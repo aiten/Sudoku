@@ -399,8 +399,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,16,0,0
- PRODUCTVERSION 1,16,0,0
+ FILEVERSION 1,17,0,0
+ PRODUCTVERSION 1,17,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -417,12 +417,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Softwaretechnik GesmbH"
             VALUE "FileDescription", "SwtUpdate"
-            VALUE "FileVersion", "1.16.0.0"
+            VALUE "FileVersion", "1.17.0.0"
             VALUE "InternalName", "SWTUPDATE"
-            VALUE "LegalCopyright", "Copyright © Softwaretechnik GesmbH (HAIT) 1996-2013"
+            VALUE "LegalCopyright", "Copyright © Softwaretechnik GesmbH (HAIT) 1996-2014"
             VALUE "OriginalFilename", "SWTUpdate.exe"
-            VALUE "ProductName", "SWTUPDATE Application (Vs2012Upd3RC)"
-            VALUE "ProductVersion", "1.16.0.0"
+            VALUE "ProductName", "SWTUPDATE Application (Vs2013Upd3)"
+            VALUE "ProductVersion", "1.17.0.0"
         END
     END
     BLOCK "VarFileInfo"
