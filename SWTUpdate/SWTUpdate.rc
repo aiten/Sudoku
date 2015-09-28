@@ -206,7 +206,7 @@ FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
     LTEXT           "SWTUpdate, Version ",IDC_VERSION,40,10,179,8,SS_NOPREFIX
-    LTEXT           "Copyright © 1998-2012 by Softwaretechnik GesmbH (HAIT)",IDC_STATIC,42,25,201,8
+    LTEXT           "Copyright © 1998-2015 by Softwaretechnik GesmbH (HAIT)",IDC_STATIC,42,25,201,8
     LTEXT           "E-Mail to: ha@softwaretechnik.at",IDC_STATIC,41,36,111,8
     LTEXT           "Usage:\n/AUTOCOPY  Start copy left -> right and terminate\n/LEFTDIR:dir override left dir\n/RIGHTDIR:dir override right dir\nExitcode 0 if autocopy succeded",IDC_STATIC,7,52,246,45
     DEFPUSHBUTTON   "OK",IDOK,221,7,32,14,WS_GROUP
@@ -399,8 +399,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,17,0,0
- PRODUCTVERSION 1,17,0,0
+ FILEVERSION 1,15,0,0
+ PRODUCTVERSION 1,15,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -417,12 +417,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Softwaretechnik GesmbH"
             VALUE "FileDescription", "SwtUpdate"
-            VALUE "FileVersion", "1.17.0.0"
+            VALUE "FileVersion", "1.15.0.0"
             VALUE "InternalName", "SWTUPDATE"
-            VALUE "LegalCopyright", "Copyright © Softwaretechnik GesmbH (HAIT) 1996-2014"
+            VALUE "LegalCopyright", "Copyright © Softwaretechnik GesmbH (HAIT) 1996-2015"
             VALUE "OriginalFilename", "SWTUpdate.exe"
-            VALUE "ProductName", "SWTUPDATE Application (Vs2013Upd3)"
-            VALUE "ProductVersion", "1.17.0.0"
+            VALUE "ProductName", "SWTUPDATE Application"
+            VALUE "ProductVersion", "1.15.0.0"
         END
     END
     BLOCK "VarFileInfo"
@@ -548,6 +548,17 @@ BEGIN
 END
 
 #endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_ABOUTBOX AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
 
 
 /////////////////////////////////////////////////////////////////////////////

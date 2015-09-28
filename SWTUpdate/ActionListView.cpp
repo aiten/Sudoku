@@ -130,7 +130,7 @@ void CActionListView::AddItem(FileInfo *pFI)
 	{
 		int nItem =
 		GetListCtrl().InsertItem(0,pFI->m_strFileName);
-		GetListCtrl().SetItemData(nItem,(DWORD) pFI);
+		GetListCtrl().SetItemData(nItem,(LPARAM) pFI);
 		GetListCtrl().SetItem(nItem,1,LVIF_TEXT,pFI->m_ActMsg,0,0,0,0);
 	}
 }

@@ -419,7 +419,7 @@ void CSWTUpdateView::AddItem(FileInfo * pFI)
 				2, 
 				INDEXTOSTATEIMAGEMASK(pFI->m_State), 
 				TVIS_STATEIMAGEMASK, 
-				(DWORD) pFI, GetFilePath(pFI->m_strFileName,pFI->m_Flags&FLAG_DIR), 
+				(LPARAM) pFI, GetFilePath(pFI->m_strFileName,pFI->m_Flags&FLAG_DIR), 
 				TVI_LAST);
 
 	}
