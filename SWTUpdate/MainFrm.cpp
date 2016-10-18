@@ -22,10 +22,10 @@ static char THIS_FILE[] = __FILE__;
 IMPLEMENT_DYNCREATE(CMainFrame, CFrameWndEx)
 
 BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
-	//{{AFX_MSG_MAP(CMainFrame)
+
 	ON_WM_CREATE()
 	ON_WM_CONTEXTMENU()
-	//}}AFX_MSG_MAP
+
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -57,7 +57,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	BOOL bNameValid;
 
 	// Visuellen Manager zum Zeichnen aller Benutzeroberflächenelemente festlegen
-	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerVS2005));
+	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerWindows7));
 
 	if (!m_wndMenuBar.Create(this))
 	{

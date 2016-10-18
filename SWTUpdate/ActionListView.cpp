@@ -89,6 +89,8 @@ void CActionListView::OnInitialUpdate()
 {
 	CListView::OnInitialUpdate();
 
+	SetWindowTheme(m_hWnd, _T("Explorer"), NULL);
+
 	if (!m_bInit)
 	{
 		GetListCtrl().InsertColumn(0,_T("File"),LVCFMT_LEFT,200,-1);
