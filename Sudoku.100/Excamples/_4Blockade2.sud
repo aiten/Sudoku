@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Sudoku xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <XmlUserNortCol>
+    <string xsi:nil="true" />
+    <string xsi:nil="true" />
+    <string xsi:nil="true" />
+    <string xsi:nil="true" />
+    <string xsi:nil="true" />
+    <string xsi:nil="true" />
+    <string xsi:nil="true" />
+    <string xsi:nil="true" />
+    <string xsi:nil="true" />
+  </XmlUserNortCol>
+  <XmlUserNortRow>
+    <string xsi:nil="true" />
+    <string xsi:nil="true" />
+    <string xsi:nil="true" />
+    <string xsi:nil="true" />
+    <string xsi:nil="true" />
+    <string xsi:nil="true" />
+    <string xsi:nil="true" />
+    <string xsi:nil="true" />
+    <string xsi:nil="true" />
+  </XmlUserNortRow>
+  <XmlSudoku00>
+    <XmlSudoku00>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku00>
+    <XmlSudoku10>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku10>
+    <XmlSudoku20>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku20>
+    <XmlSudoku01>
+      <XmlUserNote />
+      <XmlNo>8</XmlNo>
+    </XmlSudoku01>
+    <XmlSudoku11>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku11>
+    <XmlSudoku21>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku21>
+    <XmlSudoku02>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku02>
+    <XmlSudoku12>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku12>
+    <XmlSudoku22>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku22>
+  </XmlSudoku00>
+  <XmlSudoku10>
+    <XmlSudoku00>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku00>
+    <XmlSudoku10>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku10>
+    <XmlSudoku20>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku20>
+    <XmlSudoku01>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku01>
+    <XmlSudoku11>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku11>
+    <XmlSudoku21>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku21>
+    <XmlSudoku02>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku02>
+    <XmlSudoku12>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku12>
+    <XmlSudoku22>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku22>
+  </XmlSudoku10>
+  <XmlSudoku20>
+    <XmlSudoku00>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku00>
+    <XmlSudoku10>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku10>
+    <XmlSudoku20>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku20>
+    <XmlSudoku01>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku01>
+    <XmlSudoku11>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku11>
+    <XmlSudoku21>
+      <XmlUserNote />
+      <XmlNo>9</XmlNo>
+    </XmlSudoku21>
+    <XmlSudoku02>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku02>
+    <XmlSudoku12>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku12>
+    <XmlSudoku22>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku22>
+  </XmlSudoku20>
+  <XmlSudoku01>
+    <XmlSudoku00>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku00>
+    <XmlSudoku10>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku10>
+    <XmlSudoku20>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku20>
+    <XmlSudoku01>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku01>
+    <XmlSudoku11>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku11>
+    <XmlSudoku21>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku21>
+    <XmlSudoku02>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku02>
+    <XmlSudoku12>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku12>
+    <XmlSudoku22>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku22>
+  </XmlSudoku01>
+  <XmlSudoku11>
+    <XmlSudoku00>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku00>
+    <XmlSudoku10>
+      <XmlUserNote />
+      <XmlNo>2</XmlNo>
+    </XmlSudoku10>
+    <XmlSudoku20>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku20>
+    <XmlSudoku01>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku01>
+    <XmlSudoku11>
+      <XmlUserNote />
+      <XmlNo>3</XmlNo>
+    </XmlSudoku11>
+    <XmlSudoku21>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku21>
+    <XmlSudoku02>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku02>
+    <XmlSudoku12>
+      <XmlUserNote />
+      <XmlNo>4</XmlNo>
+    </XmlSudoku12>
+    <XmlSudoku22>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku22>
+  </XmlSudoku11>
+  <XmlSudoku21>
+    <XmlSudoku00>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku00>
+    <XmlSudoku10>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku10>
+    <XmlSudoku20>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku20>
+    <XmlSudoku01>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku01>
+    <XmlSudoku11>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku11>
+    <XmlSudoku21>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku21>
+    <XmlSudoku02>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku02>
+    <XmlSudoku12>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku12>
+    <XmlSudoku22>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku22>
+  </XmlSudoku21>
+  <XmlSudoku02>
+    <XmlSudoku00>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku00>
+    <XmlSudoku10>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku10>
+    <XmlSudoku20>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku20>
+    <XmlSudoku01>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku01>
+    <XmlSudoku11>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku11>
+    <XmlSudoku21>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku21>
+    <XmlSudoku02>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku02>
+    <XmlSudoku12>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku12>
+    <XmlSudoku22>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku22>
+  </XmlSudoku02>
+  <XmlSudoku12>
+    <XmlSudoku00>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku00>
+    <XmlSudoku10>
+      <XmlUserNote />
+      <XmlNo>5</XmlNo>
+    </XmlSudoku10>
+    <XmlSudoku20>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku20>
+    <XmlSudoku01>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku01>
+    <XmlSudoku11>
+      <XmlUserNote />
+      <XmlNo>6</XmlNo>
+    </XmlSudoku11>
+    <XmlSudoku21>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku21>
+    <XmlSudoku02>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku02>
+    <XmlSudoku12>
+      <XmlUserNote />
+      <XmlNo>7</XmlNo>
+    </XmlSudoku12>
+    <XmlSudoku22>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku22>
+  </XmlSudoku12>
+  <XmlSudoku22>
+    <XmlSudoku00>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku00>
+    <XmlSudoku10>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku10>
+    <XmlSudoku20>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku20>
+    <XmlSudoku01>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku01>
+    <XmlSudoku11>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku11>
+    <XmlSudoku21>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku21>
+    <XmlSudoku02>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku02>
+    <XmlSudoku12>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku12>
+    <XmlSudoku22>
+      <XmlUserNote />
+      <XmlNo>0</XmlNo>
+    </XmlSudoku22>
+  </XmlSudoku22>
+</Sudoku>
