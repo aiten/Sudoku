@@ -27,14 +27,18 @@ LANGUAGE LANG_GERMAN, SUBLANG_GERMAN_AUSTRIAN
 // remains consistent on all systems.
 IDR_MAINFRAME           ICON                    "res\\SWTUpdate.ico"
 
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // Bitmap
 //
 
 IDR_MAINFRAME           BITMAP                  "res\\Toolbar.bmp"
+
 IDB_IMAGELIST           BITMAP                  "res\\TreeImageList.bmp"
+
 IDB_STATEIMAGELIST      BITMAP                  "res\\StateImageList.bmp"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -42,7 +46,9 @@ IDB_STATEIMAGELIST      BITMAP                  "res\\StateImageList.bmp"
 //
 
 IDR_AVI_COPY            AVI                     "res\\CopyIt.avi"
+
 IDR_AVI_SEARCH          AVI                     "res\\SearchIt.avi"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -399,8 +405,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,15,0,0
- PRODUCTVERSION 1,15,0,0
+ FILEVERSION 1,16,0,0
+ PRODUCTVERSION 1,16,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -417,12 +423,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Softwaretechnik GesmbH"
             VALUE "FileDescription", "SwtUpdate"
-            VALUE "FileVersion", "1.15.0.0"
+            VALUE "FileVersion", "1.16.0.0"
             VALUE "InternalName", "SWTUPDATE"
-            VALUE "LegalCopyright", "Copyright © Softwaretechnik GesmbH (HAIT) 1996-2015"
+            VALUE "LegalCopyright", "Copyright © Softwaretechnik GesmbH (HAIT) 1996-2016"
             VALUE "OriginalFilename", "SWTUpdate.exe"
             VALUE "ProductName", "SWTUPDATE Application"
-            VALUE "ProductVersion", "1.15.0.0"
+            VALUE "ProductVersion", "1.16.0.0"
         END
     END
     BLOCK "VarFileInfo"

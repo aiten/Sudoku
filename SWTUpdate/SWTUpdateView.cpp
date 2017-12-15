@@ -21,7 +21,7 @@ static char THIS_FILE[] = __FILE__;
 IMPLEMENT_DYNCREATE(CSWTUpdateView, CTreeView)
 
 BEGIN_MESSAGE_MAP(CSWTUpdateView, CTreeView)
-	//{{AFX_MSG_MAP(CSWTUpdateView)
+
 	ON_COMMAND(ID_COPY2ORG, OnCopy2Org)
 	ON_COMMAND(ID_ORG2COPY, OnOrg2Copy)
 	ON_COMMAND(ID_UPDATE_MERGE, OnMerge)
@@ -46,7 +46,7 @@ BEGIN_MESSAGE_MAP(CSWTUpdateView, CTreeView)
 	ON_UPDATE_COMMAND_UI(ID_ADDEXCLUDEEXTENSION, OnUpdateAddExcludeExtension)
 	ON_UPDATE_COMMAND_UI(ID_ADDEXCLUDEFILE, OnUpdateAddExcludeFile)
 	ON_UPDATE_COMMAND_UI(ID_ADDEXCLUDEDIRECTORY, OnUpdateAddExcludeDirectory)
-	//}}AFX_MSG_MAP
+
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -77,19 +77,15 @@ CSWTUpdateView::~CSWTUpdateView()
 
 BOOL CSWTUpdateView::PreCreateWindow(CREATESTRUCT& cs)
 {
-	// TODO: Modify the Window class or styles here by modifying
-	//  the CREATESTRUCT cs
-
 	cs.style |= TVS_HASLINES|TVS_LINESATROOT|TVS_HASBUTTONS;
-
-	return CTreeView::PreCreateWindow(cs);
+	return __super::PreCreateWindow(cs);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
 int CSWTUpdateView::OnCreate(LPCREATESTRUCT lpCreateStruct) 
 {
-	if (CTreeView::OnCreate(lpCreateStruct) == -1)
+	if (__super::OnCreate(lpCreateStruct) == -1)
 		return -1;
 	// Create the Image List
 
@@ -104,7 +100,9 @@ int CSWTUpdateView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	/// Attach image list to Tree
 	GetTreeCtrl().SetImageList(&m_ctlImageState,TVSIL_STATE);
-	
+
+	SetWindowTheme(GetTreeCtrl().m_hWnd, _T("Explorer"), NULL);
+
 	return 0;
 }
 
@@ -113,10 +111,6 @@ int CSWTUpdateView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 void CSWTUpdateView::OnDraw(CDC* /* pDC */)
 {
-//	CSWTUpdateDoc* pDoc = GetDocument();
-//	ASSERT_VALID(pDoc);
-
-	// TODO: add draw code for native data here
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -125,12 +119,12 @@ void CSWTUpdateView::OnDraw(CDC* /* pDC */)
 #ifdef _DEBUG
 void CSWTUpdateView::AssertValid() const
 {
-	CTreeView::AssertValid();
+	__super::AssertValid();
 }
 
 void CSWTUpdateView::Dump(CDumpContext& dc) const
 {
-	CTreeView::Dump(dc);
+	__super::Dump(dc);
 }
 
 CSWTUpdateDoc* CSWTUpdateView::GetDocument() // non-debug version is inline
@@ -688,7 +682,7 @@ void CSWTUpdateView::OnRButtonDown(UINT nFlags, CPoint point)
 		GetTreeCtrl().Select(hItem,TVGN_CARET);
 	}
 
-	CTreeView::OnRButtonDown(nFlags, point);
+	__super::OnRButtonDown(nFlags, point);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -771,5 +765,3 @@ void CSWTUpdateView::OnUpdateAddExcludeFile(CCmdUI* pCmdUI)
 {
 	GetDocument()->AddExcludeUI(TempDirFileInfo(),CSWTUpdateDoc::ExcludeFile,pCmdUI);
 }
-
-

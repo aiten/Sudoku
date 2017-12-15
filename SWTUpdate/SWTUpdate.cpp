@@ -21,15 +21,12 @@ static char THIS_FILE[] = __FILE__;
 // CSWTUpdateApp
 
 BEGIN_MESSAGE_MAP(CSWTUpdateApp, CWinAppEx)
-	//{{AFX_MSG_MAP(CSWTUpdateApp)
+
 	ON_COMMAND(ID_APP_ABOUT, OnAppAbout)
-		// NOTE - the ClassWizard will add and remove mapping macros here.
-		//    DO NOT EDIT what you see in these blocks of generated code!
-	//}}AFX_MSG_MAP
-	// Standard file based document commands
 	ON_COMMAND(ID_FILE_NEW, CWinAppEx::OnFileNew)
 	ON_COMMAND(ID_FILE_OPEN, CWinAppEx::OnFileOpen)
 	ON_COMMAND(ID_FILE_OPTIONS, &CSWTUpdateApp::OnFileOptions)
+
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -37,9 +34,6 @@ END_MESSAGE_MAP()
 
 CSWTUpdateApp::CSWTUpdateApp()
 {
-	// TODO: add construction code here,
-	// Place all significant initialization in InitInstance
-
 	m_bStartCopy = false;
 	m_ExitCode   = 0;
 }
@@ -79,9 +73,7 @@ BOOL CSWTUpdateApp::InitInstance()
 	LoadStdProfileSettings();  // Load standard INI file options (including MRU)
 
 	InitContextMenuManager();
-
 	InitKeyboardManager();
-
 	InitTooltipManager();
 
 	// Register the application's document templates.  Document templates
@@ -203,44 +195,32 @@ public:
 	CAboutDlg();
 
 // Dialog Data
-	//{{AFX_DATA(CAboutDlg)
 	enum { IDD = IDD_ABOUTBOX };
 	CStatic	m_Version;
-	//}}AFX_DATA
-
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CAboutDlg)
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	//}}AFX_VIRTUAL
 
 // Implementation
 protected:
-	//{{AFX_MSG(CAboutDlg)
+
 	virtual BOOL OnInitDialog();
-	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
 public:
 	afx_msg void OnBnClickedSendmail();
 };
 
 CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
 {
-	//{{AFX_DATA_INIT(CAboutDlg)
-	//}}AFX_DATA_INIT
 }
 
 void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CAboutDlg)
+	__super::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_VERSION, m_Version);
-	//}}AFX_DATA_MAP
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialog)
-	//{{AFX_MSG_MAP(CAboutDlg)
-	//}}AFX_MSG_MAP
 	ON_BN_CLICKED(IDC_SENDMAIL, OnBnClickedSendmail)
 END_MESSAGE_MAP()
 
@@ -256,7 +236,7 @@ void CSWTUpdateApp::OnAppAbout()
 
 BOOL CAboutDlg::OnInitDialog() 
 {
-	CDialog::OnInitDialog();
+	__super::OnInitDialog();
 	
 	CString WndText;
 

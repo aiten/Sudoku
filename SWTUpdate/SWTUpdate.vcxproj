@@ -156,7 +156,7 @@
     </Manifest>
     <CustomBuildStep />
     <PostBuildEvent>
-      <Command>"$(TargetPlatformSdkPath)\bin\$(TargetedSDKArchitecture)\signtool.exe" sign /a /f $(ProjectDir)..\sign\HA.pfx $(TargetPath)</Command>
+      <Command>"$(TargetPlatformSdkPath)bin\$(TargetedSDKArchitecture)\signtool.exe" sign /a /f $(ProjectDir)..\sign\HA.pfx $(TargetPath)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -181,7 +181,7 @@
     <CustomBuildStep />
     <CustomBuildStep />
     <PostBuildEvent>
-      <Command>"$(TargetPlatformSdkPath)\bin\$(TargetedSDKArchitecture)\signtool.exe" sign /a /f $(ProjectDir)..\sign\HA.pfx $(TargetPath)</Command>
+      <Command>"$(TargetPlatformSdkPath)bin\$(TargetedSDKArchitecture)\signtool.exe" sign /a /f $(ProjectDir)..\sign\HA.pfx $(TargetPath)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -222,7 +222,7 @@
       <AdditionalManifestFiles>$(ProjectDir)\res\SWTUpdate.manifest;%(AdditionalManifestFiles)</AdditionalManifestFiles>
     </Manifest>
     <PostBuildEvent>
-      <Command>"$(TargetPlatformSdkPath)\bin\$(TargetedSDKArchitecture)\signtool.exe" sign /a /f $(ProjectDir)..\sign\HA.pfx $(TargetPath)</Command>
+      <Command>"$(TargetPlatformSdkPath)bin\$(TargetedSDKArchitecture)\signtool.exe" sign /a /f $(ProjectDir)..\sign\HA.pfx $(TargetPath)</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Sign</Message>
@@ -266,7 +266,7 @@
       <AdditionalManifestFiles>$(ProjectDir)\res\SWTUpdate.manifest;%(AdditionalManifestFiles)</AdditionalManifestFiles>
     </Manifest>
     <PostBuildEvent>
-      <Command>"$(TargetPlatformSdkPath)\bin\$(TargetedSDKArchitecture)\signtool.exe" sign /a /f $(ProjectDir)..\sign\HA.pfx $(TargetPath)</Command>
+      <Command>"$(TargetPlatformSdkPath)bin\$(TargetedSDKArchitecture)\signtool.exe" sign /a /f $(ProjectDir)..\sign\HA.pfx $(TargetPath)</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Sign</Message>
@@ -298,7 +298,7 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
     <PostBuildEvent>
-      <Command>"$(TargetPlatformSdkPath)\bin\$(TargetedSDKArchitecture)\signtool.exe" sign /a /f $(ProjectDir)..\sign\HA.pfx $(TargetPath)</Command>
+      <Command>"$(TargetPlatformSdkPath)bin\x64\signtool.exe" sign /a /f $(ProjectDir)..\sign\HA.pfx $(TargetPath)</Command>
       <Message>Sign</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -328,7 +328,7 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
     <PostBuildEvent>
-      <Command>"$(TargetPlatformSdkPath)\bin\x64\signtool.exe" sign /a /f $(ProjectDir)..\sign\HA.pfx $(TargetPath)</Command>
+      <Command>"$(TargetPlatformSdkPath)bin\x64\signtool.exe" sign /a /f $(ProjectDir)..\sign\HA.pfx $(TargetPath)</Command>
       <Message>Sign</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>

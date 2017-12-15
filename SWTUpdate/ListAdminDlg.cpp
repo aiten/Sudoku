@@ -42,6 +42,8 @@ BOOL CListAdminDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
+	SetWindowTheme(m_LV.m_hWnd, _T("Explorer"), NULL);
+
 	CStringList List;
 	CListUtil::GetListFromStr(m_List,List);
 	int Idx=0;
