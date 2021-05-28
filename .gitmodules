@@ -1,0 +1,3 @@
+[submodule "Sudoku/Framework"]
+	path = Sudoku/Framework
+	url = https://github.com/aiten/Framework.git

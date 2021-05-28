@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<TestSettings name="Auswirkung nachverfolgen und testen" id="6f767366-96f9-4c33-8e3b-2ae31f52d3a0" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
-  <Description>Dies sind die Testeinstellungen für "Auswirkung nachverfolgen und testen".</Description>
-  <Execution>
-    <TestTypeSpecific />
-    <AgentRule name="Execution Agents">
-    </AgentRule>
-  </Execution>
-</TestSettings>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Sudoku xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <XmlUserNoteCol>
+    <string />
+    <string />
+    <string />
+    <string />
+    <string />
+    <string />
+    <string />
+    <string />
+    <string />
+  </XmlUserNoteCol>
+  <XmlUserNoteRow>
+    <string />
+    <string />
+    <string />
+    <string />
+    <string />
+    <string />
+    <string />
+    <string />
+    <string />
+  </XmlUserNoteRow>
+  <XmlSudoku00>
+    <XmlSudoku00>
+      <XmlNo>1</XmlNo>
+    </XmlSudoku00>
+    <XmlSudoku01>
+      <XmlNo>2</XmlNo>
+    </XmlSudoku01>
+    <XmlSudoku02>
+      <XmlNo>3</XmlNo>
+    </XmlSudoku02>
+  </XmlSudoku00>
+  <XmlSudoku01>
+    <XmlSudoku00>
+      <XmlNo>4</XmlNo>
+    </XmlSudoku00>
+    <XmlSudoku01>
+      <XmlNo>5</XmlNo>
+    </XmlSudoku01>
+    <XmlSudoku02>
+      <XmlNo>6</XmlNo>
+    </XmlSudoku02>
+  </XmlSudoku01>
+  <XmlSudoku02>
+    <XmlSudoku00>
+      <XmlNo>7</XmlNo>
+    </XmlSudoku00>
+    <XmlSudoku01>
+      <XmlNo>8</XmlNo>
+    </XmlSudoku01>
+  </XmlSudoku02>
+  <XmlSudoku22>
+    <XmlSudoku22>
+      <XmlNo>9</XmlNo>
+    </XmlSudoku22>
+  </XmlSudoku22>
+</Sudoku>
