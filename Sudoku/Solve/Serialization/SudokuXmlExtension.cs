@@ -21,6 +21,7 @@ namespace Sudoku.Solve.Serialization
         public static SudokuXml ToSudokuXml(this Solve.Sudoku sudoku)
         {
             var sudokuXml = new SudokuXml();
+            sudokuXml.Version = 1;
 
             var colUserNote = new string[9];
             var rowUserNote = new string[9];
@@ -34,20 +35,20 @@ namespace Sudoku.Solve.Serialization
             sudokuXml.XmlUserNoteRow = rowUserNote;
             sudokuXml.XmlUserNoteCol = colUserNote;
 
-            for (int x = 0; x < 3; x++)
+            for (int row = 0; row < 3; row++)
             {
-                for (int y = 0; y < 3; y++)
+                for (int col = 0; col < 3; col++)
                 {
-                    var pi3X3  = typeof(SudokuXml).GetProperty($"XmlSudoku{x}{y}");
+                    var pi3X3  = typeof(SudokuXml).GetProperty($"XmlSudoku{row}{col}");
                     var xml3x3 = (Sudoku3X3Xml)pi3X3.GetValue(sudokuXml);
 
-                    for (int ix = 0; ix < 3; ix++)
+                    for (int iRow = 0; iRow < 3; iRow++)
                     {
-                        for (int iy = 0; iy < 3; iy++)
+                        for (int iCol = 0; iCol < 3; iCol++)
                         {
-                            var piElem  = typeof(Sudoku3X3Xml).GetProperty($"XmlSudoku{ix}{iy}");
+                            var piElem  = typeof(Sudoku3X3Xml).GetProperty($"XmlSudoku{iRow}{iCol}");
                             var xmlElem = (SudokuElementXml)piElem.GetValue(xml3x3);
-                            var def     = sudoku.GetDef(x * 3 + ix, y * 3 + iy);
+                            var def     = sudoku.GetDef(row * 3 + iRow, col * 3 + iCol);
                             xmlElem.XmlNo       = def.No;
                             xmlElem.XmlUserNote = def.UserNote;
                         }
@@ -72,35 +73,40 @@ namespace Sudoku.Solve.Serialization
                 sudoku.SetUserNoteCol(idx, sudokuXml.XmlUserNoteCol[idx]);
             }
 
-            for (int x = 0; x < 3; x++)
+            for (int row = 0; row < 3; row++)
             {
-                for (int y = 0; y < 3; y++)
+                for (int col = 0; col < 3; col++)
                 {
-                    var pi3X3  = typeof(SudokuXml).GetProperty($"XmlSudoku{x}{y}");
+                    var pi3X3  = typeof(SudokuXml).GetProperty($"XmlSudoku{row}{col}");
                     var xml3x3 = (Sudoku3X3Xml)pi3X3.GetValue(sudokuXml);
 
-                    for (int ix = 0; ix < 3; ix++)
+                    for (int iRow = 0; iRow < 3; iRow++)
                     {
-                        for (int iy = 0; iy < 3; iy++)
+                        for (int iCol = 0; iCol < 3; iCol++)
                         {
-                            var piElem  = typeof(Sudoku3X3Xml).GetProperty($"XmlSudoku{ix}{iy}");
+                            var piElem  = typeof(Sudoku3X3Xml).GetProperty($"XmlSudoku{iRow}{iCol}");
                             var xmlElem = (SudokuElementXml)piElem.GetValue(xml3x3);
 
-                            var myX = x * 3 + ix;
-                            var myY = y * 3 + iy;
+                            var myRow = row * 3 + iRow;
+                            var myCol = col * 3 + iCol;
 
                             if (!string.IsNullOrEmpty(xmlElem.XmlUserNote))
                             {
-                                sudoku.SetUserNote(myX, myY, xmlElem.XmlUserNote);
+                                sudoku.SetUserNote(myRow, myCol, xmlElem.XmlUserNote);
                             }
 
                             if (xmlElem.XmlNo > 0)
                             {
-                                sudoku.Set(myX, myY, xmlElem.XmlNo);
+                                sudoku.Set(myRow, myCol, xmlElem.XmlNo);
                             }
                         }
                     }
                 }
+            }
+
+            if (sudokuXml.Version < 1)
+            {
+
             }
 
             sudoku.ClearUndo();

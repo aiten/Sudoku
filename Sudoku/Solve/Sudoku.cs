@@ -21,8 +21,6 @@ namespace Sudoku.Solve
     using System.Linq;
     using System.Threading;
 
-    using global::Sudoku.Solve.Tools;
-
     public class Sudoku
     {
         #region Private Data
@@ -39,9 +37,13 @@ namespace Sudoku.Solve
 
         public Sudoku()
         {
-            for (var x = 0; x < 9; x++)
-            for (var y = 0; y < 9; y++)
-                _fields[x, y] = new SudokuField();
+            for (var row = 0; row < 9; row++)
+            {
+                for (var col = 0; col < 9; col++)
+                {
+                    _fields[row, col] = new SudokuField();
+                }
+            }
         }
 
         public int  StepCount => _setCount;
@@ -51,52 +53,52 @@ namespace Sudoku.Solve
 
         #region Get Field Information
 
-        public int Get(int x, int y)
+        public int Get(int row, int col)
         {
-            return GetDef(x, y).No;
+            return GetDef(row, col).No;
         }
 
-        public SudokuField GetDef(int x, int y)
+        public SudokuField GetDef(int row, int col)
         {
-            return _fields[x, y];
+            return _fields[row, col];
         }
 
-        private delegate SudokuField GetSudokuField(int x, int y);
+        public delegate SudokuField GetSudokuField(int row, int col);
 
-        private SudokuField GetSudokuFieldRow(int x, int y)
+        public SudokuField GetSudokuFieldRow(int row, int col)
         {
-            return GetDef(x, y);
+            return GetDef(row, col);
         }
 
-        private SudokuField GetSudokuFieldCol(int x, int y)
+        public SudokuField GetSudokuFieldCol(int row, int col)
         {
-            return GetDef(y, x);
+            return GetDef(col, row);
         }
 
-        private SudokuField GetSudokuFieldS3(int x, int y)
+        public SudokuField GetSudokuFieldS3(int row, int col)
         {
-            var x3 = (x / 3) * 3;
-            var y3 = (x % 3) * 3;
+            var rowX3 = (row / 3) * 3;
+            var colX3 = (row % 3) * 3;
 
-            var dx = y / 3;
-            var dy = y % 3;
+            var dRow = col / 3;
+            var dCol = col % 3;
 
-            return _fields[x3 + dx, y3 + dy];
+            return _fields[rowX3 + dRow, colX3 + dCol];
         }
 
         #endregion
 
         #region Set and Validation
 
-        public bool SetNextPossible(int x, int y)
+        public bool SetNextPossible(int row, int col)
         {
-            var def = GetDef(x, y);
+            var def = GetDef(row, col);
             var no  = def.No;
 
             if (no == 0)
             {
                 var only = def.OnlyPossible();
-                if (only > 0 && Set(x, y, only))
+                if (only > 0 && Set(row, col, only))
                 {
                     return true;
                 }
@@ -107,32 +109,32 @@ namespace Sudoku.Solve
                 var newNo = no + i;
 
                 if (newNo > 9) newNo -= 10;
-                if (Set(x, y, newNo))
+                if (Set(row, col, newNo))
                 {
                     return true;
                 }
             }
 
-            Clear(x, y);
+            Clear(row, col);
             return false;
         }
 
-        public bool Set(int x, int y, int no)
+        public bool Set(int row, int col, int no)
         {
             if (no < 0 || no > 9)
                 return false;
 
-            if (!CanSet(x, y, no))
+            if (!CanSet(row, col, no))
             {
                 return false;
             }
 
-            var def = GetDef(x, y);
+            var def = GetDef(row, col);
             var old = def.No;
 
             def.No = no;
 
-            AddUndo(x, y, old);
+            AddUndo(row, col, old);
 
             if ((old == 0 && no > 0))
             {
@@ -146,9 +148,9 @@ namespace Sudoku.Solve
             return true;
         }
 
-        public bool Clear(int x, int y)
+        public bool Clear(int row, int col)
         {
-            return Set(x, y, 0);
+            return Set(row, col, 0);
         }
 
         private bool CanSet(int idx, int no, GetSudokuField getDef)
@@ -164,19 +166,19 @@ namespace Sudoku.Solve
             return true;
         }
 
-        public bool CanSet(int x, int y, int no)
+        public bool CanSet(int row, int col, int no)
         {
             return no == 0 ||
-                   (CanSet(x,                   no, GetSudokuFieldRow) &&
-                    CanSet(y,                   no, GetSudokuFieldCol) &&
-                    CanSet((x / 3) * 3 + y / 3, no, GetSudokuFieldS3));
+                   (CanSet(row,                     no, GetSudokuFieldRow) &&
+                    CanSet(col,                     no, GetSudokuFieldCol) &&
+                    CanSet((row / 3) * 3 + col / 3, no, GetSudokuFieldS3));
         }
 
-        private bool SetNoUndo(int x, int y, int no)
+        private bool SetNoUndo(int row, int col, int no)
         {
             var old = UndoAvailable;
             UndoAvailable = false;
-            var ret = Set(x, y, no);
+            var ret = Set(row, col, no);
             UndoAvailable = old;
             return ret;
         }
@@ -187,8 +189,8 @@ namespace Sudoku.Solve
 
         private class UndoInfo
         {
-            public int X;
-            public int Y;
+            public int Row;
+            public int Col;
             public int No;
         };
 
@@ -201,7 +203,7 @@ namespace Sudoku.Solve
             if (CanUndo())
             {
                 var undo = _undoList.Last();
-                SetNoUndo(undo.X, undo.Y, undo.No);
+                SetNoUndo(undo.Row, undo.Col, undo.No);
                 _undoList.RemoveAt(_undoList.Count - 1);
                 return true;
             }
@@ -214,15 +216,15 @@ namespace Sudoku.Solve
             return _undoList.Count > 0;
         }
 
-        public void AddUndo(int x, int y, int no)
+        public void AddUndo(int row, int col, int no)
         {
             if (UndoAvailable)
             {
                 _undoList.Add(new UndoInfo
                 {
-                    X  = x,
-                    Y  = y,
-                    No = no
+                    Row = row,
+                    Col = col,
+                    No  = no
                 });
                 Modified = true;
             }
@@ -237,392 +239,66 @@ namespace Sudoku.Solve
 
         #region UserNote
 
-        public void SetUserNote(int x, int y, string userNote)
+        public void SetUserNote(int row, int col, string userNote)
         {
-            var def = GetDef(x, y);
+            var def = GetDef(row, col);
             if (String.Compare(def.UserNote, userNote, StringComparison.Ordinal) != 0)
                 Modified = true;
             def.SetUserNote(userNote);
         }
 
-        public string GetUserNoteRow(int idx)
+        public string GetUserNoteRow(int row)
         {
-            return _userNoteRow[idx] ?? "";
+            return _userNoteRow[row] ?? "";
         }
 
-        public string GetUserNoteCol(int idx)
+        public string GetUserNoteCol(int col)
         {
-            return _userNoteCol[idx] ?? "";
+            return _userNoteCol[col] ?? "";
         }
 
-        public void SetUserNoteRow(int idx, string userNote)
+        public void SetUserNoteRow(int row, string userNote)
         {
-            var old = GetUserNoteRow(idx);
+            var old = GetUserNoteRow(row);
             if (String.Compare(old, userNote, StringComparison.Ordinal) != 0)
                 Modified = true;
-            _userNoteRow[idx] = userNote;
+            _userNoteRow[row] = userNote;
         }
 
-        public void SetUserNoteCol(int idx, string userNote)
+        public void SetUserNoteCol(int col, string userNote)
         {
-            var old = GetUserNoteCol(idx);
+            var old = GetUserNoteCol(col);
             if (String.Compare(old, userNote, StringComparison.Ordinal) != 0)
                 Modified = true;
-            _userNoteCol[idx] = userNote;
+            _userNoteCol[col] = userNote;
         }
 
         #endregion
 
         #region Calc Possibilities
 
-        private readonly bool[] _foundIdx1 = new bool[9];
-        private readonly bool[] _foundIdx2 = new bool[9];
-
         private void CommitChanges()
         {
-            for (var x = 0; x < 9; x++)
+            for (var row = 0; row < 9; row++)
             {
-                for (var y = 0; y < 9; y++)
+                for (var col = 0; col < 9; col++)
                 {
-                    GetSudokuFieldCol(x, y).CommitChanges();
+                    GetSudokuFieldCol(row, col).CommitChanges();
                 }
             }
-        }
-
-        private int UpdatePossibleBlockade1(GetSudokuField getDef, char rowcol3)
-        {
-            // set all onlyPossible 
-            var changCount = 0;
-
-            for (var z = 0; z < 9; z++)
-            {
-                for (var x = 0; x < 9; x++)
-                {
-                    for (var y = 0; y < 9; y++)
-                    {
-                        var def = getDef(x, y);
-                        if (def.No == 0 && def.IsPossible(z + 1))
-                        {
-                            var foundOther = false;
-                            for (var t = 0; t < 9; t++)
-                            {
-                                if (t != y)
-                                {
-                                    var def2 = getDef(x, t);
-                                    if (def2.No == 0 && def2.IsPossible(z + 1))
-                                    {
-                                        foundOther = true;
-                                        break;
-                                    }
-                                }
-                            }
-
-                            if (!foundOther)
-                            {
-                                for (var t = 0; t < 9; t++)
-                                {
-                                    if (t != z && !def.IsNotPossible(t + 1))
-                                    {
-                                        changCount++;
-                                        def.SetNotPossibleBlockade1(t + 1, rowcol3, z + 1);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return changCount;
-        }
-
-        private int UpdatePossibleBlockade2(GetSudokuField getDef, char rowcol3)
-        {
-            // set all onlyPossible 
-            var changCount = 0;
-
-            for (var x = 0; x < 9; x++)
-            {
-                for (var y = 0; y < 9; y++)
-                {
-                    var def = getDef(x, y);
-                    if (def.No == 0)
-                    {
-                        _foundIdx1.Init(false);
-
-                        _foundIdx1[y] = true;
-                        var foundCount = 1;
-
-                        for (var t = 0; t < 9; t++)
-                        {
-                            if (t != y)
-                            {
-                                var def2 = getDef(x, t);
-                                if (def2.No == 0)
-                                {
-                                    if (def.IsSubSetPossible(def2))
-                                    {
-                                        _foundIdx1[t] = true;
-                                        foundCount++;
-                                    }
-                                }
-                            }
-                        }
-
-                        if (foundCount == def.PossibleCount())
-                        {
-                            string reasonPossible = null;
-                            string reasonIndex    = null;
-                            for (var t = 0; t < 9; t++)
-                            {
-                                if (_foundIdx1[t])
-                                {
-                                    var def2 = getDef(x, t);
-                                    if (def2.No == 0)
-                                    {
-                                        if (string.IsNullOrEmpty(reasonPossible))
-                                        {
-                                            reasonPossible = def2.PossibleString();
-                                        }
-
-                                        reasonIndex = reasonIndex.Add(',', t + 1);
-                                    }
-                                }
-                            }
-
-                            for (var t = 0; t < 9; t++)
-                            {
-                                if (!_foundIdx1[t])
-                                {
-                                    var def2 = getDef(x, t);
-                                    if (def2.No == 0)
-                                    {
-                                        for (var z = 1; z <= 9; z++)
-                                        {
-                                            if (def.IsPossible(z) && def2.IsPossible(z))
-                                            {
-                                                changCount++;
-                                                def2.SetNotPossibleBlockade2(z, rowcol3, reasonPossible, reasonIndex);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return changCount;
-        }
-
-        private int UpdatePossibleBlockade2SubSet(GetSudokuField getDef, char rowcol3)
-        {
-            // set all onlyPossible 
-            var changCount = 0;
-
-            for (var x = 0; x < 9; x++)
-            {
-                for (var y = 0; y < 9; y++)
-                {
-                    var def = getDef(x, y);
-                    if (def.No == 0)
-                    {
-                        _foundIdx1.Init(false);
-                        _foundIdx1[y] = true;
-
-                        if (FindSubSet(getDef, x, y + 1, _foundIdx1, _foundIdx2))
-                        {
-                            string reasonPossible = null;
-                            string reasonIndex    = null;
-                            for (var t = 0; t < 9; t++)
-                                if (_foundIdx1[t])
-                                {
-                                    var def2 = getDef(x, t);
-                                    if (def2.No == 0)
-                                    {
-                                        if (string.IsNullOrEmpty(reasonPossible))
-                                        {
-                                            for (var z = 1; z <= 9; z++)
-                                            {
-                                                if (_foundIdx2[z - 1])
-                                                {
-                                                    reasonPossible = reasonPossible.Add(',', z);
-                                                }
-                                            }
-                                        }
-
-                                        reasonIndex = reasonIndex.Add(',', t + 1);
-                                    }
-                                }
-
-                            for (var t = 0; t < 9; t++)
-                            {
-                                if (!_foundIdx1[t])
-                                {
-                                    var def2 = getDef(x, t);
-                                    if (def2.No == 0)
-                                    {
-                                        for (var z = 1; z <= 9; z++)
-                                        {
-                                            if (_foundIdx2[z - 1] && def2.IsPossible(z))
-                                            {
-                                                changCount++;
-                                                def2.SetNotPossibleBlockade2P(z, rowcol3, reasonPossible, reasonIndex);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return changCount;
-        }
-
-        private int UpdatePossibleBlockade3(GetSudokuField getDef, char rowcol3)
-        {
-            // set all onlyPossible 
-            var changCount = 0;
-
-            for (var x = 0; x < 9; x++)
-            {
-                for (var y = 0; y < 9; y++)
-                {
-                    var def = getDef(x, y);
-                    if (def.No == 0)
-                    {
-                        for (var z = 1; z <= 9; z++)
-                        {
-                            string info = null;
-
-                            if (def.IsPossible(z))
-                            {
-                                // test all in same sudoku but not in same row/col
-
-                                var s3x = x / 3;
-                                var s3y = y / 3;
-                                int t;
-
-                                for (t = 0; t < 9; t++)
-                                {
-                                    var sx   = s3x * 3 + t / 3;
-                                    var sy   = s3y * 3 + t % 3;
-                                    var def2 = getDef(sx, sy);
-                                    if (def2.No == 0)
-                                    {
-                                        if (x != sx)
-                                        {
-                                            if (def2.IsPossible(z))
-                                            {
-                                                // abort with z
-                                                break;
-                                            }
-                                        }
-                                        else if (def2.IsPossible(z))
-                                        {
-                                            info = info.Add(',', (sy + 1));
-                                        }
-                                    }
-                                }
-
-                                if (t >= 9)
-                                {
-                                    for (t = 0; t < 9; t++)
-                                    {
-                                        if (t / 3 != y / 3)
-                                        {
-                                            var def2 = getDef(x, t);
-                                            if (def2.No == 0 && def2.IsPossible(z))
-                                            {
-                                                changCount++;
-                                                def2.SetNotPossibleBlockade3(z, rowcol3, info);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return changCount;
-        }
-
-        private bool FindSubSet(GetSudokuField getDef, int x, int y, bool[] use, bool[] noSet)
-        {
-            // find union with backtracking
-
-            if (y >= 9)
-                return false;
-
-            if (IsSubSet(getDef, x, use, noSet))
-                return true;
-
-            int z;
-            for (z = y; z < 9; z++)
-            {
-                use[z] = true;
-                if (FindSubSet(getDef, x, z + 1, use, noSet))
-                {
-                    return true;
-                }
-
-                use[z] = false;
-            }
-
-            return false;
-        }
-
-        private bool IsSubSet(GetSudokuField getDef, int x, bool[] use, bool[] noSet)
-        {
-            var countUsed     = 0;
-            var countPossible = 0;
-            var countSet      = 0;
-
-            noSet.Init(false);
-
-            for (var y = 0; y < 9; y++)
-            {
-                var def = getDef(x, y);
-                if (def.No == 0)
-                {
-                    countPossible++;
-                    if (use[y])
-                    {
-                        countUsed++;
-                        for (var t = 1; t <= 9; t++)
-                        {
-                            if (def.IsPossible(t))
-                            {
-                                if (!noSet[t - 1])
-                                {
-                                    countSet++;
-                                    noSet[t - 1] = true;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return countSet == countUsed && countUsed != countPossible && countSet > 1;
         }
 
         private bool HavePossibility()
         {
             // Update with sudoku (mainRule) rules
 
-            for (var x = 0; x < 9; x++)
+            for (var row = 0; row < 9; row++)
             {
-                for (var y = 0; y < 9; y++)
+                for (var col = 0; col < 9; col++)
                 {
-                    var def = GetDef(x, y);
+                    var def = GetDef(row, col);
 
-                    if (def.No == 0 && def.OnlyPossible() > 0)
+                    if (def.IsEmpty && def.OnlyPossible() > 0)
                         return true;
                 }
             }
@@ -634,43 +310,45 @@ namespace Sudoku.Solve
         {
             // Update with sudoku (mainRule) rules
 
-            for (var x = 0; x < 9; x++)
+            for (var row = 0; row < 9; row++)
             {
-                for (var y = 0; y < 9; y++)
+                for (var col = 0; col < 9; col++)
                 {
-                    var def = GetDef(x, y);
+                    var def = GetDef(row, col);
                     def.InitHelpVar();
 
-                    if (def.No == 0)
+                    if (def.IsEmpty)
                     {
                         for (var z = 1; z <= 9; z++)
                         {
-                            if (SetNoUndo(x, y, z))
+                            if (SetNoUndo(row, col, z))
                             {
                                 def.MainRulePossible[z - 1] = true;
                             }
                         }
 
-                        SetNoUndo(x, y, 0);
+                        SetNoUndo(row, col, 0);
                     }
                 }
             }
 
             CommitChanges();
 
-            const char row = 'R';
-            const char col = 'C';
-            const char s3  = 'X';
+            var solverB1        = new SolverBlockade1(this);
+            var solverB2        = new SolverBlockade2(this);
+            var solverB2B       = new SolverBlockade2SubSet(this);
+            var solverB3        = new SolverBlockade3(this);
+            var solverXW        = new SolverXWing(this);
+            var solverSwordfish = new SolverSwordfish(this);
+            var solverJellyfish = new SolverJellyfish(this);
 
-            UpdatePossibleBlockade1(GetSudokuFieldS3, s3);
+            solverB1.Solve(SolverBase.Orientation.X3);
 
             CommitChanges();
 
             while (!HavePossibility())
             {
-                UpdatePossibleBlockade1(GetSudokuFieldRow, row);
-                UpdatePossibleBlockade1(GetSudokuFieldCol, col);
-                UpdatePossibleBlockade1(GetSudokuFieldS3,  s3);
+                solverB1.Solve();
 
                 CommitChanges();
 
@@ -679,16 +357,14 @@ namespace Sudoku.Solve
 
                 var changeCount = 0;
 
-                if (0 < UpdatePossibleBlockade3(GetSudokuFieldRow, row)) changeCount++;
-                if (0 < UpdatePossibleBlockade3(GetSudokuFieldCol, col)) changeCount++;
+                if (solverB3.Solve()) changeCount++;
+                if (solverB2.Solve()) changeCount++;
+                if (solverB2B.Solve()) changeCount++;
 
-                if (0 < UpdatePossibleBlockade2(GetSudokuFieldRow, row)) changeCount++;
-                if (0 < UpdatePossibleBlockade2(GetSudokuFieldCol, col)) changeCount++;
-                if (0 < UpdatePossibleBlockade2(GetSudokuFieldS3,  s3)) changeCount++;
-
-                if (0 < UpdatePossibleBlockade2SubSet(GetSudokuFieldRow, row)) changeCount++;
-                if (0 < UpdatePossibleBlockade2SubSet(GetSudokuFieldCol, col)) changeCount++;
-                if (0 < UpdatePossibleBlockade2SubSet(GetSudokuFieldS3,  s3)) changeCount++;
+                // only use xWing as last option is no other works
+                if (changeCount == 0 && solverXW.Solve()) changeCount++;
+                if (changeCount == 0 && solverSwordfish.Solve()) changeCount++;
+                if (changeCount == 0 && solverJellyfish.Solve()) changeCount++;
 
                 CommitChanges();
 
@@ -748,7 +424,7 @@ namespace Sudoku.Solve
                 _calcSudoku.StopPossibleSolutions();
         }
 
-        private int _CalcPossibleSolutions(int x, int y, bool calcEnd, ref int possibleSolutions, CancellationToken cancellationToken)
+        private int _CalcPossibleSolutions(int row, int col, bool calcEnd, ref int possibleSolutions, CancellationToken cancellationToken)
         {
             if (!calcEnd && _endCalc)
                 return -1;
@@ -767,44 +443,44 @@ namespace Sudoku.Solve
 
 
             var results = 0;
-            int myx;
-            int myy;
-            y++;
-            if (y >= 9)
+            int myRow;
+            int myCol;
+            col++;
+            if (col >= 9)
             {
-                x++;
-                y = 0;
+                row++;
+                col = 0;
             }
 
-            if (x > 8)
+            if (row > 8)
             {
                 possibleSolutions = possibleSolutions > 1 ? possibleSolutions : 1;
                 return 1;
             }
 
-            for (myx = x; myx < 9; myx++)
+            for (myRow = row; myRow < 9; myRow++)
             {
-                for (myy = y; myy < 9; myy++)
+                for (myCol = col; myCol < 9; myCol++)
                 {
-                    var no = Get(myx, myy);
+                    var no = Get(myRow, myCol);
 
                     if (no == 0)
                     {
                         //int old = no;
                         for (var newNo = 1; newNo <= 9; newNo++)
                         {
-                            if (SetNoUndo(myx, myy, newNo))
+                            if (SetNoUndo(myRow, myCol, newNo))
                             {
                                 if (cancellationToken.IsCancellationRequested)
                                 {
                                     return -1;
                                 }
 
-                                var res = _CalcPossibleSolutions(myx, myy, calcEnd, ref possibleSolutions, cancellationToken);
+                                var res = _CalcPossibleSolutions(myRow, myCol, calcEnd, ref possibleSolutions, cancellationToken);
                                 if (res < 0)
                                 {
                                     if (!calcEnd)
-                                        SetNoUndo(myx, myy, 0);
+                                        SetNoUndo(myRow, myCol, 0);
                                     return res; // abort
                                 }
 
@@ -821,12 +497,12 @@ namespace Sudoku.Solve
                             }
                         }
 
-                        SetNoUndo(myx, myy, 0);
+                        SetNoUndo(myRow, myCol, 0);
                         return results;
                     }
                 }
 
-                y = 0;
+                col = 0;
             }
 
             return 0;

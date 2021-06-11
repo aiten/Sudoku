@@ -27,6 +27,38 @@ namespace Sudoku.Test
     public class SudokuUnitTest : SudokuBaseUnitTest
     {
         [Fact]
+        public void SimpleTest()
+        {
+            var s = new Sudoku();
+            s.UpdatePossible();
+
+            for (int row = 0; row < 9; row++)
+            for (int col = 0; col < 9; col++)
+                s.GetDef(row, col).MainRulePossibleCount().Should().Be(9);
+        }
+
+        [Fact]
+        public void SimplePossibleTest()
+        {
+            var s   = new Sudoku();
+            var opt = new SudokuOptions();
+            opt.Help        = true;
+            opt.ShowToolTip = true;
+
+            s.UpdatePossible();
+
+            for (int row = 0; row < 9; row++)
+            for (int col = 0; col < 9; col++)
+            {
+                s.GetDef(row, col).PossibleCount().Should().Be(9);
+                s.GetDef(row, col).PossibleString().Should().BeEquivalentTo("1,2,3,4,5,6,7,8,9");
+
+                s.GetDef(row, col).MainRulePossibleCount().Should().Be(9);
+                s.GetDef(row, col).ToButtonString(opt).Should().BeEquivalentTo("1,2,3,4,5,6,7,8,9");
+            }
+        }
+
+        [Fact]
         public void FillTest()
         {
             var lines = new[]
@@ -49,9 +81,9 @@ namespace Sudoku.Test
 
             var nowLines = s.SmartPrint();
 
-            for (int y = 0; y < 9; y++)
+            for (int col = 0; col < 9; col++)
             {
-                nowLines[y].Should().Be(lines[y]);
+                nowLines[col].Should().Be(lines[col]);
             }
         }
 
@@ -67,7 +99,7 @@ namespace Sudoku.Test
 
             var cannotSet = new[]
             {
-                (7, 0),
+                (0, 7),
             };
 
             TestCanSet(s, cannotSet);
@@ -89,7 +121,7 @@ namespace Sudoku.Test
 
             var cannotSet = new[]
             {
-                (5, 4),
+                (4, 5),
             };
 
             TestCanSet(s, cannotSet);
@@ -115,7 +147,7 @@ namespace Sudoku.Test
 
             var cannotSet = new[]
             {
-                (1, 8)
+                (8, 1)
             };
 
             TestCanSet(s, cannotSet);
@@ -141,7 +173,7 @@ namespace Sudoku.Test
 
             var cannotSet = new[]
             {
-                (0, 7),
+                (7, 0),
             };
 
             TestCanSet(s, cannotSet);
@@ -167,7 +199,7 @@ namespace Sudoku.Test
 
             var cannotSet = new[]
             {
-                (4, 7),
+                (7, 4),
             };
 
             TestCanSet(s, cannotSet);
@@ -193,7 +225,7 @@ namespace Sudoku.Test
 
             var cannotSet = new[]
             {
-                (8, 7),
+                (7, 8),
             };
 
             TestCanSet(s, cannotSet);
@@ -247,9 +279,9 @@ namespace Sudoku.Test
 
             var cannotSet = new[]
             {
-                (6, 1),
-                (2, 4),
-                (4, 7),
+                (1, 6),
+                (4, 2),
+                (7, 4),
             };
 
             TestCanSet(s, cannotSet);
@@ -275,9 +307,9 @@ namespace Sudoku.Test
 
             var cannotSet = new[]
             {
-                (4, 1),
-                (6, 4),
-                (2, 7),
+                (1, 4),
+                (4, 6),
+                (7, 2),
             };
 
             TestCanSet(s, cannotSet);
@@ -303,29 +335,29 @@ namespace Sudoku.Test
 
             var cannotSet = new[]
             {
-                (0, 7),
-                (8, 0),
-                (5, 4)
+                (7, 0),
+                (0, 8),
+                (4, 5)
             };
 
             TestCanSet(s, cannotSet);
         }
 
-        private static void TestCanSet(Sudoku s, (int, int)[] cannotSet)
+        private static void TestCanSet(Sudoku s, (int Row, int Col)[] cannotSet)
         {
-            for (var x = 0; x < 9; x++)
+            for (var row = 0; row < 9; row++)
             {
-                for (var y = 0; y < 9; y++)
+                for (var col = 0; col < 9; col++)
                 {
-                    s.CanSet(x, y, 0).Should().BeTrue();
-                    s.CanSet(x, y, 9).Should().BeTrue();
+                    s.CanSet(row, col, 0).Should().BeTrue();
+                    s.CanSet(row, col, 9).Should().BeTrue();
 
-                    if (cannotSet.Contains((x, y)))
+                    if (cannotSet.Contains((Row: row, Col: col)))
                     {
                         // cannot set 0..8, only 9
                         for (int no = 1; no < 9; no++)
                         {
-                            s.CanSet(x, y, no).Should().BeFalse($"{x}:{y} with {no}");
+                            s.CanSet(row, col, no).Should().BeFalse($"{row}:{col} with {no}");
                         }
                     }
                 }

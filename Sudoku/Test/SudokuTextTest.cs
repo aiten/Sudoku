@@ -16,8 +16,6 @@
 
 namespace Sudoku.Test
 {
-    using System.Linq;
-
     using FluentAssertions;
 
     using Sudoku.Solve;
@@ -57,7 +55,7 @@ namespace Sudoku.Test
                 for (var y = 0; y < 9; y++)
                 {
                     var def = s.GetDef(x, y);
-                    if (def.No == 0)
+                    if (def.IsEmpty)
                     {
                         var toolTipsText = s.GetDef(x, y).ToButtonToolTip(opt);
                         var toolTips     = toolTipsText.Split('\n');

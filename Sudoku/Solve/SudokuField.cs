@@ -16,7 +16,6 @@
 
 namespace Sudoku.Solve
 {
-    using System;
     using System.Drawing;
     using System.Text;
 
@@ -27,6 +26,9 @@ namespace Sudoku.Solve
         #region Data
 
         public int No { get; internal set; }
+
+        public bool IsEmpty => No == 0;
+        public bool HasNo   => No != 0;
 
         public string UserNote => _userNote ?? "";
 
@@ -44,8 +46,8 @@ namespace Sudoku.Solve
         private readonly bool[]   _mainRulePossible  = new bool[9];
         private readonly string[] _notPossibleReason = new string[9];
 
-        private bool[] _notPossible        = new bool[9];
-        private bool[] _notPossibleChanged = new bool[9];
+        private bool[] _notPossible = new bool[9];
+        private bool[] _notPossibleUncommitted;
 
         internal bool[] MainRulePossible => _mainRulePossible;
 
@@ -56,10 +58,10 @@ namespace Sudoku.Solve
         private int PossibleCount(bool[] ar)
         {
             var count = 0;
-            if (No == 0)
+            if (IsEmpty)
             {
-                for (var x = 0; x < 9; x++)
-                    if (ar[x])
+                for (var idx = 0; idx < 9; idx++)
+                    if (ar[idx])
                         count++;
             }
 
@@ -77,13 +79,19 @@ namespace Sudoku.Solve
             _mainRulePossible.Init(false);
             _notPossible.Init(false);
 
-            _notPossibleChanged = null;
+            _notPossibleUncommitted = null;
         }
 
         internal bool IsPossible(int no)
         {
             var idx = no - 1;
             return _mainRulePossible[idx] && !_notPossible[idx];
+        }
+
+        internal bool IsEmptyAndPossible(int no)
+        {
+            var idx = no - 1;
+            return IsEmpty && _mainRulePossible[idx] && !_notPossible[idx];
         }
 
         internal bool IsNotPossible(int no)
@@ -94,11 +102,11 @@ namespace Sudoku.Solve
 
         internal bool IsSubSetPossible(SudokuField field)
         {
-            for (var z = 1; z <= 9; z++)
+            for (var no = 1; no <= 9; no++)
             {
-                if (IsPossible(z) != field.IsPossible(z))
+                if (IsPossible(no) != field.IsPossible(no))
                 {
-                    if (!IsPossible(z))
+                    if (!IsPossible(no))
                         return false;
                 }
             }
@@ -108,34 +116,33 @@ namespace Sudoku.Solve
 
         internal void SetNotPossible(int no, string reason)
         {
-            if (_notPossibleChanged == null)
+            if (_notPossibleUncommitted == null)
             {
-                _notPossibleChanged = new bool[9];
+                _notPossibleUncommitted = new bool[9];
                 for (var z = 0; z < 9; z++)
                 {
-                    _notPossibleChanged[z] = _notPossible[z];
+                    _notPossibleUncommitted[z] = _notPossible[z];
                 }
             }
 
             var idx = no - 1;
-            _notPossibleChanged[idx] = true;
-            _notPossibleReason[idx]  = reason;
+            _notPossibleUncommitted[idx] = true;
+            _notPossibleReason[idx]      = reason;
         }
 
         internal void CommitChanges()
         {
-            if (_notPossibleChanged != null)
-                _notPossible = _notPossibleChanged;
-            _notPossibleChanged = null;
+            if (_notPossibleUncommitted != null)
+                _notPossible = _notPossibleUncommitted;
+            _notPossibleUncommitted = null;
         }
 
         public int PossibleCount()
         {
-            int x;
             var ret = 0;
-            for (x = 1; x <= 9; x++)
+            for (int no = 1; no <= 9; no++)
             {
-                if (IsPossible(x))
+                if (IsPossible(no))
                 {
                     ret++;
                 }
@@ -146,15 +153,14 @@ namespace Sudoku.Solve
 
         public int OnlyPossible()
         {
-            int x;
             var ret = 0;
-            for (x = 1; x <= 9; x++)
+            for (int no = 1; no <= 9; no++)
             {
-                if (IsPossible(x))
+                if (IsPossible(no))
                 {
                     if (ret != 0)
                         return 0;
-                    ret = x;
+                    ret = no;
                 }
             }
 
@@ -172,7 +178,7 @@ namespace Sudoku.Solve
 
         public Color ToButtonColor(SudokuOptions opt)
         {
-            if (No != 0)
+            if (HasNo)
                 return Color.Green;
 
             if (opt.Help)
@@ -190,7 +196,7 @@ namespace Sudoku.Solve
 
         private string ToButtonStringMainRuleOnly()
         {
-            if (No > 0)
+            if (HasNo)
             {
                 return No.ToString();
             }
@@ -219,7 +225,7 @@ namespace Sudoku.Solve
             {
                 var    ret    = ToButtonString(opt);
                 string reason = "";
-                if (No == 0)
+                if (IsEmpty)
                 {
                     for (var z = 0; z < 9; z++)
                     {
@@ -260,16 +266,15 @@ namespace Sudoku.Solve
 
         public string PossibleString()
         {
-            int z;
             var str1 = new StringBuilder();
 
-            for (z = 0; z < 9; z++)
+            for (int no = 0; no < 9; no++)
             {
-                if (IsPossible(z + 1))
+                if (IsPossible(no + 1))
                 {
                     if (str1.Length > 0)
                         str1.Append(",");
-                    str1.Append((z + 1).ToString());
+                    str1.Append((no + 1).ToString());
                 }
             }
 
@@ -278,7 +283,7 @@ namespace Sudoku.Solve
 
         public string ToButtonString(SudokuOptions opt)
         {
-            if (No > 0)
+            if (HasNo)
             {
                 return No.ToString();
             }

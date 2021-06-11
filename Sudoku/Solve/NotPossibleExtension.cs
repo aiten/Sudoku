@@ -38,6 +38,21 @@ namespace Sudoku.Solve
             def.SetNotPossible(forNo, $"B3:{forNo}:{rowcol3}:{becauseNo}");
         }
 
+        public static void SetNotPossibleXWing(this SudokuField def, int forNo, char rowcol3, string becauseRow, string becauseCol)
+        {
+            def.SetNotPossible(forNo, $"B4:{forNo}:{rowcol3}:{becauseRow}:{becauseCol}");
+        }
+
+        public static void SetNotPossibleSwordfish(this SudokuField def, int forNo, char rowcol3, string becauseRow, string becauseCol)
+        {
+            def.SetNotPossible(forNo, $"B5:{forNo}:{rowcol3}:{becauseRow}:{becauseCol}");
+        }
+
+        public static void SetNotPossibleJellyfish(this SudokuField def, int forNo, char rowcol3, string becauseRow, string becauseCol)
+        {
+            def.SetNotPossible(forNo, $"B6:{forNo}:{rowcol3}:{becauseRow}:{becauseCol}");
+        }
+
         private static string ToOrientation(string rowCol3)
         {
             switch (rowCol3)
@@ -45,6 +60,15 @@ namespace Sudoku.Solve
                 case "R": return "row";
                 case "C": return "col";
                 case "X": return "3*3";
+                default:  return rowCol3;
+            }
+        }
+        private static string ToOpositOrientation(string rowCol3)
+        {
+            switch (rowCol3)
+            {
+                case "R": return "col";
+                case "C": return "row";
                 default:  return rowCol3;
             }
         }
@@ -59,6 +83,9 @@ namespace Sudoku.Solve
                 case "B2P": return $"{val[1]}: {val[3]}: in {ToOrientation(val[2])}-index: {val[4]} (B2+)";
                 case "B2":  return $"{val[1]}: {val[3]}: in {ToOrientation(val[2])}-index: {val[4]} (B2)";
                 case "B3":  return $"{val[1]}: only in {ToOrientation(val[2])}-index: {val[3]} (B3)";
+                case "B4":  return $"{val[1]}: X-Wing {ToOrientation(val[2])} {val[3]} with {ToOpositOrientation(val[2])} {val[4]}";
+                case "B5":  return $"{val[1]}: swordfish {ToOrientation(val[2])} {val[3]} with {ToOpositOrientation(val[2])} {val[4]}";
+                case "B6":  return $"{val[1]}: jellyfish {ToOrientation(val[2])} {val[3]} with {ToOpositOrientation(val[2])} {val[4]}";
             }
 
             return notPossibleReason;

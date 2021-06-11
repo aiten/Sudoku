@@ -25,19 +25,19 @@ namespace Sudoku.Solve
         {
             var s = new Solve.Sudoku();
 
-            for (var y = 0; y < 9 && y < lines.Length; y++)
+            for (var row = 0; row < 9 && row < lines.Length; row++)
             {
-                if (!string.IsNullOrEmpty(lines[y]))
+                if (!string.IsNullOrEmpty(lines[row]))
                 {
-                    var cols = lines[y].Split(',', StringSplitOptions.None);
+                    var cols = lines[row].Split(',', StringSplitOptions.None);
 
-                    for (var x = 0; x < 9; x++)
+                    for (var col = 0; col < 9; col++)
                     {
-                        if (cols.Length > x && !string.IsNullOrEmpty(cols[x]))
+                        if (cols.Length > col && !string.IsNullOrEmpty(cols[col]))
                         {
-                            if (cols[x] != " ")
+                            if (cols[col] != " ")
                             {
-                                if (!s.Set(x, y, int.Parse(cols[x])))
+                                if (!s.Set(row, col, int.Parse(cols[col])))
                                 {
                                     throw new ArgumentException("illegal sudoku");
                                 }
@@ -54,18 +54,18 @@ namespace Sudoku.Solve
         public static IList<string> SmartPrint(this Solve.Sudoku s)
         {
             var lines = new List<string>();
-            for (int y = 0; y < 9; y++)
+            for (int row = 0; row < 9; row++)
             {
-                string GetValue(int x, int y)
+                string GetValue(int row, int col)
                 {
-                    var no = s.Get(x, y);
+                    var no = s.Get(row, col);
                     return no == 0 ? " " : no.ToString();
                 }
 
-                var line = GetValue(0, y);
-                for (int x = 1; x < 9; x++)
+                var line = GetValue(row, 0);
+                for (int col = 1; col < 9; col++)
                 {
-                    line += "," + GetValue(x, y);
+                    line += "," + GetValue(row, col);
                 }
 
                 lines.Add(line);
@@ -82,27 +82,27 @@ namespace Sudoku.Solve
 
             s.UpdatePossible();
             var info = new string[9, 9];
-            for (int y = 0; y < 9; y++)
+            for (int row = 0; row < 9; row++)
             {
-                for (int x = 0; x < 9; x++)
+                for (int col = 0; col < 9; col++)
                 {
-                    var field = s.GetDef(x, y);
-                    if (field.No == 0)
+                    var field = s.GetDef(row, col);
+                    if (field.IsEmpty)
                     {
                         var possible    = field.PossibleString();
                         var possibleOpt = field.ToButtonToolTip(opt);
                         if (possible == possibleOpt)
                         {
-                            info[x, y] = $"[{possible}]";
+                            info[row, row] = $"[{possible}]";
                         }
                         else
                         {
-                            info[x, y] = $"[{possible}]=>{possibleOpt}";
+                            info[row, col] = $"[{possible}]=>{possibleOpt}";
                         }
                     }
                     else
                     {
-                        info[x, y] = $"{field.No}";
+                        info[row, col] = $"{field.No}";
                     }
                 }
             }

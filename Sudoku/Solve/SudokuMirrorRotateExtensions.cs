@@ -21,13 +21,12 @@ namespace Sudoku.Solve
         public static Sudoku Clone(this Sudoku sudoku)
         {
             var newsoduku = new Solve.Sudoku();
-            int x, y;
-            for (x = 0; x < 9; x++)
+            for (var row = 0; row < 9; row++)
             {
-                for (y = 0; y < 9; y++)
+                for (var col = 0; col < 9; col++)
                 {
-                    var no = sudoku.Get(x, y);
-                    newsoduku.Set(x, y, no);
+                    var no = sudoku.Get(row, col);
+                    newsoduku.Set(row, col, no);
                 }
             }
 
@@ -38,21 +37,20 @@ namespace Sudoku.Solve
         public static Sudoku Rotate(this Sudoku sudoku)
         {
             var newSudoku = new Sudoku();
-            int x, y;
 
-            for (x = 0; x < 9; x++)
+            for (var row = 0; row < 9; row++)
             {
-                newSudoku.SetUserNoteCol(x, sudoku.GetUserNoteRow(x));
-                newSudoku.SetUserNoteRow(x, sudoku.GetUserNoteCol(x));
-                for (y = 0; y < 9; y++)
+                newSudoku.SetUserNoteCol(row, sudoku.GetUserNoteRow(row));
+                newSudoku.SetUserNoteRow(row, sudoku.GetUserNoteCol(row));
+                for (var col = 0; col < 9; col++)
                 {
-                    int myx = 8 - y;
-                    int myy = x;
+                    int myRow = 8 - col;
+                    int myCol = row;
 
-                    var def = sudoku.GetDef(myx, myy);
-                    newSudoku.SetUserNote(x, y, def.UserNote);
-                    if (def.No > 0)
-                        newSudoku.Set(x, y, def.No);
+                    var def = sudoku.GetDef(myRow, myCol);
+                    newSudoku.SetUserNote(row, col, def.UserNote);
+                    if (def.HasNo)
+                        newSudoku.Set(row, col, def.No);
                 }
             }
 
@@ -63,21 +61,20 @@ namespace Sudoku.Solve
         public static Sudoku Mirror(this Sudoku sudoku)
         {
             var newSudoku = new Sudoku();
-            int x, y;
 
-            for (x = 0; x < 9; x++)
+            for (var row = 0; row < 9; row++)
             {
-                newSudoku.SetUserNoteCol(x, sudoku.GetUserNoteRow(x));
-                newSudoku.SetUserNoteRow(x, sudoku.GetUserNoteCol(x));
-                for (y = 0; y < 9; y++)
+                newSudoku.SetUserNoteCol(row, sudoku.GetUserNoteRow(row));
+                newSudoku.SetUserNoteRow(row, sudoku.GetUserNoteCol(row));
+                for (var col = 0; col < 9; col++)
                 {
-                    var myx = x;
-                    var myy = 8 - y;
+                    var myx = row;
+                    var myy = 8 - col;
 
                     var def = sudoku.GetDef(myx, myy);
-                    newSudoku.SetUserNote(x, y, def.UserNote);
+                    newSudoku.SetUserNote(row, col, def.UserNote);
                     if (def.No > 0)
-                        newSudoku.Set(x, y, def.No);
+                        newSudoku.Set(row, col, def.No);
                 }
             }
 

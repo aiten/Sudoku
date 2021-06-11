@@ -273,7 +273,7 @@ namespace Sudoku.Forms
                 {
                     SudokuField def = _sudoku.GetDef(x, y);
 
-                    if (def.No > 0)
+                    if (def.HasNo)
                     {
                         _buttons[x, y].Font = _buttonFontSet;
                     }

@@ -16,6 +16,7 @@
 
 namespace Sudoku.Solve.Serialization
 {
+    using System.Linq;
     using System.Xml.Serialization;
 
     public class SudokuElementXml
@@ -63,8 +64,9 @@ namespace Sudoku.Solve.Serialization
     [XmlRoot(ElementName = "Sudoku")]
     public class SudokuXml
     {
-        public string[] XmlUserNoteCol { get; set; } = new string[0];
+        public int Version { get; set; }
 
+        public string[] XmlUserNoteCol { get; set; } = new string[0];
         public string[] XmlUserNoteRow { get; set; } = new string[0];
 
         public Sudoku3X3Xml XmlSudoku00 { get; set; } = new();
@@ -75,9 +77,12 @@ namespace Sudoku.Solve.Serialization
         public Sudoku3X3Xml XmlSudoku11 { get; set; } = new();
         public Sudoku3X3Xml XmlSudoku12 { get; set; } = new();
 
-        public Sudoku3X3Xml XmlSudoku20 { get; set; } = new();
-        public Sudoku3X3Xml XmlSudoku21 { get; set; } = new();
-        public Sudoku3X3Xml XmlSudoku22 { get; set; } = new();
+        public Sudoku3X3Xml XmlSudoku20                  { get; set; } = new();
+        public Sudoku3X3Xml XmlSudoku21                  { get; set; } = new();
+        public Sudoku3X3Xml XmlSudoku22                  { get; set; } = new();
+
+        public bool ShouldSerializeXmlUserNoteCol() => XmlUserNoteCol.Any(usernote => !string.IsNullOrEmpty(usernote));
+        public bool ShouldSerializeXmlUserNoteRow() => XmlUserNoteRow.Any(usernote => !string.IsNullOrEmpty(usernote));
 
         public bool ShouldSerializeXmlSudoku00() => XmlSudoku00.ShouldSerialize();
         public bool ShouldSerializeXmlSudoku01() => XmlSudoku01.ShouldSerialize();
