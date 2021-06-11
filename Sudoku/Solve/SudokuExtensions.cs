@@ -93,7 +93,7 @@ namespace Sudoku.Solve
                         var possibleOpt = field.ToButtonToolTip(opt);
                         if (possible == possibleOpt)
                         {
-                            info[row, row] = $"[{possible}]";
+                            info[row, col] = $"[{possible}]";
                         }
                         else
                         {
