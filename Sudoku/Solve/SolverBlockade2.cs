@@ -16,6 +16,8 @@
 
 namespace Sudoku.Solve
 {
+    using System.Linq;
+
     using global::Sudoku.Solve.Tools;
 
     public class SolverBlockade2 : SolverBase
@@ -51,18 +53,15 @@ namespace Sudoku.Solve
                 _foundIdx1[col] = true;
                 var foundCount = 1;
 
-                for (var t = 0; t < 9; t++)
+                foreach (var col2 in LoopExtensions.Cols.Where(col2 => col2 != col))
                 {
-                    if (t != col)
+                    var def2 = getDef(row, col2);
+                    if (def2.IsEmpty)
                     {
-                        var def2 = getDef(row, t);
-                        if (def2.IsEmpty)
+                        if (def.IsSubSetPossible(def2))
                         {
-                            if (def.IsSubSetPossible(def2))
-                            {
-                                _foundIdx1[t] = true;
-                                foundCount++;
-                            }
+                            _foundIdx1[col2] = true;
+                            foundCount++;
                         }
                     }
                 }
@@ -71,37 +70,31 @@ namespace Sudoku.Solve
                 {
                     string reasonPossible = null;
                     string reasonIndex    = null;
-                    for (var t = 0; t < 9; t++)
+                    foreach (var col2 in LoopExtensions.Cols.Where(col2 => _foundIdx1[col2]))
                     {
-                        if (_foundIdx1[t])
+                        var def2 = getDef(row, col2);
+                        if (def2.IsEmpty)
                         {
-                            var def2 = getDef(row, t);
-                            if (def2.IsEmpty)
+                            if (string.IsNullOrEmpty(reasonPossible))
                             {
-                                if (string.IsNullOrEmpty(reasonPossible))
-                                {
-                                    reasonPossible = def2.PossibleString();
-                                }
-
-                                reasonIndex = reasonIndex.Add(',', t + 1);
+                                reasonPossible = def2.PossibleString();
                             }
+
+                            reasonIndex = reasonIndex.Add(',', col2 + 1);
                         }
                     }
 
-                    for (var t = 0; t < 9; t++)
+                    foreach (var col2 in LoopExtensions.Cols.Where(col2 => !_foundIdx1[col2]))
                     {
-                        if (!_foundIdx1[t])
+                        var def2 = getDef(row, col2);
+                        if (def2.IsEmpty)
                         {
-                            var def2 = getDef(row, t);
-                            if (def2.IsEmpty)
+                            foreach (var no in LoopExtensions.Nos)
                             {
-                                for (var no = 1; no <= 9; no++)
+                                if (def.IsPossible(no) && def2.IsPossible(no))
                                 {
-                                    if (def.IsPossible(no) && def2.IsPossible(no))
-                                    {
-                                        changeCount++;
-                                        def2.SetNotPossibleBlockade2(no, rowcol3, reasonPossible, reasonIndex);
-                                    }
+                                    changeCount++;
+                                    def2.SetNotPossibleBlockade2(no, rowcol3, reasonPossible, reasonIndex);
                                 }
                             }
                         }

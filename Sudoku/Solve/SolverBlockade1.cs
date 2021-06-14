@@ -16,6 +16,8 @@
 
 namespace Sudoku.Solve
 {
+    using global::Sudoku.Solve.Tools;
+
     public class SolverBlockade1 : SolverBase
     {
         public SolverBlockade1(Sudoku sudoku) : base(sudoku)
@@ -42,13 +44,13 @@ namespace Sudoku.Solve
 
             ForEachEmpty(getDef, (def, row, col) =>
             {
-                for (var no = 1; no <= 9; no++)
+                foreach (var no in LoopExtensions.Nos)
                 {
                     if (def.IsPossible(no))
                     {
-                        if (!FindPossible(getDef, no, row, col))
+                        if (CountPossible(getDef, no, row) == 1)
                         {
-                            for (var no2 = 1; no2 <= 9; no2++)
+                            foreach (var no2 in LoopExtensions.Nos)
                             {
                                 if (no2 != no && !def.IsNotPossible(no2))
                                 {
@@ -61,23 +63,6 @@ namespace Sudoku.Solve
                 }
             });
             return changeCount;
-        }
-
-        private bool FindPossible(Sudoku.GetSudokuField getDef, int no, int row, int ignoreIndex)
-        {
-            for (var col = 0; col < 9; col++)
-            {
-                if (col != ignoreIndex)
-                {
-                    var def = getDef(row, col);
-                    if (def.IsEmpty && def.IsPossible(no))
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
         }
     }
 }

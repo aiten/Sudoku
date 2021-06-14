@@ -16,6 +16,8 @@
 
 namespace Sudoku.Solve
 {
+    using System.Linq;
+
     using global::Sudoku.Solve.Tools;
 
     public class SolverBlockade2SubSet : SolverBase
@@ -53,21 +55,16 @@ namespace Sudoku.Solve
                 {
                     var reason = ReasonPossible(getDef, used, notSet, row);
 
-                    for (var t = 0; t < 9; t++)
+                    foreach (var def2 in LoopExtensions.Cols
+                        .Where(col2 => !used[col2])
+                        .SelectFieldEmpty(getDef, row))
                     {
-                        if (!used[t])
+                        foreach (var no in LoopExtensions.Nos)
                         {
-                            var def2 = getDef(row, t);
-                            if (def2.IsEmpty)
+                            if (notSet[no - 1] && def2.IsPossible(no))
                             {
-                                for (var z = 1; z <= 9; z++)
-                                {
-                                    if (notSet[z - 1] && def2.IsPossible(z))
-                                    {
-                                        changeCount++;
-                                        def2.SetNotPossibleBlockade2P(z, rowcol3, reason.Possible, reason.Index);
-                                    }
-                                }
+                                changeCount++;
+                                def2.SetNotPossibleBlockade2P(no, rowcol3, reason.Possible, reason.Index);
                             }
                         }
                     }
@@ -81,26 +78,24 @@ namespace Sudoku.Solve
         {
             string reasonPossible = null;
             string reasonIndex    = null;
-            for (var col = 0; col < 9; col++)
+            foreach (var col in LoopExtensions.Cols
+                .Where(col => used[col]))
             {
-                if (used[col])
+                var def = getDef(row, col);
+                if (def.IsEmpty)
                 {
-                    var def = getDef(row, col);
-                    if (def.IsEmpty)
+                    if (string.IsNullOrEmpty(reasonPossible))
                     {
-                        if (string.IsNullOrEmpty(reasonPossible))
+                        foreach (var no in LoopExtensions.Nos)
                         {
-                            for (var no = 1; no <= 9; no++)
+                            if (notSet[no - 1])
                             {
-                                if (notSet[no - 1])
-                                {
-                                    reasonPossible = reasonPossible.Add(',', no);
-                                }
+                                reasonPossible = reasonPossible.Add(',', no);
                             }
                         }
-
-                        reasonIndex = reasonIndex.Add(',', col + 1);
                     }
+
+                    reasonIndex = reasonIndex.Add(',', col + 1);
                 }
             }
 

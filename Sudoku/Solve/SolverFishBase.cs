@@ -18,6 +18,8 @@ namespace Sudoku.Solve
 {
     using System.Linq;
 
+    using global::Sudoku.Solve.Tools;
+
     public abstract class SolverFishBase : SolverBase
     {
         protected SolverFishBase(Sudoku sudoku) : base(sudoku)
@@ -26,80 +28,39 @@ namespace Sudoku.Solve
 
         protected abstract void SetNotPossible(SudokuField def, int forNo, char rowcol3, string becauseRow, string becauseCol);
 
-        protected int UpdateFish(Sudoku.GetSudokuField getDef, int count, char rowcol3)
+        protected int UpdateFish(Sudoku.GetSudokuField getDef, int fishSize, char rowcol3)
         {
             var changeCount = 0;
 
-            for (var no = 1; no <= 9; no++)
+            foreach (var no in LoopExtensions.Nos)
             {
-                var countPerRow = InitCountsPerRow(getDef, no);
-                var rows        = GetRowIdx(count);
+                var countPerRow = LoopExtensions.Rows.Select(row => CountPossible(getDef, no, row)).ToArray();
+                var rowIdx      = GetRowIdx(fishSize);
 
                 do
                 {
-                    var countsOk = true;
-                    for (var i = 0; i < count; i++)
+                    if (rowIdx.All(row => countPerRow[row] > 0 && countPerRow[row] <= fishSize))
                     {
-                        countsOk &= countPerRow[rows[i]] > 0 && countPerRow[rows[i]] <= count;
-                    }
+                        var colIdx = LoopExtensions.Cols.Where(col => rowIdx.Any(row => getDef(row, col).IsEmptyAndPossible(no))).ToArray();
 
-                    if (countsOk)
-                    {
-                        var countCol = 0;
-                        var colIdx   = new int[count];
-                        for (var col = 0; col < 9; col++)
+                        if (colIdx.Length == fishSize)
                         {
-                            var isEmptyAndPossible = false;
-                            for (var i = 0; i < count; i++)
+                            foreach (var row in LoopExtensions.Rows.Where(row => !rowIdx.Contains(row)))
                             {
-                                isEmptyAndPossible |= getDef(rows[i], col).IsEmptyAndPossible(no);
-                            }
-
-                            if (isEmptyAndPossible)
-                            {
-                                if (countCol < count)
+                                foreach (var def in colIdx
+                                    .SelectField(getDef, row)
+                                    .Where(def => def.IsEmpty && !def.IsNotPossible(no)))
                                 {
-                                    colIdx[countCol] = col;
-                                }
-
-                                countCol++;
-                            }
-                        }
-
-                        if (countCol == count)
-                        {
-                            for (var row = 0; row < 9; row++)
-                            {
-                                if (!rows.Contains(row))
-                                {
-                                    for (int n = 0; n < countCol; n++)
-                                    {
-                                        var def = getDef(row, colIdx[n]);
-                                        if (def.IsEmpty && !def.IsNotPossible(no))
-                                        {
-                                            SetNotPossible(def, no, rowcol3, $"{string.Join(',', rows.Select(idx => idx + 1))}", $"{string.Join(',', colIdx.Select(idx => idx + 1))}");
-                                            changeCount++;
-                                        }
-                                    }
+                                    SetNotPossible(def, no, rowcol3, $"{string.Join(',', rowIdx.Select(idx => idx + 1))}", $"{string.Join(',', colIdx.Select(idx => idx + 1))}");
+                                    changeCount++;
                                 }
                             }
                         }
                     }
-                } while (GetNext(count - 1, rows));
+                } while (GetNext(fishSize - 1, rowIdx));
             }
 
             return changeCount;
-        }
-
-        private int[] InitCountsPerRow(Sudoku.GetSudokuField getDef, int no)
-        {
-            var countPerRow = new int[9];
-            for (var row = 0; row < 9; row++)
-            {
-                countPerRow[row] = CountPossible(getDef, no, row);
-            }
-
-            return countPerRow;
         }
 
         private int[] GetRowIdx(int count)

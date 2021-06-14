@@ -17,6 +17,7 @@
 namespace Sudoku.Solve
 {
     using System;
+    using System.Linq;
 
     using global::Sudoku.Solve.Tools;
 
@@ -123,17 +124,10 @@ namespace Sudoku.Solve
 
         protected int CountPossible(Sudoku.GetSudokuField getDef, int no, int row)
         {
-            var count = 0;
-            for (var y = 0; y < 9; y++)
-            {
-                var def = getDef(row, y);
-                if (def.IsEmpty && def.IsPossible(no))
-                {
-                    count++;
-                }
-            }
-
-            return count;
+            return LoopExtensions.Cols
+                .SelectField(getDef, row)
+                .Where(def => def.IsEmpty && def.IsPossible(no))
+                .Count();
         }
 
         protected void ForEachEmpty(Sudoku.GetSudokuField getDef, Action<SudokuField, int, int> action)
