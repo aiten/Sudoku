@@ -16,8 +16,10 @@
 
 namespace Sudoku.Solve
 {
+    using System.Collections.Generic;
     using System.Linq;
 
+    using global::Sudoku.Solve.NotPossible;
     using global::Sudoku.Solve.Tools;
 
     public class SolverBlockade2SubSet : SolverBase
@@ -37,10 +39,10 @@ namespace Sudoku.Solve
 
         public override bool Solve(Orientation orientation)
         {
-            return UpdatePossibleBlockade2SubSet(ToGetDef(orientation), ToChar(orientation)) > 0;
+            return UpdatePossibleBlockade2SubSet(ToGetDef(orientation), orientation) > 0;
         }
 
-        public int UpdatePossibleBlockade2SubSet(Sudoku.GetSudokuField getDef, char rowcol3)
+        public int UpdatePossibleBlockade2SubSet(Sudoku.GetSudokuField getDef, Orientation orientation)
         {
             var changeCount = 0;
 
@@ -64,7 +66,13 @@ namespace Sudoku.Solve
                             if (notSet[no - 1] && def2.IsPossible(no))
                             {
                                 changeCount++;
-                                def2.SetNotPossibleBlockade2P(no, rowcol3, reason.Possible, reason.Index);
+                                def2.SetNotPossible(no, new NotPossibleBlockade2SubSet()
+                                {
+                                    ForNo       = no,
+                                    Orientation = orientation,
+                                    BecauseIdx  = reason.Index,
+                                    BecauseNos  = reason.Possible
+                                });
                             }
                         }
                     }
@@ -74,28 +82,28 @@ namespace Sudoku.Solve
             return changeCount;
         }
 
-        private (string Possible, string Index) ReasonPossible(Sudoku.GetSudokuField getDef, bool[] used, bool[] notSet, int row)
+        private (IEnumerable<int> Possible, IEnumerable<int> Index) ReasonPossible(Sudoku.GetSudokuField getDef, bool[] used, bool[] notSet, int row)
         {
-            string reasonPossible = null;
-            string reasonIndex    = null;
+            var reasonPossible = new List<int>();
+            var reasonIndex    = new List<int>();
             foreach (var col in LoopExtensions.Cols
                 .Where(col => used[col]))
             {
                 var def = getDef(row, col);
                 if (def.IsEmpty)
                 {
-                    if (string.IsNullOrEmpty(reasonPossible))
+                    if (reasonPossible.Count == 0)
                     {
                         foreach (var no in LoopExtensions.Nos)
                         {
                             if (notSet[no - 1])
                             {
-                                reasonPossible = reasonPossible.Add(',', no);
+                                reasonPossible.Add(no);
                             }
                         }
                     }
 
-                    reasonIndex = reasonIndex.Add(',', col + 1);
+                    reasonIndex.Add(col);
                 }
             }
 

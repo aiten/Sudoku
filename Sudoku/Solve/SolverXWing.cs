@@ -16,7 +16,10 @@
 
 namespace Sudoku.Solve
 {
+    using System.Collections.Generic;
     using System.Linq;
+
+    using global::Sudoku.Solve.NotPossible;
 
     public class SolverXWing : SolverFishBase
     {
@@ -24,9 +27,15 @@ namespace Sudoku.Solve
         {
         }
 
-        protected override void SetNotPossible(SudokuField def, int forNo, char rowcol3, string becauseRow, string becauseCol)
+        protected override void SetNotPossible(SudokuField def, int forNo, Orientation orientation, IEnumerable<int> becauseRow, IEnumerable<int> becauseCol)
         {
-            def.SetNotPossibleXWing(forNo, rowcol3, becauseRow, becauseCol);
+            def.SetNotPossible(forNo, new NotPossibleXWing()
+            {
+                Orientation = orientation,
+                BecauseCol  = becauseCol,
+                BecauseRow  = becauseRow,
+                ForNo       = forNo,
+            });
         }
 
         public override bool Solve()
@@ -39,7 +48,7 @@ namespace Sudoku.Solve
 
         public override bool Solve(Orientation orientation)
         {
-            return UpdateFish(ToGetDef(orientation), 2, ToChar(orientation)) > 0;
+            return UpdateFish(ToGetDef(orientation), 2, orientation) > 0;
         }
     }
 }

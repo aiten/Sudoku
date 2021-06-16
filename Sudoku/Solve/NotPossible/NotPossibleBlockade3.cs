@@ -1,4 +1,4 @@
-/*
+﻿/*
   This file is part of Sudoku - A library to solve a sudoku.
 
   Copyright (c) Herbert Aitenbichler
@@ -14,41 +14,37 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Solve
+namespace Sudoku.Solve.NotPossible
 {
     using System.Collections.Generic;
     using System.Linq;
 
-    using global::Sudoku.Solve.NotPossible;
-
-    public class SolverJellyfish : SolverFishBase
+    public class NotPossibleBlockade3 : NotPossibleBase
     {
-        public SolverJellyfish(Sudoku sudoku) : base(sudoku)
+        public NotPossibleBlockade3()
         {
+            RoleName = "B3";
         }
 
-        public override bool Solve()
+        public override string SerializeTo()
         {
-            var isCol = Solve(Orientation.Column);
-            var isRow = Solve(Orientation.Row);
-
-            return isCol || isRow;
+            return $"{RoleName}:{ForNo}:{Orientation.ToChar()}:{BecauseIdx.ToRowList()}";
         }
 
-        protected override void SetNotPossible(SudokuField def, int forNo, Orientation orientation, IEnumerable<int> becauseRow, IEnumerable<int> becauseCol)
+        protected override void SerializeFrom(string[] serialized)
         {
-            def.SetNotPossible(forNo, new NotPossibleJellyfish()
-            {
-                Orientation = orientation,
-                BecauseCol  = becauseCol,
-                BecauseRow  = becauseRow,
-                ForNo       = forNo,
-            });
+            ForNo       = int.Parse(serialized[1]);
+            Orientation = serialized[2].ToOrientation();
+            BecauseIdx  = serialized[3].FromRowList();
         }
 
-        public override bool Solve(Orientation orientation)
+        public override string ToString()
         {
-            return UpdateFish(ToGetDef(orientation), 4, orientation) > 0;
+            return $"{ForNo}: only in {Orientation.ToOrientationDesc()}-index: {BecauseIdx.ToRowList()} (B3)";
         }
+
+        public int              ForNo      { get; set; }
+        public IEnumerable<int> BecauseIdx { get; set; }
+
     }
 }

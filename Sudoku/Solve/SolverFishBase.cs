@@ -16,6 +16,7 @@
 
 namespace Sudoku.Solve
 {
+    using System.Collections.Generic;
     using System.Linq;
 
     using global::Sudoku.Solve.Tools;
@@ -26,9 +27,9 @@ namespace Sudoku.Solve
         {
         }
 
-        protected abstract void SetNotPossible(SudokuField def, int forNo, char rowcol3, string becauseRow, string becauseCol);
+        protected abstract void SetNotPossible(SudokuField def, int forNo, Orientation orientation, IEnumerable<int> becauseRow, IEnumerable<int> becauseCol);
 
-        protected int UpdateFish(Sudoku.GetSudokuField getDef, int fishSize, char rowcol3)
+        protected int UpdateFish(Sudoku.GetSudokuField getDef, int fishSize, Orientation orientation)
         {
             var changeCount = 0;
 
@@ -51,7 +52,7 @@ namespace Sudoku.Solve
                                     .SelectField(getDef, row)
                                     .Where(def => def.IsEmpty && !def.IsNotPossible(no)))
                                 {
-                                    SetNotPossible(def, no, rowcol3, $"{string.Join(',', rowIdx.Select(idx => idx + 1))}", $"{string.Join(',', colIdx.Select(idx => idx + 1))}");
+                                    SetNotPossible(def, no, orientation, rowIdx.ToList(), colIdx);
                                     changeCount++;
                                 }
                             }

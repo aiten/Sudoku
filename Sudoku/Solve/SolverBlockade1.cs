@@ -16,6 +16,7 @@
 
 namespace Sudoku.Solve
 {
+    using global::Sudoku.Solve.NotPossible;
     using global::Sudoku.Solve.Tools;
 
     public class SolverBlockade1 : SolverBase
@@ -35,10 +36,10 @@ namespace Sudoku.Solve
 
         public override bool Solve(Orientation orientation)
         {
-            return UpdatePossibleBlockade1(ToGetDef(orientation), ToChar(orientation)) > 0;
+            return UpdatePossibleBlockade1(ToGetDef(orientation), orientation) > 0;
         }
 
-        public int UpdatePossibleBlockade1(Sudoku.GetSudokuField getDef, char rowcol3)
+        public int UpdatePossibleBlockade1(Sudoku.GetSudokuField getDef, Orientation orientation)
         {
             var changeCount = 0;
 
@@ -55,7 +56,12 @@ namespace Sudoku.Solve
                                 if (no2 != no && !def.IsNotPossible(no2))
                                 {
                                     changeCount++;
-                                    def.SetNotPossibleBlockade1(no2, rowcol3, no);
+                                    def.SetNotPossible(no2, new NotPossibleBlockade1()
+                                    {
+                                        ForNo = no2,
+                                        Orientation = orientation,
+                                        BecauseNo = no
+                                    });
                                 }
                             }
                         }

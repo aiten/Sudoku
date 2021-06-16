@@ -16,9 +16,12 @@
 
 namespace Sudoku.Solve
 {
+    using System.Collections.Generic;
     using System.Drawing;
+    using System.Linq;
     using System.Text;
 
+    using global::Sudoku.Solve.NotPossible;
     using global::Sudoku.Solve.Tools;
 
     public class SudokuField
@@ -43,8 +46,8 @@ namespace Sudoku.Solve
 
         #region Calculation Help Variabled
 
-        private readonly bool[]   _mainRulePossible  = new bool[9];
-        private readonly string[] _notPossibleReason = new string[9];
+        private readonly bool[]            _mainRulePossible  = new bool[9];
+        private readonly NotPossibleBase[] _notPossibleReason = new NotPossibleBase[9];
 
         private bool[] _notPossible = new bool[9];
         private bool[] _notPossibleUncommitted;
@@ -114,7 +117,7 @@ namespace Sudoku.Solve
             return true;
         }
 
-        internal void SetNotPossible(int no, string reason)
+        internal void SetNotPossible(int no, NotPossibleBase reason)
         {
             if (_notPossibleUncommitted == null)
             {
@@ -235,22 +238,13 @@ namespace Sudoku.Solve
                             {
                                 reason += '\n';
 
-                                if (_notPossibleReason[z][0] == 'B')
+                                if (opt.ShowNormalized)
                                 {
-                                    if (opt.ShowNormalized)
-                                    {
-                                        reason += _notPossibleReason[z];
-                                    }
-                                    else
-                                    {
-                                        reason += _notPossibleReason[z].GetNotPossibleReason();
-                                    }
+                                    reason += _notPossibleReason[z].SerializeTo();
                                 }
                                 else
                                 {
-                                    reason = reason + (z + 1).ToString();
-                                    reason = reason + ": ";
-                                    reason = reason + _notPossibleReason[z];
+                                    reason += _notPossibleReason[z].ToString();
                                 }
                             }
                         }
@@ -266,19 +260,12 @@ namespace Sudoku.Solve
 
         public string PossibleString()
         {
-            var str1 = new StringBuilder();
+            return string.Join(',', PossibleNos());
+        }
 
-            for (int no = 0; no < 9; no++)
-            {
-                if (IsPossible(no + 1))
-                {
-                    if (str1.Length > 0)
-                        str1.Append(",");
-                    str1.Append((no + 1).ToString());
-                }
-            }
-
-            return str1.ToString();
+        public IEnumerable<int> PossibleNos()
+        {
+            return LoopExtensions.Nos.Where(IsPossible);
         }
 
         public string ToButtonString(SudokuOptions opt)

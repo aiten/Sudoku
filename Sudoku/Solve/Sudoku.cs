@@ -342,7 +342,7 @@ namespace Sudoku.Solve
             var solverSwordfish = new SolverSwordfish(this);
             var solverJellyfish = new SolverJellyfish(this);
 
-            solverB1.Solve(SolverBase.Orientation.X3);
+            solverB1.Solve(Orientation.X3);
 
             CommitChanges();
 

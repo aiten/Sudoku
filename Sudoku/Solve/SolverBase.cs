@@ -30,25 +30,6 @@ namespace Sudoku.Solve
 
         public Sudoku Sudoku { get; private set; }
 
-        public enum Orientation
-        {
-            Column,
-            Row,
-            X3
-        }
-
-        public static char ToChar(Orientation orientation)
-        {
-            switch (orientation)
-            {
-                case Orientation.Column: return 'C';
-                case Orientation.Row:    return 'R';
-                case Orientation.X3:     return 'X';
-            }
-
-            throw new ArgumentException();
-        }
-
         public Sudoku.GetSudokuField ToGetDef(Orientation orientation)
         {
             switch (orientation)

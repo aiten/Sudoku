@@ -20,7 +20,10 @@ namespace Sudoku.Test
     using System.Linq;
     using System.Text.RegularExpressions;
 
+    using FluentAssertions;
+
     using Sudoku.Solve;
+    using Sudoku.Solve.NotPossible;
     using Sudoku.Solve.Serialization;
 
     using Xunit;
@@ -62,8 +65,9 @@ namespace Sudoku.Test
 
             var opt = new SudokuOptions
             {
-                Help        = true,
-                ShowToolTip = true
+                Help           = true,
+                ShowToolTip    = true,
+                ShowNormalized = true
             };
 
             using (var sw = new StreamWriter(@"c:\tmp\test.txt"))
@@ -97,43 +101,11 @@ namespace Sudoku.Test
                         var part = buttonToolTip.Split('\n').Select(
                             p =>
                             {
-                                string role;
+                                var notPossible = NotPossibleBase.Create(p);
 
-                                // 4: 1 only in 3*3 (B1)
-                                var regExB1      = new Regex(@"(\d): (\d) only in (col|row|3\*3).*\(B1\)");
-                                var regExB1Match = regExB1.Match(p);
-
-                                // 6: 8,9: in 3*3-index: 1,2,7 (B2)
-                                var regExB2      = new Regex(@"(\d): (.*): in (col|row|3\*3).*: (.*) \(B2\)");
-                                var regExB2Match = regExB2.Match(p);
-
-                                // 6: 6,8,9: in col-index: 1,3,4(B2+)
-                                var regExB2P      = new Regex(@"(\d): (.*): in (col|row|3\*3).*: (.*) \(B2\+\)");
-                                var regExB2PMatch = regExB2P.Match(p);
-
-                                // 1: only in col-index: 7,8,9 (B3)
-                                var regExB3      = new Regex(@"(\d): only in (col|row|3\*3)-index: (.*) \(B3\)");
-                                var regExB3Match = regExB3.Match(p);
-
-                                if (regExB1Match.Success)
+                                if (notPossible != null)
                                 {
-                                    role = new[] { "B13", "B1R", "B1C", "NC" }[(int)GetRoleType(regExB1Match.Groups[3].Value)];
-                                    p    = $"{role}:{regExB1Match.Groups[1]}:{regExB1Match.Groups[2]}";
-                                }
-                                else if (regExB2Match.Success)
-                                {
-                                    role = new[] { "B23", "B2R", "B2C", "NC" }[(int)GetRoleType(regExB2Match.Groups[3].Value)];
-                                    p    = $"{role}:{regExB2Match.Groups[1]}:{regExB2Match.Groups[2]}:{regExB2Match.Groups[4]}";
-                                }
-                                else if (regExB2PMatch.Success)
-                                {
-                                    role = new[] { "B2P3", "B2PR", "B2PC", "NC" }[(int)GetRoleType(regExB2PMatch.Groups[3].Value)];
-                                    p    = $"{role}:{regExB2PMatch.Groups[1]}:{regExB2PMatch.Groups[2]}:{regExB2PMatch.Groups[4]}";
-                                }
-                                else if (regExB3Match.Success)
-                                {
-                                    role = new[] { "B33", "B3R", "B3C", "NC" }[(int)GetRoleType(regExB3Match.Groups[2].Value)];
-                                    p    = $"{role}:{regExB3Match.Groups[1]}:{regExB3Match.Groups[3]}";
+                                    notPossible.ToString().Should().NotBeEmpty();
                                 }
 
                                 return p;

@@ -65,8 +65,8 @@ namespace Sudoku.Test
                             for (int i = 1; i < toolTips.Length; i++)
                             {
                                 var toolTip = toolTips[i];
-                                toolTip.StartsWith("B").Should().BeTrue();
-                                var localized = toolTip.GetNotPossibleReason();
+                                toolTip.Should().StartWith("B");
+                                var localized = toolTip;
                                 localized.Should().NotBeEmpty();
                             }
                         }

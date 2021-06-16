@@ -16,12 +16,14 @@
 
 namespace Sudoku.Test
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
     using FluentAssertions;
 
     using Sudoku.Solve;
+    using Sudoku.Solve.NotPossible;
 
     public class SudokuBaseUnitTest
     {
@@ -39,21 +41,26 @@ namespace Sudoku.Test
             public int    Y               { get; set; }
             public string PossibleString  { get; set; }
             public string ToButtonToolTip { get; set; }
+
+            public ExpectResult Rotate()
+            {
+                string ToButtonToolTip(string buttonToolTip)
+                {
+                    if (buttonToolTip.Contains(":C:"))
+                    {
+                        return buttonToolTip.Replace(":C:", ":R:");
+                    }
+
+                    return buttonToolTip.Replace(":R:", ":C:");
+                }
+
+                return new ExpectResult(Y, 8 - X, PossibleString, ToButtonToolTip(this.ToButtonToolTip));
+            }
         }
 
         protected IList<ExpectResult> Rotate(IList<ExpectResult> expected)
         {
-            string ToButtonToolTip(string buttonToolTip)
-            {
-                if (buttonToolTip.Contains("B1C"))
-                {
-                    return buttonToolTip.Replace("B1C", "B1R");
-                }
-
-                return buttonToolTip.Replace("B1R", "B1C");
-            }
-
-            return expected.Select(expect => new ExpectResult(expect.Y, 8 - expect.X, expect.PossibleString, ToButtonToolTip(expect.ToButtonToolTip))).ToList();
+            return expected.Select(expect => expect.Rotate()).ToList();
         }
 
         protected IList<ExpectResult> Mirror(IList<ExpectResult> expected)
@@ -110,54 +117,21 @@ namespace Sudoku.Test
                     var regex = toolTipRegEx[i];
                     if (regex.StartsWith("B"))
                     {
-                        var parts = regex.Split(':');
+                        var notPossible = NotPossibleBase.Create(regex);
 
-                        // 4: 1 only in 3*3 (B1)
-                        // 6: 8,9: in 3*3-index: 1,2,7 (B2)
-                        // 6: 6,8,9: in col-index: 1,3,4 (B2+)
-                        // 1: only in col-index:7,8,9 (B3)
-
-                        switch (parts[0])
+                        if (notPossible != null)
                         {
-                            case "B13":
-                                regex = $"{parts[1]}: {parts[2]} only in 3\\*3 \\(B1\\)";
-                                break;
-                            case "B1C":
-                                regex = $"{parts[1]}: {parts[2]} only in col \\(B1\\)";
-                                break;
-                            case "B1R":
-                                regex = $"{parts[1]}: {parts[2]} only in row \\(B1\\)";
-                                break;
-
-                            case "B23":
-                                regex = $"{parts[1]}: {parts[2]}: in 3\\*3\\-index: {parts[3]} \\(B2\\)";
-                                break;
-                            case "B2C":
-                                regex = $"{parts[1]}: {parts[2]}: in col\\-index: {parts[3]} \\(B2\\)";
-                                break;
-                            case "B2R":
-                                regex = $"{parts[1]}: {parts[2]}: in row\\-index: {parts[3]} \\(B2\\)";
-                                break;
-
-                            case "B2P3":
-                                regex = $"{parts[1]}: {parts[2]}: in 3\\*3\\-index: {parts[3]} \\(B2\\+\\)";
-                                break;
-                            case "B2PC":
-                                regex = $"{parts[1]}: {parts[2]}: in col\\-index: {parts[3]} \\(B2\\+\\)";
-                                break;
-                            case "B2PR":
-                                regex = $"{parts[1]}: {parts[2]}: in row\\-index: {parts[3]} \\(B2\\+\\)";
-                                break;
-
-                            case "B33":
-                                regex = $"{parts[1]}: only in 3\\*3\\-index: {parts[2]} \\(B3\\)";
-                                break;
-                            case "B3C":
-                                regex = $"{parts[1]}: only in col\\-index: {parts[2]} \\(B3\\)";
-                                break;
-                            case "B3R":
-                                regex = $"{parts[1]}: only in row\\-index: {parts[2]} \\(B3\\)";
-                                break;
+                            regex = notPossible.ToString();
+                            regex = regex
+                                .Replace("(", "\\(")
+                                .Replace(")", "\\)")
+                                .Replace("+", "\\+")
+                                .Replace("-", "\\-")
+                                .Replace("*", "\\*");
+                        }
+                        else
+                        {
+                            throw new AggregateException();
                         }
                     }
 

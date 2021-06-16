@@ -16,6 +16,10 @@
 
 namespace Sudoku.Solve
 {
+    using System.Collections.Generic;
+    using System.Reflection;
+
+    using global::Sudoku.Solve.NotPossible;
     using global::Sudoku.Solve.Tools;
 
     public class SolverBlockade3 : SolverBase
@@ -34,10 +38,10 @@ namespace Sudoku.Solve
 
         public override bool Solve(Orientation orientation)
         {
-            return UpdatePossibleBlockade3(ToGetDef(orientation), ToChar(orientation)) > 0;
+            return UpdatePossibleBlockade3(ToGetDef(orientation), orientation) > 0;
         }
 
-        private int UpdatePossibleBlockade3(Sudoku.GetSudokuField getDef, char rowcol3)
+        private int UpdatePossibleBlockade3(Sudoku.GetSudokuField getDef, Orientation orientation)
         {
             var changeCount = 0;
 
@@ -45,7 +49,7 @@ namespace Sudoku.Solve
             {
                 for (var no = 1; no <= 9; no++)
                 {
-                    string info = null;
+                    var colIdx = new List<int>();
 
                     if (def.IsPossible(no))
                     {
@@ -57,8 +61,8 @@ namespace Sudoku.Solve
 
                         for (t = 0; t < 9; t++)
                         {
-                            var sRow   = s3Row * 3 + t / 3;
-                            var sCol   = s3Col * 3 + t % 3;
+                            var sRow = s3Row * 3 + t / 3;
+                            var sCol = s3Col * 3 + t % 3;
                             var def2 = getDef(sRow, sCol);
                             if (def2.IsEmpty)
                             {
@@ -72,7 +76,7 @@ namespace Sudoku.Solve
                                 }
                                 else if (def2.IsPossible(no))
                                 {
-                                    info = info.Add(',', (sCol + 1));
+                                    colIdx.Add(sCol);
                                 }
                             }
                         }
@@ -87,7 +91,12 @@ namespace Sudoku.Solve
                                     if (def2.IsEmpty && def2.IsPossible(no))
                                     {
                                         changeCount++;
-                                        def2.SetNotPossibleBlockade3(no, rowcol3, info);
+                                        def2.SetNotPossible(no, new NotPossibleBlockade3()
+                                        {
+                                            ForNo       = no,
+                                            Orientation = orientation,
+                                            BecauseIdx  = colIdx
+                                        });
                                     }
                                 }
                             }

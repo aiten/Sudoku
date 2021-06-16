@@ -1,4 +1,4 @@
-/*
+﻿/*
   This file is part of Sudoku - A library to solve a sudoku.
 
   Copyright (c) Herbert Aitenbichler
@@ -14,41 +14,14 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Solve
+namespace Sudoku.Solve.NotPossible
 {
-    using System.Collections.Generic;
-    using System.Linq;
-
-    using global::Sudoku.Solve.NotPossible;
-
-    public class SolverJellyfish : SolverFishBase
+    public class NotPossibleXWing : NotPossibleFish
     {
-        public SolverJellyfish(Sudoku sudoku) : base(sudoku)
+        public NotPossibleXWing()
         {
-        }
-
-        public override bool Solve()
-        {
-            var isCol = Solve(Orientation.Column);
-            var isRow = Solve(Orientation.Row);
-
-            return isCol || isRow;
-        }
-
-        protected override void SetNotPossible(SudokuField def, int forNo, Orientation orientation, IEnumerable<int> becauseRow, IEnumerable<int> becauseCol)
-        {
-            def.SetNotPossible(forNo, new NotPossibleJellyfish()
-            {
-                Orientation = orientation,
-                BecauseCol  = becauseCol,
-                BecauseRow  = becauseRow,
-                ForNo       = forNo,
-            });
-        }
-
-        public override bool Solve(Orientation orientation)
-        {
-            return UpdateFish(ToGetDef(orientation), 4, orientation) > 0;
+            RoleName = "B4";
+            FishName = "X-Wing";
         }
     }
 }

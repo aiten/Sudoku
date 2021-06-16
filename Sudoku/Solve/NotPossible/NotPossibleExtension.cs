@@ -14,41 +14,32 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Solve
+namespace Sudoku.Solve.NotPossible
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
-    using global::Sudoku.Solve.NotPossible;
-
-    public class SolverJellyfish : SolverFishBase
+    public static class NotPossibleExtension
     {
-        public SolverJellyfish(Sudoku sudoku) : base(sudoku)
+        public static string ToRowList(this IEnumerable<int> because)
         {
+            return string.Join(',', because.Select(idx => idx + 1));
         }
 
-        public override bool Solve()
+        public static string ToNoList(this IEnumerable<int> because)
         {
-            var isCol = Solve(Orientation.Column);
-            var isRow = Solve(Orientation.Row);
-
-            return isCol || isRow;
+            return string.Join(',', because);
         }
 
-        protected override void SetNotPossible(SudokuField def, int forNo, Orientation orientation, IEnumerable<int> becauseRow, IEnumerable<int> becauseCol)
+        public static IEnumerable<int> FromNoList(this string noList)
         {
-            def.SetNotPossible(forNo, new NotPossibleJellyfish()
-            {
-                Orientation = orientation,
-                BecauseCol  = becauseCol,
-                BecauseRow  = becauseRow,
-                ForNo       = forNo,
-            });
+            return noList.Split(',').Select(int.Parse);
         }
 
-        public override bool Solve(Orientation orientation)
+        public static IEnumerable<int> FromRowList(this string noList)
         {
-            return UpdateFish(ToGetDef(orientation), 4, orientation) > 0;
+            return noList.Split(',').Select(p => int.Parse(p) - 1);
         }
     }
 }

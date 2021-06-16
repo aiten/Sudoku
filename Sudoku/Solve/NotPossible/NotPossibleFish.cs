@@ -1,4 +1,4 @@
-/*
+﻿/*
   This file is part of Sudoku - A library to solve a sudoku.
 
   Copyright (c) Herbert Aitenbichler
@@ -14,41 +14,40 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Solve
+namespace Sudoku.Solve.NotPossible
 {
     using System.Collections.Generic;
     using System.Linq;
 
-    using global::Sudoku.Solve.NotPossible;
-
-    public class SolverJellyfish : SolverFishBase
+    public class NotPossibleFish : NotPossibleBase
     {
-        public SolverJellyfish(Sudoku sudoku) : base(sudoku)
+        protected NotPossibleFish()
         {
         }
 
-        public override bool Solve()
-        {
-            var isCol = Solve(Orientation.Column);
-            var isRow = Solve(Orientation.Row);
+        public string FishName { get; protected set; }
 
-            return isCol || isRow;
+        public override string SerializeTo()
+        {
+            return $"{RoleName}:{ForNo}:{Orientation.ToChar()}:{BecauseRow.ToRowList()}:{BecauseCol.ToRowList()}";
         }
 
-        protected override void SetNotPossible(SudokuField def, int forNo, Orientation orientation, IEnumerable<int> becauseRow, IEnumerable<int> becauseCol)
+        protected override void SerializeFrom(string[] serialized)
         {
-            def.SetNotPossible(forNo, new NotPossibleJellyfish()
-            {
-                Orientation = orientation,
-                BecauseCol  = becauseCol,
-                BecauseRow  = becauseRow,
-                ForNo       = forNo,
-            });
+            ForNo       = int.Parse(serialized[1]);
+            Orientation = serialized[2].ToOrientation();
+            BecauseRow  = serialized[3].FromRowList();
+            BecauseCol  = serialized[4].FromRowList();
         }
 
-        public override bool Solve(Orientation orientation)
+        public override string ToString()
         {
-            return UpdateFish(ToGetDef(orientation), 4, orientation) > 0;
+            return $"{ForNo}: {FishName} {Orientation.ToOrientationDesc()} {BecauseRow.ToRowList()} with {Orientation.ToOppositeOrientation().ToOrientationDesc()} {BecauseCol.ToRowList()}";
         }
+
+        public int ForNo { get; set; }
+
+        public IEnumerable<int> BecauseRow { get; set; }
+        public IEnumerable<int> BecauseCol { get; set; }
     }
 }
