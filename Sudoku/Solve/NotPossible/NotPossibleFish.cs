@@ -42,7 +42,7 @@ namespace Sudoku.Solve.NotPossible
 
         public override string ToString()
         {
-            return $"{ForNo}: {FishName} {Orientation.ToOrientationDesc()} {BecauseRow.ToRowList()} with {Orientation.ToOppositeOrientation().ToOrientationDesc()} {BecauseCol.ToRowList()}";
+            return $"{ForNo}: {FishName} {Orientation.ToOrientationDesc()} {BecauseRow.ToUserRowList()} with {Orientation.ToOppositeOrientation().ToOrientationDesc()} {BecauseCol.ToUserRowList()}";
         }
 
         public int ForNo { get; set; }

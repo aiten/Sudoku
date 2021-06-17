@@ -41,7 +41,7 @@ namespace Sudoku.Solve.NotPossible
 
         public override string ToString()
         {
-            return $"{ForNo}: {BecauseNos.ToNoList()}: in {Orientation.ToOrientationDesc()}-index: {BecauseIdx.ToRowList()} (B2+)";
+            return $"{ForNo}: {BecauseNos.ToUserNoList()}: in {Orientation.ToOrientationDesc()}-index: {BecauseIdx.ToUserRowList()} (B2+)";
         }
 
         public int              ForNo      { get; set; }

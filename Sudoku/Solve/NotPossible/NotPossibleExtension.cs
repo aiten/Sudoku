@@ -22,10 +22,24 @@ namespace Sudoku.Solve.NotPossible
 
     public static class NotPossibleExtension
     {
-        public static string ToRowList(this IEnumerable<int> because)
+
+        #region For Display
+        public static string ToUserRowList(this IEnumerable<int> because)
         {
             return string.Join(',', because.Select(idx => idx + 1));
         }
+        public static string ToUserNoList(this IEnumerable<int> because)
+        {
+            return string.Join(',', because);
+        }
+
+        #endregion
+
+        public static string ToRowList(this IEnumerable<int> because)
+        {
+            return string.Join(',', because);
+        }
+
 
         public static string ToNoList(this IEnumerable<int> because)
         {
@@ -39,7 +53,7 @@ namespace Sudoku.Solve.NotPossible
 
         public static IEnumerable<int> FromRowList(this string noList)
         {
-            return noList.Split(',').Select(p => int.Parse(p) - 1);
+            return noList.Split(',').Select(int.Parse);
         }
     }
 }
