@@ -25,6 +25,7 @@ namespace Sudoku.Solve.NotPossible
         }
 
         public string RoleName { get; protected set; }
+        public int    ForNo    { get; set; }
 
         public abstract    string SerializeTo();
         protected abstract void   SerializeFrom(string[] serialized);

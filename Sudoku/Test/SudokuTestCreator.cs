@@ -63,13 +63,6 @@ namespace Sudoku.Test
         {
             var dirInfo = Directory.EnumerateFiles(@"C:\dev\Sudoku\Sudoku\Test\TestSamples", "_*.sud");
 
-            var opt = new SudokuOptions
-            {
-                Help           = true,
-                ShowToolTip    = true,
-                ShowNormalized = true
-            };
-
             using (var sw = new StreamWriter(@"c:\tmp\test.txt"))
             {
                 foreach (var file in dirInfo)
@@ -123,7 +116,7 @@ namespace Sudoku.Test
 
                         var def = newSudoku.GetDef(x, y);
 
-                        return def.PossibleString().Length <= 1 || def.PossibleString() != def.ToButtonToolTip(opt);
+                        return def.PossibleString().Length <= 1 || def.PossibleString() != def.GetFullFiledInfo();
                     }
 
                     for (int y = 0; y < 9; y++)
@@ -132,7 +125,7 @@ namespace Sudoku.Test
                         {
                             if (ShouldCheck(x, y))
                             {
-                                sw.WriteLine($"                new ({x}, {y}, \"{newSudoku.GetDef(x, y).PossibleString()}\", \"{ToButtonToolTip(newSudoku.GetDef(x, y).ToButtonToolTip(opt))}\"),");
+                                sw.WriteLine($"                new ({x}, {y}, \"{newSudoku.GetDef(x, y).PossibleString()}\", \"{ToButtonToolTip(newSudoku.GetDef(x, y).GetFullFiledInfo())}\"),");
                             }
                         }
                     }

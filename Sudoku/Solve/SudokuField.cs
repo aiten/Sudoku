@@ -17,9 +17,7 @@
 namespace Sudoku.Solve
 {
     using System.Collections.Generic;
-    using System.Drawing;
     using System.Linq;
-    using System.Text;
 
     using global::Sudoku.Solve.NotPossible;
     using global::Sudoku.Solve.Tools;
@@ -56,23 +54,6 @@ namespace Sudoku.Solve
 
         #endregion
 
-        #region Private Help Functions
-
-        private int PossibleCount(bool[] ar)
-        {
-            var count = 0;
-            if (IsEmpty)
-            {
-                for (var idx = 0; idx < 9; idx++)
-                    if (ar[idx])
-                        count++;
-            }
-
-            return count;
-        }
-
-        #endregion
-
         #region External Access functions
 
         internal void InitHelpVar()
@@ -85,52 +66,77 @@ namespace Sudoku.Solve
             _notPossibleUncommitted = null;
         }
 
-        internal bool IsPossible(int no)
+        private static int NoToIdx(int no)
         {
-            var idx = no - 1;
-            return _mainRulePossible[idx] && !_notPossible[idx];
+            return no - 1;
         }
 
-        internal bool IsEmptyAndPossible(int no)
+        public bool IsPossible(int no)
         {
-            var idx = no - 1;
-            return IsEmpty && _mainRulePossible[idx] && !_notPossible[idx];
+            return IsPossibleMainRule(no) && !_notPossible[NoToIdx(no)];
         }
 
-        internal bool IsNotPossible(int no)
+        public bool IsPossibleMainRule(int no)
         {
-            var idx = no - 1;
-            return _notPossible[idx];
+            return IsEmpty && _mainRulePossible[NoToIdx(no)];
         }
 
-        internal bool IsSubSetPossible(SudokuField field)
+        public bool IsNotPossible(int no)
         {
-            for (var no = 1; no <= 9; no++)
-            {
-                if (IsPossible(no) != field.IsPossible(no))
-                {
-                    if (!IsPossible(no))
-                        return false;
-                }
-            }
+            return IsPossibleMainRule(no) && _notPossible[NoToIdx(no)];
+        }
 
-            return true;
+        public IEnumerable<int> GetPossibleNos()
+        {
+            return LoopExtensions.Nos.Where(IsPossible);
+        }
+
+        public IEnumerable<int> GetPossibleMainRuleNos()
+        {
+            return LoopExtensions.Nos.Where(IsPossibleMainRule);
+        }
+
+        public IEnumerable<NotPossibleBase> GetNotPossible()
+        {
+            return LoopExtensions.Nos.Where(IsNotPossible).Select(no => _notPossibleReason[NoToIdx(no)]);
+        }
+
+        public IEnumerable<int> GetNotPossibleNos()
+        {
+            return GetNotPossible().Select(not => not.ForNo);
+        }
+
+
+        public NotPossibleBase GetNotPossible(int no)
+        {
+            return IsNotPossible(no) ? _notPossibleReason[NoToIdx(no)] : null;
+        }
+
+        public int PossibleCount()
+        {
+            return LoopExtensions.Nos.Count(IsPossible);
+        }
+
+        public int MainRulePossibleCount()
+        {
+            return IsEmpty ? _mainRulePossible.Count(x => x) : 0;
         }
 
         internal void SetNotPossible(int no, NotPossibleBase reason)
         {
             if (_notPossibleUncommitted == null)
             {
-                _notPossibleUncommitted = new bool[9];
-                for (var z = 0; z < 9; z++)
-                {
-                    _notPossibleUncommitted[z] = _notPossible[z];
-                }
+                _notPossibleUncommitted = (bool[])_notPossible.Clone();
             }
 
-            var idx = no - 1;
+            var idx = NoToIdx(no);
             _notPossibleUncommitted[idx] = true;
             _notPossibleReason[idx]      = reason;
+        }
+
+        internal bool IsSubSetPossible(SudokuField field)
+        {
+            return !LoopExtensions.Nos.Any(no => IsPossible(no) != field.IsPossible(no) && !IsPossible(no));
         }
 
         internal void CommitChanges()
@@ -140,180 +146,11 @@ namespace Sudoku.Solve
             _notPossibleUncommitted = null;
         }
 
-        public int PossibleCount()
-        {
-            var ret = 0;
-            for (int no = 1; no <= 9; no++)
-            {
-                if (IsPossible(no))
-                {
-                    ret++;
-                }
-            }
-
-            return ret;
-        }
-
-        public int OnlyPossible()
-        {
-            var ret = 0;
-            for (int no = 1; no <= 9; no++)
-            {
-                if (IsPossible(no))
-                {
-                    if (ret != 0)
-                        return 0;
-                    ret = no;
-                }
-            }
-
-            return ret;
-        }
-
-        public int MainRulePossibleCount()
-        {
-            return PossibleCount(_mainRulePossible);
-        }
-
         #endregion
-
-        #region Frame Output
-
-        public Color ToButtonColor(SudokuOptions opt)
-        {
-            if (HasNo)
-                return Color.Green;
-
-            if (opt.Help)
-            {
-                switch (PossibleCount())
-                {
-                    default: return Color.Gray;
-                    case 0:  return Color.Red;
-                    case 1:  return Color.LightGray;
-                }
-            }
-
-            return Color.Gray;
-        }
-
-        private string ToButtonStringMainRuleOnly()
-        {
-            if (HasNo)
-            {
-                return No.ToString();
-            }
-
-            var str2 = new StringBuilder();
-
-            for (var z = 0; z < 9; z++)
-            {
-                if (MainRulePossible[z])
-                {
-                    if (str2.Length > 0)
-                        str2.Append(",");
-                    str2.Append((z + 1).ToString());
-                }
-            }
-
-            return str2.ToString();
-        }
-
-        public string ToButtonToolTip(SudokuOptions opt)
-        {
-            if (!opt.ShowToolTip)
-                return "";
-
-            if (opt.Help)
-            {
-                var    ret    = ToButtonString(opt);
-                string reason = "";
-                if (IsEmpty)
-                {
-                    for (var z = 0; z < 9; z++)
-                    {
-                        if (MainRulePossible[z])
-                        {
-                            if (_notPossible[z])
-                            {
-                                reason += '\n';
-
-                                if (opt.ShowNormalized)
-                                {
-                                    reason += _notPossibleReason[z].SerializeTo();
-                                }
-                                else
-                                {
-                                    reason += _notPossibleReason[z].ToString();
-                                }
-                            }
-                        }
-                    }
-                }
-
-                return ret + reason;
-            }
-
-            return ToButtonStringMainRuleOnly();
-        }
-
 
         public string PossibleString()
         {
-            return string.Join(',', PossibleNos());
+            return string.Join(',', GetPossibleNos());
         }
-
-        public IEnumerable<int> PossibleNos()
-        {
-            return LoopExtensions.Nos.Where(IsPossible);
-        }
-
-        public string ToButtonString(SudokuOptions opt)
-        {
-            if (HasNo)
-            {
-                return No.ToString();
-            }
-
-            if (opt.Help)
-            {
-                int z;
-                var str1 = new StringBuilder();
-                var str2 = new StringBuilder();
-
-                for (z = 0; z < 9; z++)
-                {
-                    if (MainRulePossible[z])
-                    {
-                        if (_notPossible[z])
-                        {
-                            if (str1.Length > 0)
-                                str1.Append(",");
-                            str1.Append((z + 1).ToString());
-                        }
-                        else
-                        {
-                            if (str2.Length > 0)
-                                str2.Append(",");
-                            str2.Append((z + 1).ToString());
-                        }
-                    }
-                }
-
-                if (str1.Length > 0)
-                {
-                    if (str2.Length > 0)
-                        return str2 + " - " + str1;
-
-                    return str1.ToString();
-                }
-
-                return str2.ToString();
-            }
-
-            return UserNote;
-        }
-
-        #endregion
     }
 }

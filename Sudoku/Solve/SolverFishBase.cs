@@ -42,7 +42,7 @@ namespace Sudoku.Solve
                 {
                     if (rowIdx.All(row => countPerRow[row] > 0 && countPerRow[row] <= fishSize))
                     {
-                        var colIdx = LoopExtensions.Cols.Where(col => rowIdx.Any(row => getDef(row, col).IsEmptyAndPossible(no))).ToArray();
+                        var colIdx = LoopExtensions.Cols.Where(col => rowIdx.Any(row => getDef(row, col).IsPossible(no))).ToArray();
 
                         if (colIdx.Length == fishSize)
                         {
@@ -50,7 +50,7 @@ namespace Sudoku.Solve
                             {
                                 foreach (var def in colIdx
                                     .SelectField(getDef, row)
-                                    .Where(def => def.IsEmpty && !def.IsNotPossible(no)))
+                                    .Where(def => def.IsPossible(no)))
                                 {
                                     SetNotPossible(def, no, orientation, rowIdx.ToList(), colIdx);
                                     changeCount++;

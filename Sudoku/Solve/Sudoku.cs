@@ -95,9 +95,9 @@ namespace Sudoku.Solve
             var def = GetDef(row, col);
             var no  = def.No;
 
-            if (no == 0)
+            if (def.IsEmpty)
             {
-                var only = def.OnlyPossible();
+                var only = def.GetPossibleNos().FirstOrDefault();
                 if (only > 0 && Set(row, col, only))
                 {
                     return true;
@@ -298,7 +298,7 @@ namespace Sudoku.Solve
                 {
                     var def = GetDef(row, col);
 
-                    if (def.IsEmpty && def.OnlyPossible() > 0)
+                    if (def.IsEmpty && def.PossibleCount() == 1)
                         return true;
                 }
             }

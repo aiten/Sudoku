@@ -101,16 +101,10 @@ namespace Sudoku.Test
 
             var lines = s.SmartPrint();
 
-            var opt = new SudokuOptions
-            {
-                Help        = true,
-                ShowToolTip = true
-            };
-
             foreach (var expect in expected)
             {
                 s.GetDef(expect.X, expect.Y).PossibleString().Should().Be(expect.PossibleString);
-                var toolTips     = s.GetDef(expect.X, expect.Y).ToButtonToolTip(opt).Split('\n');
+                var toolTips     = s.GetDef(expect.X, expect.Y).ToButtonToolTip().Split('\n');
                 var toolTipRegEx = expect.ToButtonToolTip.Split('\n');
                 for (int i = 0; i < toolTips.Length && i < toolTipRegEx.Length; i++)
                 {

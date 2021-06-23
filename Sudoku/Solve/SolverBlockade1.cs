@@ -53,7 +53,7 @@ namespace Sudoku.Solve
                         {
                             foreach (var no2 in LoopExtensions.Nos)
                             {
-                                if (no2 != no && !def.IsNotPossible(no2))
+                                if (no2 != no && def.IsPossible(no2))
                                 {
                                     changeCount++;
                                     def.SetNotPossible(no2, new NotPossibleBlockade1()

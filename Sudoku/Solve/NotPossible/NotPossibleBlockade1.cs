@@ -43,8 +43,6 @@ namespace Sudoku.Solve.NotPossible
             return $"{ForNo}: {BecauseNo} only in {Orientation.ToOrientationDesc()} (B1)";
         }
 
-        public int ForNo { get; set; }
         public int BecauseNo { get; set; }
-
     }
 }

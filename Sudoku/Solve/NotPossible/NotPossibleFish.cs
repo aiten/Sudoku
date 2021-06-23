@@ -45,8 +45,6 @@ namespace Sudoku.Solve.NotPossible
             return $"{ForNo}: {FishName} {Orientation.ToOrientationDesc()} {BecauseRow.ToUserRowList()} with {Orientation.ToOppositeOrientation().ToOrientationDesc()} {BecauseCol.ToUserRowList()}";
         }
 
-        public int ForNo { get; set; }
-
         public IEnumerable<int> BecauseRow { get; set; }
         public IEnumerable<int> BecauseCol { get; set; }
     }

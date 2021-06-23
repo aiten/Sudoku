@@ -43,8 +43,6 @@ namespace Sudoku.Solve.NotPossible
             return $"{ForNo}: only in {Orientation.ToOrientationDesc()}-index: {BecauseIdx.ToUserRowList()} (B3)";
         }
 
-        public int              ForNo      { get; set; }
         public IEnumerable<int> BecauseIdx { get; set; }
-
     }
 }

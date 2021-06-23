@@ -43,13 +43,6 @@ namespace Sudoku.Test
             var s = lines.CreateSudoku();
             s.UpdatePossible();
 
-            var opt = new SudokuOptions
-            {
-                Help           = true,
-                ShowToolTip    = true,
-                ShowNormalized = true
-            };
-
             for (var x = 0; x < 9; x++)
             {
                 for (var y = 0; y < 9; y++)
@@ -57,7 +50,7 @@ namespace Sudoku.Test
                     var def = s.GetDef(x, y);
                     if (def.IsEmpty)
                     {
-                        var toolTipsText = s.GetDef(x, y).ToButtonToolTip(opt);
+                        var toolTipsText = s.GetDef(x, y).GetFullFiledInfo();
                         var toolTips     = toolTipsText.Split('\n');
 
                         if (def.PossibleString() != toolTipsText)

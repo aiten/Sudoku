@@ -41,9 +41,6 @@ namespace Sudoku.Test
         public void SimplePossibleTest()
         {
             var s   = new Sudoku();
-            var opt = new SudokuOptions();
-            opt.Help        = true;
-            opt.ShowToolTip = true;
 
             s.UpdatePossible();
 
@@ -54,7 +51,7 @@ namespace Sudoku.Test
                 s.GetDef(row, col).PossibleString().Should().BeEquivalentTo("1,2,3,4,5,6,7,8,9");
 
                 s.GetDef(row, col).MainRulePossibleCount().Should().Be(9);
-                s.GetDef(row, col).ToButtonString(opt).Should().BeEquivalentTo("1,2,3,4,5,6,7,8,9");
+                s.GetDef(row, col).ToButtonString().Should().BeEquivalentTo("1,2,3,4,5,6,7,8,9");
             }
         }
 

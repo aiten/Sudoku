@@ -25,9 +25,9 @@ namespace Sudoku.Forms
             InitializeComponent();
         }
 
-        private Sudoku.Solve.SudokuOptions _options;
+        private SudokuOptions _options;
 
-        public Sudoku.Solve.SudokuOptions Options
+        public SudokuOptions Options
         {
             get
             {

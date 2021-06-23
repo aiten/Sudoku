@@ -22,12 +22,13 @@ namespace Sudoku.Solve.NotPossible
 
     public static class NotPossibleExtension
     {
-
         #region For Display
+
         public static string ToUserRowList(this IEnumerable<int> because)
         {
             return string.Join(',', because.Select(idx => idx + 1));
         }
+
         public static string ToUserNoList(this IEnumerable<int> because)
         {
             return string.Join(',', because);

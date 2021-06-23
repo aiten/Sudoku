@@ -76,10 +76,6 @@ namespace Sudoku.Solve
 
         public static string[,] SmartPrintInfo(this Solve.Sudoku s)
         {
-            var opt = new SudokuOptions();
-            opt.Help        = true;
-            opt.ShowToolTip = true;
-
             s.UpdatePossible();
             var info = new string[9, 9];
             for (int row = 0; row < 9; row++)
@@ -90,7 +86,7 @@ namespace Sudoku.Solve
                     if (field.IsEmpty)
                     {
                         var possible    = field.PossibleString();
-                        var possibleOpt = field.ToButtonToolTip(opt);
+                        var possibleOpt = field.ToString(); // TODO
                         if (possible == possibleOpt)
                         {
                             info[row, col] = $"[{possible}]";

@@ -79,7 +79,7 @@ namespace Sudoku.Solve
                         {
                             if (reasonPossible.Count == 0)
                             {
-                                reasonPossible.AddRange(def2.PossibleNos());
+                                reasonPossible.AddRange(def2.GetPossibleNos());
                             }
 
                             reasonIndex.Add(col2);
