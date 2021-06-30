@@ -147,10 +147,5 @@ namespace Sudoku.Solve
         }
 
         #endregion
-
-        public string PossibleString()
-        {
-            return string.Join(',', GetPossibleNos());
-        }
     }
 }

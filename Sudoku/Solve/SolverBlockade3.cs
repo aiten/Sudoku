@@ -38,7 +38,7 @@ namespace Sudoku.Solve
 
         public override bool Solve(Orientation orientation)
         {
-            return UpdatePossibleBlockade3(ToGetDef(orientation), orientation) > 0;
+            return UpdatePossibleBlockade3(Sudoku.ToGetDef(orientation), orientation) > 0;
         }
 
         private int UpdatePossibleBlockade3(Sudoku.GetSudokuField getDef, Orientation orientation)

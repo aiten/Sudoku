@@ -69,5 +69,27 @@ namespace Sudoku.Solve
                 default:                 return orientation;
             }
         }
+
+        public static (int row, int col) ConvertFrom(this Orientation orientation, int row, int col)
+        {
+            return orientation switch
+            {
+                Orientation.Row    => Sudoku.ConvertFromRow(row, col),
+                Orientation.Column => Sudoku.ConvertFromCol(row, col),
+                Orientation.X3     => Sudoku.ConvertFromS3(row, col),
+                _                  => throw new ArgumentException()
+            };
+        }
+
+        public static (int row, int col) ConvertTo(this Orientation orientation, int row, int col)
+        {
+            return orientation switch
+            {
+                Orientation.Row    => Sudoku.ConvertToRow(row, col),
+                Orientation.Column => Sudoku.ConvertToCol(row, col),
+                Orientation.X3     => Sudoku.ConvertToS3(row, col),
+                _                  => throw new ArgumentException()
+            };
+        }
     }
 }

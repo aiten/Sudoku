@@ -18,12 +18,15 @@ namespace Sudoku.Forms
 {
     using System;
     using System.Drawing;
+    using System.Linq;
     using System.Windows.Forms;
     using System.Threading;
     using System.Media;
 
     using Sudoku.Solve;
     using Sudoku.Solve.Serialization;
+
+    using Orientation = Sudoku.Solve.Orientation;
 
     public partial class MainForm : Form
     {
@@ -155,12 +158,14 @@ namespace Sudoku.Forms
             }
         }
 
-        private Button[,]    _buttons     = new Button[9, 9];
+        private Button[,]    _buttons = new Button[9, 9];
         private Solve.Sudoku _sudoku;
         private TextBox[]    _userNoteRow = new TextBox[9];
         private TextBox[]    _userNoteCol = new TextBox[9];
 
         private SudokuOptions _options;
+
+        private int _notPossibleIndex;
 
         #endregion
 
@@ -218,11 +223,8 @@ namespace Sudoku.Forms
                 control.Text = text;
         }
 
-        int _test = 0;
-
         protected void OnFoundSolution(object sudoku, SudokuEventArgs solutioninfo)
         {
-            _test++;
             int    possibilities = solutioninfo.PossibleSolutions;
             string outstr;
 
@@ -237,7 +239,6 @@ namespace Sudoku.Forms
             }
             catch (ObjectDisposedException)
             {
-
             }
 //            BeginInvoke(new MethodInvoker( () => _toolStripStatusPossibleSolutions1.Text = outstr  ));
         }
@@ -253,9 +254,11 @@ namespace Sudoku.Forms
         {
             undoToolStripButton.Enabled = _sudoku.CanUndo();
 
+            _notPossibleIndex = -1;
             _sudoku.UpdatePossible();
             _toolStripStatusMove.Text               = _sudoku.StepCount.ToString();
             _toolStripStatusPossibleSolutions1.Text = "";
+            _toolStripStatusHint1.Text = "press F1";
 
             StartThread();
 
@@ -295,6 +298,31 @@ namespace Sudoku.Forms
             }
         }
 
+        private void SetButtonsOnly()
+        {
+            int x, y;
+            for (x = 0; x < 9; x++)
+            {
+                for (y = 0; y < 9; y++)
+                {
+                    SudokuField def = _sudoku.GetDef(x, y);
+
+                    if (def.HasNo)
+                    {
+                        _buttons[x, y].Font = _buttonFontSet;
+                    }
+                    else
+                    {
+                        _buttons[x, y].Font = _buttonFontClear;
+                    }
+
+                    _buttons[x, y].BackColor = def.ToButtonColor(_options);
+                    _buttons[x, y].Text      = def.ToButtonString(_options);
+                    _toolTip.SetToolTip(_buttons[x, y], def.ToButtonToolTip(_options));
+                }
+            }
+        }
+
         private void ButtonKeyDown(object sender, KeyEventArgs e)
         {
             int no = -1;
@@ -305,8 +333,8 @@ namespace Sudoku.Forms
 
             if (no >= 0)
             {
-                int    x, y;
-                Button btn = GetButton(sender, out x, out y);
+                int x, y;
+                var btn = GetButton(sender, out x, out y);
                 if (btn != null)
                 {
                     if (_sudoku.Set(x, y, no))
@@ -316,6 +344,48 @@ namespace Sudoku.Forms
                     else
                     {
                         SystemSounds.Asterisk.Play();
+                    }
+                }
+            }
+
+            if (e.KeyCode == Keys.F1)
+            {
+                int x, y;
+                var btn = GetButton(sender, out x, out y);
+                if (btn != null)
+                {
+                    Explain(x, y);
+                }
+            }
+        }
+
+        private void Explain(int x, int y)
+        {
+            var def = _sudoku.GetDef(x, y);
+            if (def.IsEmpty)
+            {
+                SetButtonsOnly();
+                var notPossible = def.GetNotPossible().ToArray();
+                if (notPossible.Length > 0)
+                {
+                    _notPossibleIndex = (_notPossibleIndex + 1) % notPossible.Length;
+
+                    var explains = notPossible[_notPossibleIndex].Explain(_sudoku, x, y);
+                    _toolStripStatusHint1.Text = notPossible[_notPossibleIndex].ToString();
+
+                    foreach (var explain in explains)
+                    {
+                        var def2 = _sudoku.GetDef(explain.row, explain.col);
+                        _buttons[explain.row, explain.col].BackColor = explain.level switch
+                        {
+                            0 => Color.DeepPink,
+                            1 => Color.Cyan,
+                            2 => Color.DarkCyan,
+                            3 => Color.BlueViolet,
+                            4 => Color.Violet,
+                            5 => Color.Beige,
+                            _ => Color.Aquamarine
+                        };
                     }
                 }
             }

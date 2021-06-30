@@ -77,9 +77,9 @@ namespace Sudoku.Solve.Serialization
         public Sudoku3X3Xml XmlSudoku11 { get; set; } = new();
         public Sudoku3X3Xml XmlSudoku12 { get; set; } = new();
 
-        public Sudoku3X3Xml XmlSudoku20                  { get; set; } = new();
-        public Sudoku3X3Xml XmlSudoku21                  { get; set; } = new();
-        public Sudoku3X3Xml XmlSudoku22                  { get; set; } = new();
+        public Sudoku3X3Xml XmlSudoku20 { get; set; } = new();
+        public Sudoku3X3Xml XmlSudoku21 { get; set; } = new();
+        public Sudoku3X3Xml XmlSudoku22 { get; set; } = new();
 
         public bool ShouldSerializeXmlUserNoteCol() => XmlUserNoteCol.Any(usernote => !string.IsNullOrEmpty(usernote));
         public bool ShouldSerializeXmlUserNoteRow() => XmlUserNoteRow.Any(usernote => !string.IsNullOrEmpty(usernote));

@@ -20,15 +20,16 @@ namespace Sudoku.Solve.NotPossible
 
     public abstract class NotPossibleBase
     {
-        public NotPossibleBase()
-        {
-        }
-
         public string RoleName { get; protected set; }
         public int    ForNo    { get; set; }
 
         public abstract    string SerializeTo();
         protected abstract void   SerializeFrom(string[] serialized);
+
+        public virtual IEnumerable<(int row, int col, int level)> Explain(Sudoku sudoku, int row, int col)
+        {
+            return new List<(int row, int col, int level)>();
+        }
 
         public static NotPossibleBase Create(string serialized)
         {
@@ -59,5 +60,15 @@ namespace Sudoku.Solve.NotPossible
         }
 
         public Orientation Orientation { get; set; }
+
+        protected (int row, int col) ConvertTo(int row, int col)
+        {
+            return Orientation switch
+            {
+                Orientation.Row    => Sudoku.ConvertToRow(row, col),
+                Orientation.Column => Sudoku.ConvertToCol(row, col),
+                Orientation.X3     => Sudoku.ConvertToS3(row, col),
+            };
+        }
     }
 }

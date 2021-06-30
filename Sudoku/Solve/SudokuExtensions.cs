@@ -86,8 +86,8 @@ namespace Sudoku.Solve
                     if (field.IsEmpty)
                     {
                         var possible    = field.PossibleString();
-                        var possibleOpt = field.ToString(); // TODO
-                        if (possible == possibleOpt)
+                        var possibleOpt = field.NotPossibleExplanation();
+                        if (string.IsNullOrEmpty(possibleOpt))
                         {
                             info[row, col] = $"[{possible}]";
                         }

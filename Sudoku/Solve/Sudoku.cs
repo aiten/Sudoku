@@ -77,13 +77,56 @@ namespace Sudoku.Solve
 
         public SudokuField GetSudokuFieldS3(int row, int col)
         {
+            var s3 = ConvertToS3(row, col);
+            return _fields[s3.row, s3.col];
+        }
+
+        public GetSudokuField ToGetDef(Orientation orientation)
+        {
+            switch (orientation)
+            {
+                case Orientation.Column: return GetSudokuFieldCol;
+                case Orientation.Row:    return GetSudokuFieldRow;
+                case Orientation.X3:     return GetSudokuFieldS3;
+            }
+
+            throw new ArgumentException();
+        }
+
+        public static (int row, int col) ConvertToRow(int row, int col)
+        {
+            return (row, col);
+        }
+
+        public static (int row, int col) ConvertToCol(int row, int col)
+        {
+            return (col, row);
+        }
+
+        public static (int row, int col) ConvertToS3(int row, int col)
+        {
             var rowX3 = (row / 3) * 3;
             var colX3 = (row % 3) * 3;
 
             var dRow = col / 3;
             var dCol = col % 3;
 
-            return _fields[rowX3 + dRow, colX3 + dCol];
+            return (rowX3 + dRow, colX3 + dCol);
+        }
+
+        public static (int row, int col) ConvertFromRow(int row, int col)
+        {
+            return (row, col);
+        }
+
+        public static (int row, int col) ConvertFromCol(int row, int col)
+        {
+            return (col, row);
+        }
+
+        public static (int row, int col) ConvertFromS3(int row, int col)
+        {
+            return ((row / 3) * 3 + col / 3, (row % 3) * 3 + (col % 3));
         }
 
         #endregion

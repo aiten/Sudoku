@@ -40,7 +40,7 @@ namespace Sudoku.Test
         [Fact]
         public void SimplePossibleTest()
         {
-            var s   = new Sudoku();
+            var s = new Sudoku();
 
             s.UpdatePossible();
 

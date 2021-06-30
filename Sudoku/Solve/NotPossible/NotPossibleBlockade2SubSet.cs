@@ -38,6 +38,19 @@ namespace Sudoku.Solve.NotPossible
             BecauseNos  = serialized[3].FromNoList();
             BecauseIdx  = serialized[4].FromRowList();
         }
+        public override IEnumerable<(int row, int col, int level)> Explain(Sudoku sudoku, int myRow, int myCol)
+        {
+            var expl = new List<(int row, int col, int level)>();
+            var pos  = Orientation.ConvertFrom(myRow, myCol);
+
+            foreach (var col in BecauseIdx)
+            {
+                var rowCol = ConvertTo(pos.row, col);
+                expl.Add((rowCol.row, rowCol.col, 3));
+            }
+
+            return expl;
+        }
 
         public override string ToString()
         {

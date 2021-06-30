@@ -19,6 +19,8 @@ namespace Sudoku.Solve.NotPossible
     using System.Collections.Generic;
     using System.Linq;
 
+    using global::Sudoku.Solve.Tools;
+
     public class NotPossibleBlockade1 : NotPossibleBase
     {
         public NotPossibleBlockade1()
@@ -36,6 +38,25 @@ namespace Sudoku.Solve.NotPossible
             ForNo       = int.Parse(serialized[1]);
             Orientation = serialized[2].ToOrientation();
             BecauseNo   = int.Parse(serialized[3]);
+        }
+
+        public override IEnumerable<(int row, int col, int level)> Explain(Sudoku sudoku, int myRow, int myCol)
+        {
+            var expl = new List<(int row, int col, int level)>();
+            var pos = Orientation.ConvertFrom(myRow, myCol);
+
+            foreach (var col in LoopExtensions.Cols)
+            {
+                var rowCol = ConvertTo(pos.row, col);
+                var def    = sudoku.GetDef(rowCol.row, rowCol.col);
+                
+                if (col != pos.col && def.IsEmpty)
+                {
+                    expl.Add((rowCol.row, rowCol.col, 3));
+                }
+            }
+
+            return expl;
         }
 
         public override string ToString()

@@ -182,6 +182,8 @@ namespace Sudoku.Forms
             this._lr7 = new System.Windows.Forms.Label();
             this._lr8 = new System.Windows.Forms.Label();
             this._lr9 = new System.Windows.Forms.Label();
+            this._toolStripStatusHint = new System.Windows.Forms.ToolStripStatusLabel();
+            this._toolStripStatusHint1 = new System.Windows.Forms.ToolStripStatusLabel();
             this._menuStrip.SuspendLayout();
             this._statusStrip.SuspendLayout();
             this._toolStrip.SuspendLayout();
@@ -1256,7 +1258,10 @@ namespace Sudoku.Forms
             this._toolStripStatusMove,
             this._toolStripStatusPossibleSolutionsLabel,
             this._toolStripStatusPossibleSolutions,
-            this._toolStripStatusPossibleSolutions1});
+            this._toolStripStatusPossibleSolutions1,
+            this._toolStripStatusHint,
+            this._toolStripStatusHint1
+            });
             this._statusStrip.Location = new System.Drawing.Point(0, 573);
             this._statusStrip.Name = "_statusStrip";
             this._statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
@@ -1555,6 +1560,18 @@ namespace Sudoku.Forms
             this._lr9.TabIndex = 126;
             this._lr9.Text = "9";
             // 
+            // _toolStripStatusHint
+            // 
+            this._toolStripStatusHint.Name = "_toolStripStatusHint";
+            this._toolStripStatusHint.Size = new System.Drawing.Size(36, 17);
+            this._toolStripStatusHint.Text = "Hint: ";
+            // 
+            // _toolStripStatusHint1
+            // 
+            this._toolStripStatusHint1.Name = "_toolStripStatusHint1";
+            this._toolStripStatusHint1.Size = new System.Drawing.Size(21, 17);
+            this._toolStripStatusHint1.Text = "(0)";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1851,6 +1868,8 @@ namespace Sudoku.Forms
         private System.Windows.Forms.Label _lr7;
         private System.Windows.Forms.Label _lr8;
         private System.Windows.Forms.Label _lr9;
+        private System.Windows.Forms.ToolStripStatusLabel _toolStripStatusHint;
+        private System.Windows.Forms.ToolStripStatusLabel _toolStripStatusHint1;
     }
 }
 

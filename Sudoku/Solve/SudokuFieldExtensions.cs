@@ -14,48 +14,27 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Solve.NotPossible
+namespace Sudoku.Solve
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
-    public class NotPossibleBlockade3 : NotPossibleBase
+    public static class SudokuFieldExtensions
     {
-        public NotPossibleBlockade3()
+        public static string PossibleString(this SudokuField field)
         {
-            RoleName = "B3";
+            return string.Join(',', field.GetPossibleNos());
         }
 
-        public override string SerializeTo()
+        public static string NotPossibleExplanation(this SudokuField field, char separator = '\n')
         {
-            return $"{RoleName}:{ForNo}:{Orientation.ToChar()}:{BecauseIdx.ToRowList()}";
-        }
-
-        protected override void SerializeFrom(string[] serialized)
-        {
-            ForNo       = int.Parse(serialized[1]);
-            Orientation = serialized[2].ToOrientation();
-            BecauseIdx  = serialized[3].FromRowList();
-        }
-        public override IEnumerable<(int row, int col, int level)> Explain(Sudoku sudoku, int myRow, int myCol)
-        {
-            var expl = new List<(int row, int col, int level)>();
-            var pos  = Orientation.ConvertFrom(myRow, myCol);
-
-            foreach (var col in BecauseIdx)
+            if (field.HasNo)
             {
-                var rowCol = ConvertTo(pos.row, col);
-                expl.Add((rowCol.row, rowCol.col, 3));
+                return string.Empty;
             }
-
-            return expl;
+            
+            return string.Join(separator, field.GetNotPossible().Select(notPossible => notPossible.ToString()));
         }
-
-        public override string ToString()
-        {
-            return $"{ForNo}: only in {Orientation.ToOrientationDesc()}-index: {BecauseIdx.ToUserRowList()} (B3)";
-        }
-
-        public IEnumerable<int> BecauseIdx { get; set; }
     }
 }

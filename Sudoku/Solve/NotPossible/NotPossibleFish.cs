@@ -19,6 +19,8 @@ namespace Sudoku.Solve.NotPossible
     using System.Collections.Generic;
     using System.Linq;
 
+    using global::Sudoku.Solve.Tools;
+
     public class NotPossibleFish : NotPossibleBase
     {
         protected NotPossibleFish()
@@ -38,6 +40,49 @@ namespace Sudoku.Solve.NotPossible
             Orientation = serialized[2].ToOrientation();
             BecauseRow  = serialized[3].FromRowList();
             BecauseCol  = serialized[4].FromRowList();
+        }
+
+        public override IEnumerable<(int row, int col, int level)> Explain(Sudoku sudoku, int myRow, int myCol)
+        {
+            var expl = new List<(int row, int col, int level)>();
+
+            foreach (var row in BecauseRow)
+            {
+/*
+                foreach (var col in LoopExtensions.Cols)
+                {
+                    if (!BecauseCol.Contains(col))
+                    {
+                        var rowCol = ConvertTo(row, col);
+                        expl.Add((rowCol.row, rowCol.col, 1));
+                    }
+                }
+*/
+                foreach (var col in BecauseCol)
+                {
+                    var rowCol = ConvertTo(row, col);
+                    if (sudoku.GetDef(rowCol.row, rowCol.col).IsEmpty)
+                    {
+                        expl.Add((rowCol.row, rowCol.col, 3));
+                    }
+                }
+            }
+
+            foreach (var col in BecauseCol)
+            {
+                foreach (var row in LoopExtensions.Rows)
+                {
+                    if (!BecauseRow.Contains(row))
+                    {
+                        var rowCol = ConvertTo(row, col);
+                        var def    = sudoku.GetDef(rowCol.row, rowCol.col);
+                        var isRole = def.IsPossibleMainRule(ForNo) && def.IsNotPossible(ForNo) ? 5 : 2;
+                        expl.Add((rowCol.row, rowCol.col, isRole));
+                    }
+                }
+            }
+
+            return expl;
         }
 
         public override string ToString()

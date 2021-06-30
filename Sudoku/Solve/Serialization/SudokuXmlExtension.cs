@@ -106,7 +106,6 @@ namespace Sudoku.Solve.Serialization
 
             if (sudokuXml.Version < 1)
             {
-
             }
 
             sudoku.ClearUndo();

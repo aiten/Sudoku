@@ -30,19 +30,6 @@ namespace Sudoku.Solve
 
         public Sudoku Sudoku { get; private set; }
 
-        public Sudoku.GetSudokuField ToGetDef(Orientation orientation)
-        {
-            switch (orientation)
-            {
-                case Orientation.Column: return Sudoku.GetSudokuFieldCol;
-                case Orientation.Row:    return Sudoku.GetSudokuFieldRow;
-                case Orientation.X3:     return Sudoku.GetSudokuFieldS3;
-            }
-
-            throw new ArgumentException();
-        }
-
-
         protected bool FindSubSet(Sudoku.GetSudokuField getDef, int row, int col, bool[] use, bool[] noSet)
         {
             // find union with backtracking

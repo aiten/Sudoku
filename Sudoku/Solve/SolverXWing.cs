@@ -48,7 +48,7 @@ namespace Sudoku.Solve
 
         public override bool Solve(Orientation orientation)
         {
-            return UpdateFish(ToGetDef(orientation), 2, orientation) > 0;
+            return UpdateFish(Sudoku.ToGetDef(orientation), 2, orientation) > 0;
         }
     }
 }

@@ -36,7 +36,7 @@ namespace Sudoku.Solve
 
         public override bool Solve(Orientation orientation)
         {
-            return UpdatePossibleBlockade1(ToGetDef(orientation), orientation) > 0;
+            return UpdatePossibleBlockade1(Sudoku.ToGetDef(orientation), orientation) > 0;
         }
 
         public int UpdatePossibleBlockade1(Sudoku.GetSudokuField getDef, Orientation orientation)
@@ -58,9 +58,9 @@ namespace Sudoku.Solve
                                     changeCount++;
                                     def.SetNotPossible(no2, new NotPossibleBlockade1()
                                     {
-                                        ForNo = no2,
+                                        ForNo       = no2,
                                         Orientation = orientation,
-                                        BecauseNo = no
+                                        BecauseNo   = no
                                     });
                                 }
                             }

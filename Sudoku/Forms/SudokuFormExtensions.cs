@@ -86,7 +86,7 @@ namespace Sudoku.Forms
                 var reason = field.ToButtonString(opt);
                 if (field.IsEmpty)
                 {
-                    var notPossibleExplanation = string.Join('\n', field.GetNotPossible().Select(notPossible => notPossible.ToString()));
+                    var notPossibleExplanation = field.NotPossibleExplanation();
 
                     if (!string.IsNullOrEmpty(notPossibleExplanation))
                     {
