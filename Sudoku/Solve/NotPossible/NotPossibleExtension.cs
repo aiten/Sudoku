@@ -16,7 +16,6 @@
 
 namespace Sudoku.Solve.NotPossible
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -24,14 +23,28 @@ namespace Sudoku.Solve.NotPossible
     {
         #region For Display
 
-        public static string ToUserRowList(this IEnumerable<int> because)
+        const string ColNames = "ABCDEFGHI";
+        const string RowNames = "123456789";
+        const string X3Names  = "123456789";
+
+        public static string ToUserRowList(this IEnumerable<int> because, Orientation orientation)
         {
-            return string.Join(',', because.Select(idx => idx + 1));
+            return orientation switch
+            {
+                Orientation.Row    => string.Join(',', because.Select(idx => RowNames[idx])),
+                Orientation.Column => string.Join(',', because.Select(idx => ColNames[idx])),
+                Orientation.X3     => string.Join(',', because.Select(idx => X3Names[idx])),
+            };
         }
 
         public static string ToUserNoList(this IEnumerable<int> because)
         {
             return string.Join(',', because);
+        }
+
+        public static string ToCellStringUser(this (int Row, int Col) rowCol)
+        {
+            return $"{RowNames[rowCol.Row]}{ColNames[rowCol.Col]}";
         }
 
         #endregion
@@ -55,6 +68,16 @@ namespace Sudoku.Solve.NotPossible
         public static IEnumerable<int> FromRowList(this string noList)
         {
             return noList.Split(',').Select(int.Parse);
+        }
+
+        public static string ToCellString(this (int row, int col) rowCol)
+        {
+            return $"{rowCol.row}{rowCol.col}";
+        }
+
+        public static (int Row, int Col) FromCellString(this string rowCol)
+        {
+            return (rowCol[0] - '0', rowCol[1] - '0');
         }
     }
 }

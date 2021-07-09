@@ -155,6 +155,8 @@ namespace Sudoku.Forms
             this._toolStripStatusPossibleSolutionsLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this._toolStripStatusPossibleSolutions = new System.Windows.Forms.ToolStripStatusLabel();
             this._toolStripStatusPossibleSolutions1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this._toolStripStatusHint = new System.Windows.Forms.ToolStripStatusLabel();
+            this._toolStripStatusHint1 = new System.Windows.Forms.ToolStripStatusLabel();
             this._toolStrip = new System.Windows.Forms.ToolStrip();
             this.newToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.openToolStripButton = new System.Windows.Forms.ToolStripButton();
@@ -182,8 +184,6 @@ namespace Sudoku.Forms
             this._lr7 = new System.Windows.Forms.Label();
             this._lr8 = new System.Windows.Forms.Label();
             this._lr9 = new System.Windows.Forms.Label();
-            this._toolStripStatusHint = new System.Windows.Forms.ToolStripStatusLabel();
-            this._toolStripStatusHint1 = new System.Windows.Forms.ToolStripStatusLabel();
             this._menuStrip.SuspendLayout();
             this._statusStrip.SuspendLayout();
             this._toolStrip.SuspendLayout();
@@ -1260,8 +1260,7 @@ namespace Sudoku.Forms
             this._toolStripStatusPossibleSolutions,
             this._toolStripStatusPossibleSolutions1,
             this._toolStripStatusHint,
-            this._toolStripStatusHint1
-            });
+            this._toolStripStatusHint1});
             this._statusStrip.Location = new System.Drawing.Point(0, 573);
             this._statusStrip.Name = "_statusStrip";
             this._statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
@@ -1297,6 +1296,18 @@ namespace Sudoku.Forms
             this._toolStripStatusPossibleSolutions1.Name = "_toolStripStatusPossibleSolutions1";
             this._toolStripStatusPossibleSolutions1.Size = new System.Drawing.Size(21, 17);
             this._toolStripStatusPossibleSolutions1.Text = "(0)";
+            // 
+            // _toolStripStatusHint
+            // 
+            this._toolStripStatusHint.Name = "_toolStripStatusHint";
+            this._toolStripStatusHint.Size = new System.Drawing.Size(36, 17);
+            this._toolStripStatusHint.Text = "Hint: ";
+            // 
+            // _toolStripStatusHint1
+            // 
+            this._toolStripStatusHint1.Name = "_toolStripStatusHint1";
+            this._toolStripStatusHint1.Size = new System.Drawing.Size(21, 17);
+            this._toolStripStatusHint1.Text = "(0)";
             // 
             // _toolStrip
             // 
@@ -1476,9 +1487,9 @@ namespace Sudoku.Forms
             this._lr1.Location = new System.Drawing.Point(44, 49);
             this._lr1.Margin = new System.Windows.Forms.Padding(0);
             this._lr1.Name = "_lr1";
-            this._lr1.Size = new System.Drawing.Size(13, 15);
+            this._lr1.Size = new System.Drawing.Size(15, 15);
             this._lr1.TabIndex = 118;
-            this._lr1.Text = "1";
+            this._lr1.Text = "A";
             // 
             // _lr2
             // 
@@ -1486,9 +1497,9 @@ namespace Sudoku.Forms
             this._lr2.Location = new System.Drawing.Point(112, 49);
             this._lr2.Margin = new System.Windows.Forms.Padding(0);
             this._lr2.Name = "_lr2";
-            this._lr2.Size = new System.Drawing.Size(13, 15);
+            this._lr2.Size = new System.Drawing.Size(14, 15);
             this._lr2.TabIndex = 119;
-            this._lr2.Text = "2";
+            this._lr2.Text = "B";
             // 
             // _lr3
             // 
@@ -1496,9 +1507,9 @@ namespace Sudoku.Forms
             this._lr3.Location = new System.Drawing.Point(179, 49);
             this._lr3.Margin = new System.Windows.Forms.Padding(0);
             this._lr3.Name = "_lr3";
-            this._lr3.Size = new System.Drawing.Size(13, 15);
+            this._lr3.Size = new System.Drawing.Size(15, 15);
             this._lr3.TabIndex = 120;
-            this._lr3.Text = "3";
+            this._lr3.Text = "C";
             // 
             // _lr4
             // 
@@ -1506,9 +1517,9 @@ namespace Sudoku.Forms
             this._lr4.Location = new System.Drawing.Point(262, 49);
             this._lr4.Margin = new System.Windows.Forms.Padding(0);
             this._lr4.Name = "_lr4";
-            this._lr4.Size = new System.Drawing.Size(13, 15);
+            this._lr4.Size = new System.Drawing.Size(15, 15);
             this._lr4.TabIndex = 121;
-            this._lr4.Text = "4";
+            this._lr4.Text = "D";
             // 
             // _lr5
             // 
@@ -1518,7 +1529,7 @@ namespace Sudoku.Forms
             this._lr5.Name = "_lr5";
             this._lr5.Size = new System.Drawing.Size(13, 15);
             this._lr5.TabIndex = 122;
-            this._lr5.Text = "5";
+            this._lr5.Text = "E";
             // 
             // _lr6
             // 
@@ -1528,7 +1539,7 @@ namespace Sudoku.Forms
             this._lr6.Name = "_lr6";
             this._lr6.Size = new System.Drawing.Size(13, 15);
             this._lr6.TabIndex = 123;
-            this._lr6.Text = "6";
+            this._lr6.Text = "F";
             // 
             // _lr7
             // 
@@ -1536,9 +1547,9 @@ namespace Sudoku.Forms
             this._lr7.Location = new System.Drawing.Point(478, 49);
             this._lr7.Margin = new System.Windows.Forms.Padding(0);
             this._lr7.Name = "_lr7";
-            this._lr7.Size = new System.Drawing.Size(13, 15);
+            this._lr7.Size = new System.Drawing.Size(15, 15);
             this._lr7.TabIndex = 124;
-            this._lr7.Text = "7";
+            this._lr7.Text = "G";
             // 
             // _lr8
             // 
@@ -1546,9 +1557,9 @@ namespace Sudoku.Forms
             this._lr8.Location = new System.Drawing.Point(547, 49);
             this._lr8.Margin = new System.Windows.Forms.Padding(0);
             this._lr8.Name = "_lr8";
-            this._lr8.Size = new System.Drawing.Size(13, 15);
+            this._lr8.Size = new System.Drawing.Size(16, 15);
             this._lr8.TabIndex = 125;
-            this._lr8.Text = "8";
+            this._lr8.Text = "H";
             // 
             // _lr9
             // 
@@ -1556,21 +1567,9 @@ namespace Sudoku.Forms
             this._lr9.Location = new System.Drawing.Point(612, 49);
             this._lr9.Margin = new System.Windows.Forms.Padding(0);
             this._lr9.Name = "_lr9";
-            this._lr9.Size = new System.Drawing.Size(13, 15);
+            this._lr9.Size = new System.Drawing.Size(10, 15);
             this._lr9.TabIndex = 126;
-            this._lr9.Text = "9";
-            // 
-            // _toolStripStatusHint
-            // 
-            this._toolStripStatusHint.Name = "_toolStripStatusHint";
-            this._toolStripStatusHint.Size = new System.Drawing.Size(36, 17);
-            this._toolStripStatusHint.Text = "Hint: ";
-            // 
-            // _toolStripStatusHint1
-            // 
-            this._toolStripStatusHint1.Name = "_toolStripStatusHint1";
-            this._toolStripStatusHint1.Size = new System.Drawing.Size(21, 17);
-            this._toolStripStatusHint1.Text = "(0)";
+            this._lr9.Text = "I";
             // 
             // MainForm
             // 

@@ -17,10 +17,8 @@
 namespace Sudoku.Solve
 {
     using System.Collections.Generic;
-    using System.Reflection;
 
     using global::Sudoku.Solve.NotPossible;
-    using global::Sudoku.Solve.Tools;
 
     public class SolverBlockade3 : SolverBase
     {

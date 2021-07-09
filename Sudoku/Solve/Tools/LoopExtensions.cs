@@ -34,5 +34,10 @@ namespace Sudoku.Solve.Tools
         {
             return cols.Select(col => getDef(row, col)).Where(def => def.IsEmpty);
         }
+
+        public static IEnumerable<(SudokuField field,int col)> SelectFieldEmptyIndex(this IEnumerable<int> cols, Sudoku.GetSudokuField getDef, int row)
+        {
+            return cols.Select(col => (getDef(row, col), col)).Where(def => def.Item1.IsEmpty);
+        }
     }
 }

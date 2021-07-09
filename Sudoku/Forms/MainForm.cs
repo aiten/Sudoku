@@ -17,6 +17,7 @@
 namespace Sudoku.Forms
 {
     using System;
+    using System.Collections.Generic;
     using System.Drawing;
     using System.Linq;
     using System.Windows.Forms;
@@ -25,8 +26,6 @@ namespace Sudoku.Forms
 
     using Sudoku.Solve;
     using Sudoku.Solve.Serialization;
-
-    using Orientation = Sudoku.Solve.Orientation;
 
     public partial class MainForm : Form
     {
@@ -258,7 +257,7 @@ namespace Sudoku.Forms
             _sudoku.UpdatePossible();
             _toolStripStatusMove.Text               = _sudoku.StepCount.ToString();
             _toolStripStatusPossibleSolutions1.Text = "";
-            _toolStripStatusHint1.Text = "press F1";
+            _toolStripStatusHint1.Text = "press F1 or shift+Click";
 
             StartThread();
 
@@ -375,8 +374,8 @@ namespace Sudoku.Forms
 
                     foreach (var explain in explains)
                     {
-                        var def2 = _sudoku.GetDef(explain.row, explain.col);
-                        _buttons[explain.row, explain.col].BackColor = explain.level switch
+                        var def2 = _sudoku.GetDef(explain.Row, explain.Col);
+                        _buttons[explain.Row, explain.Col].BackColor = explain.Level switch
                         {
                             0 => Color.DeepPink,
                             1 => Color.Cyan,
@@ -399,7 +398,11 @@ namespace Sudoku.Forms
             {
                 if (_options.Help)
                 {
-                    if (_sudoku.SetNextPossible(x, y))
+                    if (Control.ModifierKeys == Keys.Shift)
+                    {
+                        Explain(x,y);
+                    }
+                    else if (_sudoku.SetNextPossible(x, y))
                     {
                         SetButtons();
                     }

@@ -17,7 +17,6 @@
 namespace Sudoku.Solve
 {
     using System.Collections.Generic;
-    using System.Linq;
 
     using global::Sudoku.Solve.NotPossible;
 

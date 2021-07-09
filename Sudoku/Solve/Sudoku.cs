@@ -41,7 +41,11 @@ namespace Sudoku.Solve
             {
                 for (var col = 0; col < 9; col++)
                 {
-                    _fields[row, col] = new SudokuField();
+                    _fields[row, col] = new SudokuField()
+                    {
+                        AbsCol = col,
+                        AbsRow = row
+                    };
                 }
             }
         }
@@ -78,7 +82,7 @@ namespace Sudoku.Solve
         public SudokuField GetSudokuFieldS3(int row, int col)
         {
             var s3 = ConvertToS3(row, col);
-            return _fields[s3.row, s3.col];
+            return _fields[s3.Row, s3.Col];
         }
 
         public GetSudokuField ToGetDef(Orientation orientation)
@@ -93,17 +97,17 @@ namespace Sudoku.Solve
             throw new ArgumentException();
         }
 
-        public static (int row, int col) ConvertToRow(int row, int col)
+        public static (int Row, int Col) ConvertToRow(int row, int col)
         {
             return (row, col);
         }
 
-        public static (int row, int col) ConvertToCol(int row, int col)
+        public static (int Row, int Col) ConvertToCol(int row, int col)
         {
             return (col, row);
         }
 
-        public static (int row, int col) ConvertToS3(int row, int col)
+        public static (int Row, int Col) ConvertToS3(int row, int col)
         {
             var rowX3 = (row / 3) * 3;
             var colX3 = (row % 3) * 3;
@@ -114,17 +118,17 @@ namespace Sudoku.Solve
             return (rowX3 + dRow, colX3 + dCol);
         }
 
-        public static (int row, int col) ConvertFromRow(int row, int col)
+        public static (int Row, int Col) ConvertFromRow(int row, int col)
         {
             return (row, col);
         }
 
-        public static (int row, int col) ConvertFromCol(int row, int col)
+        public static (int Row, int Col) ConvertFromCol(int row, int col)
         {
             return (col, row);
         }
 
-        public static (int row, int col) ConvertFromS3(int row, int col)
+        public static (int Row, int Col) ConvertFromS3(int row, int col)
         {
             return ((row / 3) * 3 + col / 3, (row % 3) * 3 + (col % 3));
         }
@@ -381,9 +385,10 @@ namespace Sudoku.Solve
             var solverB2        = new SolverBlockade2(this);
             var solverB2B       = new SolverBlockade2SubSet(this);
             var solverB3        = new SolverBlockade3(this);
-            var solverXW        = new SolverXWing(this);
+            var solverXWing     = new SolverXWing(this);
             var solverSwordfish = new SolverSwordfish(this);
             var solverJellyfish = new SolverJellyfish(this);
+            var solverXYWing    = new SolverXYWing(this);
 
             solverB1.Solve(Orientation.X3);
 
@@ -405,9 +410,10 @@ namespace Sudoku.Solve
                 if (solverB2B.Solve()) changeCount++;
 
                 // only use xWing as last option is no other works
-                if (changeCount == 0 && solverXW.Solve()) changeCount++;
+                if (changeCount == 0 && solverXWing.Solve()) changeCount++;
                 if (changeCount == 0 && solverSwordfish.Solve()) changeCount++;
                 if (changeCount == 0 && solverJellyfish.Solve()) changeCount++;
+                if (changeCount == 0 && solverXYWing.Solve()) changeCount++;
 
                 CommitChanges();
 

@@ -26,9 +26,9 @@ namespace Sudoku.Solve.NotPossible
         public abstract    string SerializeTo();
         protected abstract void   SerializeFrom(string[] serialized);
 
-        public virtual IEnumerable<(int row, int col, int level)> Explain(Sudoku sudoku, int row, int col)
+        public virtual IEnumerable<(int Row, int Col, int Level)> Explain(Sudoku sudoku, int row, int col)
         {
-            return new List<(int row, int col, int level)>();
+            return new List<(int Row, int Col, int Level)>();
         }
 
         public static NotPossibleBase Create(string serialized)
@@ -55,20 +55,12 @@ namespace Sudoku.Solve.NotPossible
                 case "B4":  return Serialize(new NotPossibleXWing(),           val);
                 case "B5":  return Serialize(new NotPossibleSwordfish(),       val);
                 case "B6":  return Serialize(new NotPossibleJellyfish(),       val);
+                case "B7":  return Serialize(new NotPossibleXYWing(),          val);
                 default:    return null;
             }
         }
 
         public Orientation Orientation { get; set; }
 
-        protected (int row, int col) ConvertTo(int row, int col)
-        {
-            return Orientation switch
-            {
-                Orientation.Row    => Sudoku.ConvertToRow(row, col),
-                Orientation.Column => Sudoku.ConvertToCol(row, col),
-                Orientation.X3     => Sudoku.ConvertToS3(row, col),
-            };
-        }
     }
 }

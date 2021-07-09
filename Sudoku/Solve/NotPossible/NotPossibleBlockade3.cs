@@ -17,7 +17,6 @@
 namespace Sudoku.Solve.NotPossible
 {
     using System.Collections.Generic;
-    using System.Linq;
 
     public class NotPossibleBlockade3 : NotPossibleBase
     {
@@ -37,15 +36,16 @@ namespace Sudoku.Solve.NotPossible
             Orientation = serialized[2].ToOrientation();
             BecauseIdx  = serialized[3].FromRowList();
         }
-        public override IEnumerable<(int row, int col, int level)> Explain(Sudoku sudoku, int myRow, int myCol)
+
+        public override IEnumerable<(int Row, int Col, int Level)> Explain(Sudoku sudoku, int myRow, int myCol)
         {
-            var expl = new List<(int row, int col, int level)>();
-            var pos  = Orientation.ConvertFrom(myRow, myCol);
+            var expl = new List<(int Row, int Col, int Level)>();
+            var    pos  = (myRow, myCol).ConvertFrom(Orientation);
 
             foreach (var col in BecauseIdx)
             {
-                var rowCol = ConvertTo(pos.row, col);
-                expl.Add((rowCol.row, rowCol.col, 3));
+                var rowCol = (pos.Row, col).ConvertTo(Orientation);
+                expl.Add((rowCol.Row, rowCol.Col, 3));
             }
 
             return expl;
@@ -53,7 +53,13 @@ namespace Sudoku.Solve.NotPossible
 
         public override string ToString()
         {
-            return $"{ForNo}: only in {Orientation.ToOrientationDesc()}-index: {BecauseIdx.ToUserRowList()} (B3)";
+            if (Orientation == Orientation.X3)
+            {
+                return $"{ForNo}: only in {Orientation.ToOrientationDesc()} at {BecauseIdx.ToUserRowList(Orientation)} (B3)";
+            }
+
+            var opossit = Orientation.ToOppositeOrientation();
+            return $"{ForNo}: only in {Orientation.ToOrientationDesc()} at {opossit.ToOrientationDesc()}: {BecauseIdx.ToUserRowList(opossit)} (B3)";
         }
 
         public IEnumerable<int> BecauseIdx { get; set; }

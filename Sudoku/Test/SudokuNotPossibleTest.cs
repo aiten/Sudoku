@@ -154,7 +154,7 @@ namespace Sudoku.Test
                 BecauseNos  = new[] { 9, 8, 7 }
             };
 
-            notPossible.ToString().Should().Be("2: 9,8,7: in col-index: 2,3,4 (B2)");
+            notPossible.ToString().Should().Be("2: 9,8,7 in col at row 2,3,4 (B2)");
         }
 
         [Fact]
@@ -168,7 +168,7 @@ namespace Sudoku.Test
                 BecauseNos  = new[] { 9, 8, 7 }
             };
 
-            notPossible.ToString().Should().Be("2: 9,8,7: in col-index: 2,3,4 (B2+)");
+            notPossible.ToString().Should().Be("2: 9,8,7 in col at row 2,3,4 (B2+)");
         }
 
         [Fact]
@@ -181,7 +181,7 @@ namespace Sudoku.Test
                 BecauseIdx  = new[] { 1, 2, 3 },
             };
 
-            notPossible.ToString().Should().Be("3: only in col-index: 2,3,4 (B3)");
+            notPossible.ToString().Should().Be("3: only in col at row: 2,3,4 (B3)");
         }
 
         [Fact]
@@ -195,7 +195,7 @@ namespace Sudoku.Test
                 BecauseRow  = new[] { 8, 7 },
             };
 
-            notPossible.ToString().Should().Be("4: X-Wing col 9,8 with row 2,3");
+            notPossible.ToString().Should().Be("4: X-Wing col I,H with row 2,3");
         }
 
         [Fact]
@@ -209,7 +209,7 @@ namespace Sudoku.Test
                 BecauseRow  = new[] { 8, 7, 6 },
             };
 
-            notPossible.ToString().Should().Be("4: swordfish col 9,8,7 with row 2,3,4");
+            notPossible.ToString().Should().Be("4: swordfish col I,H,G with row 2,3,4");
         }
 
         [Fact]
@@ -223,7 +223,7 @@ namespace Sudoku.Test
                 BecauseRow  = new[] { 8, 7, 6, 5 },
             };
 
-            notPossible.ToString().Should().Be("4: jellyfish col 9,8,7,6 with row 2,3,4,5");
+            notPossible.ToString().Should().Be("4: jellyfish col I,H,G,F with row 2,3,4,5");
         }
     }
 }

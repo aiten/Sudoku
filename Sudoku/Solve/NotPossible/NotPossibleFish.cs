@@ -42,9 +42,9 @@ namespace Sudoku.Solve.NotPossible
             BecauseCol  = serialized[4].FromRowList();
         }
 
-        public override IEnumerable<(int row, int col, int level)> Explain(Sudoku sudoku, int myRow, int myCol)
+        public override IEnumerable<(int Row, int Col, int Level)> Explain(Sudoku sudoku, int myRow, int myCol)
         {
-            var expl = new List<(int row, int col, int level)>();
+            var expl = new List<(int Row, int Col, int Level)>();
 
             foreach (var row in BecauseRow)
             {
@@ -60,10 +60,10 @@ namespace Sudoku.Solve.NotPossible
 */
                 foreach (var col in BecauseCol)
                 {
-                    var rowCol = ConvertTo(row, col);
-                    if (sudoku.GetDef(rowCol.row, rowCol.col).IsEmpty)
+                    var rowCol = (row, col).ConvertTo(Orientation);
+                    if (sudoku.GetDef(rowCol.Row, rowCol.Col).IsEmpty)
                     {
-                        expl.Add((rowCol.row, rowCol.col, 3));
+                        expl.Add((rowCol.Row, rowCol.Col, 3));
                     }
                 }
             }
@@ -74,10 +74,10 @@ namespace Sudoku.Solve.NotPossible
                 {
                     if (!BecauseRow.Contains(row))
                     {
-                        var rowCol = ConvertTo(row, col);
-                        var def    = sudoku.GetDef(rowCol.row, rowCol.col);
+                        var rowCol = (row, col).ConvertTo(Orientation);
+                        var def    = sudoku.GetDef(rowCol.Row, rowCol.Col);
                         var isRole = def.IsPossibleMainRule(ForNo) && def.IsNotPossible(ForNo) ? 5 : 2;
-                        expl.Add((rowCol.row, rowCol.col, isRole));
+                        expl.Add((rowCol.Row, rowCol.Col, isRole));
                     }
                 }
             }
@@ -87,7 +87,8 @@ namespace Sudoku.Solve.NotPossible
 
         public override string ToString()
         {
-            return $"{ForNo}: {FishName} {Orientation.ToOrientationDesc()} {BecauseRow.ToUserRowList()} with {Orientation.ToOppositeOrientation().ToOrientationDesc()} {BecauseCol.ToUserRowList()}";
+            var opposite = Orientation.ToOppositeOrientation();
+            return $"{ForNo}: {FishName} {Orientation.ToOrientationDesc()} {BecauseRow.ToUserRowList(Orientation)} with {opposite.ToOrientationDesc()} {BecauseCol.ToUserRowList(opposite)}";
         }
 
         public IEnumerable<int> BecauseRow { get; set; }

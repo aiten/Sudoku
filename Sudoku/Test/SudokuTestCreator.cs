@@ -18,7 +18,6 @@ namespace Sudoku.Test
 {
     using System.IO;
     using System.Linq;
-    using System.Text.RegularExpressions;
 
     using FluentAssertions;
 

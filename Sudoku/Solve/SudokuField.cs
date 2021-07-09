@@ -26,6 +26,11 @@ namespace Sudoku.Solve
     {
         #region Data
 
+        public int AbsRow { get; set; }
+        public int AbsCol { get; set; }
+
+        public (int Row, int Col) AbsRowCol => (AbsRow, AbsCol);
+
         public int No { get; internal set; }
 
         public bool IsEmpty => No == 0;

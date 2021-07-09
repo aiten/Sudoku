@@ -349,7 +349,7 @@ namespace Sudoku.Test
                     s.CanSet(row, col, 0).Should().BeTrue();
                     s.CanSet(row, col, 9).Should().BeTrue();
 
-                    if (cannotSet.Contains((Row: row, Col: col)))
+                    if (cannotSet.Contains((row, col)))
                     {
                         // cannot set 0..8, only 9
                         for (int no = 1; no < 9; no++)

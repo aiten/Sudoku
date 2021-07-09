@@ -16,8 +16,6 @@
 
 namespace Sudoku.Test
 {
-    using System.Linq;
-
     using FluentAssertions;
 
     using Sudoku.Solve;
@@ -68,7 +66,7 @@ namespace Sudoku.Test
         [InlineData(8, 8, Orientation.X3,     8, 8)]
         public void TestConvertToRowCol(int row, int col, Orientation orientation, int toRow, int toCol)
         {
-            var toRowCol = orientation.ConvertTo(row, col);
+            var toRowCol = (row, col).ConvertTo(orientation);
 
             toRowCol.Should().Be((toRow, toCol));
         }
@@ -83,8 +81,8 @@ namespace Sudoku.Test
             {
                 foreach (var col in LoopExtensions.Cols)
                 {
-                    var toRowCol = orientation.ConvertTo(row, col);
-                    var fromRowCol = orientation.ConvertFrom(toRowCol.row, toRowCol.col);
+                    var toRowCol   = (row, col).ConvertTo(orientation);
+                    var fromRowCol = (toRowCol.Row, toRowCol.Col).ConvertFrom(orientation);
 
                     fromRowCol.Should().Be((row, col));
                 }

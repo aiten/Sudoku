@@ -17,11 +17,8 @@
 namespace Sudoku.Forms
 {
     using System.Drawing;
-    using System.Linq;
-    using System.Text;
 
     using Sudoku.Solve;
-    using Sudoku.Solve.Tools;
 
     public static class SudokuFormExtensions
     {
