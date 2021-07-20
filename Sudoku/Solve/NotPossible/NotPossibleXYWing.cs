@@ -17,6 +17,7 @@
 namespace Sudoku.Solve.NotPossible
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     public class NotPossibleXYWing : NotPossibleBase
     {
@@ -45,6 +46,15 @@ namespace Sudoku.Solve.NotPossible
             expl.Add((Pivot.Row, Pivot.Col, 3));
             expl.Add((Pincer1.Row, Pincer1.Col, 4));
             expl.Add((Pincer2.Row, Pincer2.Col, 4));
+
+            var intersect = Pincer1.IntersectFields(Pincer2)
+                .Where(pos => pos != Pincer1 && pos != Pincer2 && pos != Pivot)
+                .Where(pos => sudoku.GetDef(pos.Row, pos.Col).IsEmpty && sudoku.GetDef(pos.Row, pos.Col).IsPossibleMainRule(ForNo));
+
+            foreach (var field in intersect)
+            {
+                expl.Add((field.Row, field.Col, 5));
+            }
 
             return expl;
         }

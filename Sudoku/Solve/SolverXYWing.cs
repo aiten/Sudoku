@@ -39,7 +39,7 @@ namespace Sudoku.Solve
             return Solve(Orientation.Column);
         }
 
-        private bool IsYWing(SudokuField main, SudokuField cmp1, SudokuField cmp2, out int wingNo)
+        private bool IsXYWing(SudokuField main, SudokuField cmp1, SudokuField cmp2, out int wingNo)
         {
             var possibleNosMain = main.GetPossibleNos().ToList();
             var possibleNos1    = cmp1.GetPossibleNos().ToList();
@@ -58,7 +58,7 @@ namespace Sudoku.Solve
                    interSec1To2.Single() != interSecMainTo1.Single();
         }
 
-        private int UpdateYWingField(SudokuField field, int forNo, SudokuField pivot, SudokuField pincer1, SudokuField pincer2)
+        private int UpdateXYWingField(SudokuField field, int forNo, SudokuField pivot, SudokuField pincer1, SudokuField pincer2)
         {
             if (field.AbsRowCol != pivot.AbsRowCol &&
                 field.AbsRowCol != pincer1.AbsRowCol &&
@@ -79,7 +79,7 @@ namespace Sudoku.Solve
             return 0;
         }
 
-        private int UpdateYWing(SudokuField pivot, Orientation orientation1, IList<SudokuField> list1, Orientation orientation2, IList<SudokuField> list2)
+        private int UpdateXYWing(SudokuField pivot, Orientation orientation1, IList<SudokuField> list1, Orientation orientation2, IList<SudokuField> list2)
         {
             int count = 0;
             foreach (var pincer1 in list1)
@@ -89,7 +89,7 @@ namespace Sudoku.Solve
                     if (pincer1.AbsRowCol != pincer2.AbsRowCol)
                     {
                         int wingNo;
-                        if (IsYWing(pivot, pincer1, pincer2, out wingNo))
+                        if (IsXYWing(pivot, pincer1, pincer2, out wingNo))
                         {
                             var intersect = pincer1.AbsRowCol
                                 .IntersectFields(pincer2.AbsRowCol)
@@ -98,7 +98,7 @@ namespace Sudoku.Solve
                                 .Where(field => field.IsEmpty);
                             foreach (var field in intersect)
                             {
-                                count += UpdateYWingField(field, wingNo, pivot, pincer1, pincer2);
+                                count += UpdateXYWingField(field, wingNo, pivot, pincer1, pincer2);
                             }
                         }
                     }
@@ -135,17 +135,17 @@ namespace Sudoku.Solve
 
                 if (sameRow.Count >= 1 && sameCol.Count >= 1)
                 {
-                    changeCount += UpdateYWing(pivot, Orientation.Row, sameRow, Orientation.Column, sameCol);
+                    changeCount += UpdateXYWing(pivot, Orientation.Row, sameRow, Orientation.Column, sameCol);
                 }
 
                 if (sameRow.Count >= 1 && sameX3.Count >= 1)
                 {
-                    changeCount += UpdateYWing(pivot, Orientation.Row, sameRow, Orientation.X3, sameX3);
+                    changeCount += UpdateXYWing(pivot, Orientation.Row, sameRow, Orientation.X3, sameX3);
                 }
 
                 if (sameCol.Count >= 1 && sameX3.Count >= 1)
                 {
-                    changeCount += UpdateYWing(pivot, Orientation.X3, sameX3, Orientation.Column, sameCol);
+                    changeCount += UpdateXYWing(pivot, Orientation.X3, sameX3, Orientation.Column, sameCol);
                 }
             }
 
