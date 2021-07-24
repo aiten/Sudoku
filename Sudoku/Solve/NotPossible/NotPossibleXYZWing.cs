@@ -14,30 +14,26 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Solve.Tools
+namespace Sudoku.Solve.NotPossible
 {
     using System.Collections.Generic;
     using System.Linq;
 
-    public static class LoopExtensions
+    public class NotPossibleXYZWing : NotPossibleWingBase
     {
-        public static readonly IEnumerable<int> Rows = Enumerable.Range(0, 9);
-        public static readonly IEnumerable<int> Cols = Enumerable.Range(0, 9);
-        public static readonly IEnumerable<int> Nos  = Enumerable.Range(1, 9);
-
-        public static IEnumerable<SudokuField> SelectField(this IEnumerable<int> cols, Sudoku.GetSudokuField getDef, int row)
+        public NotPossibleXYZWing()
         {
-            return cols.Select(col => getDef(row, col));
+            RoleName = "B8";
+            WingName = "XYZ";
         }
 
-        public static IEnumerable<SudokuField> SelectFieldEmpty(this IEnumerable<int> cols, Sudoku.GetSudokuField getDef, int row)
+        protected override IEnumerable<(int Row, int Col)> IntersectExplain(Sudoku sudoku, int row, int col)
         {
-            return cols.Select(col => getDef(row, col)).Where(def => def.IsEmpty);
-        }
+            var intersect = Pivot.IntersectFields(new[] { Pincer1, Pincer2 })
+                .Where(pos => pos != Pincer1 && pos != Pincer2 && pos != Pivot)
+                .Where(pos => sudoku.GetDef(pos.Row, pos.Col).IsEmpty && sudoku.GetDef(pos.Row, pos.Col).IsPossibleMainRule(ForNo));
 
-        public static IEnumerable<(SudokuField field, int col)> SelectFieldEmptyIndex(this IEnumerable<int> cols, Sudoku.GetSudokuField getDef, int row)
-        {
-            return cols.Select(col => (getDef(row, col), col)).Where(def => def.Item1.IsEmpty);
+            return intersect;
         }
     }
 }

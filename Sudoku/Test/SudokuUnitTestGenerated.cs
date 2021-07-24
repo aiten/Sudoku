@@ -21,6 +21,135 @@ namespace Sudoku.Test
     public class SudokuUnitTestGenerated : SudokuBaseUnitTest
     {
         [Fact]
+        public void Test10XYZWing1()
+        {
+            CheckSudoku(new[]
+              {
+                "8,6,9,4,5,3,7,2,1",
+                " , , ,9,2,1,5,6,8",
+                "2,1,5,8, , ,4,3,9",
+                "6,2,1,5,3,4,9,8,7",
+                "4, ,7,6,1, ,3,5,2",
+                " , , ,2, , ,1,4,6",
+                " , , ,1, ,2,8, ,3",
+                "9,3,2,7,8,5,6,1,4",
+                "1, , ,3,4, ,2, ,5",
+              },
+              new ExpectResult[]
+              {
+                new (8, 1, "8", "8 - 7\nB8:7:61:60:11"),
+              },
+              false
+            );
+        }
+        [Fact]
+        public void Test10XYZWing2()
+        {
+            CheckSudoku(new[]
+              {
+                "6,7,3, ,8, ,2, ,9",
+                "5,1,4, ,9,2, , ,3",
+                "9,8,2, , , , , ,5",
+                "1,6,7,3,5,9, , ,2",
+                "8, ,9, ,1, ,5,3,6",
+                " , ,5,8, , ,7,9,1",
+                " , ,6,1,4, ,9,2,8",
+                " , ,1, , ,8,3,5,4",
+                " , ,8, , , ,1,6,7",
+              },
+              new ExpectResult[]
+              {
+                new (2, 4, "3,7", "3,7 - 6\nB8:6:23:26:13"),
+                new (2, 5, "1,3,4,7", "1,3,4,7 - 6\nB8:6:23:26:13"),
+                new (5, 5, "6", "6 - 4\nB1:4:C:6"),
+              },
+              false
+            );
+        }
+        [Fact]
+        public void Test11SueDeCoq1()
+        {
+            CheckSudoku(new[]
+              {
+                "1,4,8,3,2,7, , , ",
+                "2,6,7,5,9,4,3,8,1",
+                " ,3, ,8,6,1,7,4,2",
+                "3,9,6,4,5,2,1,7,8",
+                "7,1,4,6,3,8,9,2,5",
+                "8,5,2, , ,9, , , ",
+                " ,8, ,2, ,6, , ,7",
+                " ,7, , ,8,5,2, , ",
+                " ,2,1, , ,3,8, , ",
+              },
+              new ExpectResult[]
+              {
+              }
+            );
+        }
+        [Fact]
+        public void Test11SueDeCoq2()
+        {
+            CheckSudoku(new[]
+              {
+                " , , ,7,2,8,4,1, ",
+                "1, ,2,9,3, ,8,7, ",
+                " , , ,1, , , , ,9",
+                "6,8, , , , , , , ",
+                " , , , , ,9,6, ,1",
+                " ,1, , , , , , ,8",
+                "7, , ,4, , ,1, , ",
+                " , ,6,5, , ,3,9, ",
+                "5, ,1, , , , , , ",
+              },
+              new ExpectResult[]
+              {
+              }
+            );
+        }
+        [Fact]
+        public void Test12Skyscraper1()
+        {
+            CheckSudoku(new[]
+              {
+                "6,9,7, , , , , ,2",
+                " , ,1,9,7,2, ,6,3",
+                " , ,3, , ,6,7,9, ",
+                "9,1,2, , , ,6, ,7",
+                "3,7,4,2,6, ,9,5, ",
+                "8,6,5,7, ,9, ,2,4",
+                "1,4,8,6,9,3,2,7,5",
+                "7, ,9, ,2,4, , ,6",
+                " , ,6,8, ,7, , ,9",
+              },
+              new ExpectResult[]
+              {
+              }
+            );
+        }
+        [Fact]
+        public void Test12Skyscraper2()
+        {
+            CheckSudoku(new[]
+              {
+                " , ,1, ,2,8,7,5,9",
+                " ,8,7,9, ,5,1,3,2",
+                "9,5,2,1,7,3,4,8,6",
+                " ,2, ,7, , ,3,4, ",
+                " , , ,5, , ,2,7, ",
+                "7,1,4,8,3,2,6,9,5",
+                " , , , ,9, ,8,1,7",
+                " ,7,8, ,5,1,9,6,3",
+                "1,9, , ,8,7,5,2,4",
+              },
+              new ExpectResult[]
+              {
+                new (6, 0, "2,3,4,5", "2,3,4,5 - 6\nB8:6:61:65:82"),
+                new (6, 2, "3,5", "3,5 - 6\nB8:6:61:65:82"),
+              },
+              false
+            );
+        }
+        [Fact]
         public void Test1NotPossible()
         {
             CheckSudoku(new[]
@@ -322,7 +451,7 @@ namespace Sudoku.Test
                 new (2, 3, "4,5,6", "4,5,6 - 7,8,9\nB2:7:R:7,8,9:6,7,8\nB2:8:R:7,8,9:6,7,8\nB2:9:R:7,8,9:6,7,8"),
                 new (2, 4, "4,5,6", "4,5,6 - 7,8,9\nB2:7:R:7,8,9:6,7,8\nB2:8:R:7,8,9:6,7,8\nB2:9:R:7,8,9:6,7,8"),
                 new (2, 5, "4,5,6", "4,5,6 - 7,8,9\nB2:7:R:7,8,9:6,7,8\nB2:8:R:7,8,9:6,7,8\nB2:9:R:7,8,9:6,7,8"),
-               },
+              },
               false
             );
         }
@@ -451,7 +580,7 @@ namespace Sudoku.Test
             );
         }
         [Fact]
-        public void Test5xWingCol()
+        public void Test5XWingCol()
         {
             CheckSudoku(new[]
               {
@@ -482,7 +611,7 @@ namespace Sudoku.Test
             );
         }
         [Fact]
-        public void Test5xWingRow()
+        public void Test5XWingRow()
         {
             CheckSudoku(new[]
               {
@@ -625,7 +754,7 @@ namespace Sudoku.Test
             );
         }
         [Fact]
-        public void Test8yWing()
+        public void Test8XYWing()
         {
             CheckSudoku(new[]
               {
@@ -651,7 +780,7 @@ namespace Sudoku.Test
             );
         }
         [Fact]
-        public void Test8Ywing1()
+        public void Test8XYWing1()
         {
             CheckSudoku(new[]
               {
@@ -675,13 +804,13 @@ namespace Sudoku.Test
                 new (1, 5, "3,7", "3,7 - 1\nB2:1:X:1,9:3,6"),
                 new (2, 5, "2,8", "2,8 - 1\nB2P:1:X:1,3,7,9:3,4,5,6"),
                 new (7, 7, "5,9", "5,9 - 4,7\nB2P:4:R:4,7:2,5\nB2P:7:R:4,7:2,5"),
-                new (7, 8, "3,6,9", "3,6,9 - 4,7\nB2P:4:R:4,7:2,5\nB2P:7:R:4,7:2,5"),
+                new (7, 8, "3,9", "3,9 - 4,6,7\nB2P:4:R:4,7:2,5\nB7:6:77:74:66\nB2P:7:R:4,7:2,5"),
               },
               false
             );
         }
         [Fact]
-        public void Test8Ywing2()
+        public void Test8XYWing2()
         {
             CheckSudoku(new[]
               {
@@ -705,6 +834,7 @@ namespace Sudoku.Test
                 new (7, 1, "6,9", "6,9 - 7\nB2P:7:C:3,7:0,3"),
                 new (8, 1, "1,2", "1,2 - 7\nB2P:7:R:4,7:3,6"),
                 new (4, 2, "4,8", "4,8 - 7,9\nB2:7:X:3,7,9:1,6,7,8\nB2:9:X:3,7,9:1,6,7,8"),
+                new (6, 2, "2,7", "2,7 - 9\nB7:9:60:63:71"),
                 new (6, 3, "9", "9 - 7\nB1:7:X:9"),
                 new (7, 3, "4,7", "4,7 - 9\nB7:9:60:63:71"),
                 new (1, 7, "2,3,7,9", "2,3,7,9 - 4\nB3:4:R:0,2"),
@@ -717,7 +847,7 @@ namespace Sudoku.Test
             );
         }
         [Fact]
-        public void Test8Ywing3()
+        public void Test8XYWing3()
         {
             CheckSudoku(new[]
               {
@@ -733,6 +863,8 @@ namespace Sudoku.Test
               },
               new ExpectResult[]
               {
+                new (1, 0, "2", "2 - 7\nB7:7:11:13:02"),
+                new (1, 1, "4", "4 - 5\nB7:5:10:15:02"),
                 new (0, 5, "2", "2 - 5\nB7:5:10:15:02"),
                 new (1, 5, "5", "5 - 2\nB7:2:02:05:10"),
               },
@@ -740,7 +872,7 @@ namespace Sudoku.Test
             );
         }
         [Fact]
-        public void Test8Ywing4()
+        public void Test8XYWing4()
         {
             CheckSudoku(new[]
               {
@@ -757,7 +889,56 @@ namespace Sudoku.Test
               new ExpectResult[]
               {
                 new (3, 1, "3,6", "3,6 - 9\nB7:9:30:33:41"),
+                new (3, 2, "1,3,7", "1,3,7 - 9\nB7:9:30:33:41"),
                 new (4, 3, "1,5,8", "1,5,8 - 9\nB7:9:30:33:41"),
+                new (4, 4, "8", "8 - 9\nB7:9:30:33:41"),
+                new (4, 5, "5", "5 - 9\nB7:9:30:33:41"),
+              },
+              false
+            );
+        }
+        [Fact]
+        public void Test9WWing1()
+        {
+            CheckSudoku(new[]
+              {
+                "9,2,5,1,3,4,6,8,7",
+                "8, , ,6,5,9,4,3,2",
+                "4,3,6,7,2,8,9,5,1",
+                "6,4, , ,1, ,8, , ",
+                "1,5, ,4,8, , ,6, ",
+                "3, ,8, ,6, , ,1,4",
+                "5, , ,2,7,6,3,4,8",
+                "2,6,3,8,4,1, , , ",
+                "7,8,4,3,9,5,1,2,6",
+              },
+              new ExpectResult[]
+              {
+                new (3, 7, "7", "7 - 9\nB8:9:38:33:48"),
+              },
+              false
+            );
+        }
+        [Fact]
+        public void Test9WWing2()
+        {
+            CheckSudoku(new[]
+              {
+                "6, , ,9,5, , ,7, ",
+                " , ,9, ,2, , , , ",
+                " ,5,8, ,3,1, , , ",
+                "1,6,4,3,8,9,7,5,2",
+                " , , ,1,7,5,9,4,6",
+                "5,9,7,2,4,6, , ,8",
+                "9,2,5,4,1,7,6,8,3",
+                " , , ,5,6,2, , , ",
+                " , ,6,8,9,3, , , ",
+              },
+              new ExpectResult[]
+              {
+                new (8, 6, "1,4,5", "1,4,5 - 2\nB7:2:76:87:26"),
+                new (2, 7, "6,9", "6,9 - 2\nB7:2:76:87:26"),
+                new (8, 7, "2", "2 - 1\nB1:1:X:2"),
               },
               false
             );

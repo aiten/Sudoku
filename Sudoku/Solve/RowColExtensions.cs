@@ -57,6 +57,17 @@ namespace Sudoku.Solve
             return dependentFields;
         }
 
+        public static IEnumerable<(int Row, int Col)> IntersectFields(this (int Row, int Col) field, IEnumerable<(int Row, int Col)> intersectWith)
+        {
+            var intersectedFields = DependentFields(field);
+            foreach (var intersect in intersectWith)
+            {
+                intersectedFields = intersectedFields.Intersect(field.IntersectFields(intersect));
+            }
+
+            return intersectedFields;
+        }
+
         public static IEnumerable<(int Row, int Col)> IntersectFields(this (int Row, int Col) field, (int Row, int Col) intersectWith)
         {
             var intersectedFields = new List<(int Row, int Col)>();

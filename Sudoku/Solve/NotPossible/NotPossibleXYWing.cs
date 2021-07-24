@@ -19,53 +19,21 @@ namespace Sudoku.Solve.NotPossible
     using System.Collections.Generic;
     using System.Linq;
 
-    public class NotPossibleXYWing : NotPossibleBase
+    public class NotPossibleXYWing : NotPossibleWingBase
     {
         public NotPossibleXYWing()
         {
             RoleName = "B7";
+            WingName = "XY";
         }
 
-        public override string SerializeTo()
+        protected override IEnumerable<(int Row, int Col)> IntersectExplain(Sudoku sudoku, int row, int col)
         {
-            return $"{RoleName}:{ForNo}:{Pivot.ToCellString()}:{Pincer1.ToCellString()}:{Pincer2.ToCellString()}";
-        }
-
-        protected override void SerializeFrom(string[] serialized)
-        {
-            ForNo   = int.Parse(serialized[1]);
-            Pivot   = serialized[2].FromCellString();
-            Pincer1 = serialized[3].FromCellString();
-            Pincer2 = serialized[4].FromCellString();
-        }
-
-        public override IEnumerable<(int Row, int Col, int Level)> Explain(Sudoku sudoku, int myRow, int myCol)
-        {
-            var expl = new List<(int Row, int Col, int Level)>();
-
-            expl.Add((Pivot.Row, Pivot.Col, 3));
-            expl.Add((Pincer1.Row, Pincer1.Col, 4));
-            expl.Add((Pincer2.Row, Pincer2.Col, 4));
-
             var intersect = Pincer1.IntersectFields(Pincer2)
                 .Where(pos => pos != Pincer1 && pos != Pincer2 && pos != Pivot)
                 .Where(pos => sudoku.GetDef(pos.Row, pos.Col).IsEmpty && sudoku.GetDef(pos.Row, pos.Col).IsPossibleMainRule(ForNo));
 
-            foreach (var field in intersect)
-            {
-                expl.Add((field.Row, field.Col, 5));
-            }
-
-            return expl;
+            return intersect;
         }
-
-        public override string ToString()
-        {
-            return $"{ForNo}: XY-Wing in {Pivot.ToCellStringUser()} with {Pincer1.ToCellStringUser()}:{Pincer2.ToCellStringUser()} (B7)";
-        }
-
-        public (int Row, int Col) Pivot   { get; set; }
-        public (int Row, int Col) Pincer1 { get; set; }
-        public (int Row, int Col) Pincer2 { get; set; }
     }
 }

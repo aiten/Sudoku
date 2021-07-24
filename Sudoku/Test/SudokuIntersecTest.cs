@@ -27,16 +27,11 @@ namespace Sudoku.Test
     public class SudokuIntersectTest
     {
         [Theory]
-        [InlineData(0, 0, 3, 1)]
-        [InlineData(0, 0, 3, 2)]
         [InlineData(0, 0, 3, 3)]
         [InlineData(0, 0, 3, 4)]
         [InlineData(0, 0, 3, 5)]
         [InlineData(0, 0, 3, 6)]
         [InlineData(0, 0, 3, 7)]
-        [InlineData(0, 0, 3, 8)]
-        [InlineData(0, 0, 1, 8)]
-        [InlineData(0, 0, 2, 8)]
         [InlineData(0, 0, 3, 8)]
         [InlineData(0, 0, 4, 8)]
         [InlineData(0, 0, 5, 8)]
@@ -46,7 +41,8 @@ namespace Sudoku.Test
         public void NoIntersectTest(int row1, int col1, int row2, int col2)
         {
             var intersect = (row1, col1).IntersectFields((row2, col2));
-            intersect.Should().HaveCount(0);
+            // 2 is minimum
+            intersect.Should().HaveCount(2);
         }
 
         [Theory]

@@ -16,11 +16,7 @@
 
 namespace Sudoku.Solve
 {
-    using System.Collections;
-    using System.Collections.Generic;
     using System.Linq;
-
-    using global::Sudoku.Solve.Tools;
 
     public static class SudokuFieldExtensions
     {
@@ -38,6 +34,5 @@ namespace Sudoku.Solve
 
             return string.Join(separator, field.GetNotPossible().Select(notPossible => notPossible.ToString()));
         }
-
     }
 }

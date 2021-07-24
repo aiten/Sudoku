@@ -24,9 +24,9 @@ namespace Sudoku.Solve
     // see: https://www.thinkgym.de/r%C3%A4tselarten/sudoku/l%C3%B6sungsstrategien-3/xy-wing/
     // see http://hodoku.sourceforge.net/de/tech_wings.php
 
-    public class SolverXYWing : SolverBase
+    public class SolverXYZWing : SolverBase
     {
-        public SolverXYWing(Sudoku sudoku) : base(sudoku)
+        public SolverXYZWing(Sudoku sudoku) : base(sudoku)
         {
         }
 
@@ -35,7 +35,7 @@ namespace Sudoku.Solve
             return Solve(Orientation.Column);
         }
 
-        private bool IsXYWing(SudokuField main, SudokuField cmp1, SudokuField cmp2, out int wingNo)
+        private bool IsXYZWing(SudokuField main, SudokuField cmp1, SudokuField cmp2, out int wingNo)
         {
             var possibleNosMain = main.GetPossibleNos().ToList();
             var possibleNos1    = cmp1.GetPossibleNos().ToList();
@@ -47,21 +47,19 @@ namespace Sudoku.Solve
 
             wingNo = intersect1To2.FirstOrDefault();
 
-            return intersectMainTo1.Count == 1 &&
-                   intersectMainTo2.Count == 1 &&
-                   intersect1To2.Count == 1 &&
-                   intersectMainTo1.Single() != intersectMainTo2.Single() &&
-                   intersect1To2.Single() != intersectMainTo1.Single();
+            return intersectMainTo1.Count == 2 &&
+                   intersectMainTo2.Count == 2 &&
+                   intersect1To2.Count == 1;
         }
 
-        private int UpdateXYWingField(SudokuField field, int forNo, SudokuField pivot, SudokuField pincer1, SudokuField pincer2)
+        private int UpdateXYZWingField(SudokuField field, int forNo, SudokuField pivot, SudokuField pincer1, SudokuField pincer2)
         {
             if (field.AbsRowCol != pivot.AbsRowCol &&
                 field.AbsRowCol != pincer1.AbsRowCol &&
                 field.AbsRowCol != pincer2.AbsRowCol &&
                 field.IsEmpty && field.IsPossible(forNo))
             {
-                field.SetNotPossible(forNo, new NotPossibleXYWing()
+                field.SetNotPossible(forNo, new NotPossibleXYZWing()
                 {
                     ForNo   = forNo,
                     Pivot   = pivot.AbsRowCol,
@@ -75,7 +73,7 @@ namespace Sudoku.Solve
             return 0;
         }
 
-        private int UpdateXYWing(SudokuField pivot, Orientation orientation1, IList<SudokuField> list1, Orientation orientation2, IList<SudokuField> list2)
+        private int UpdateXYZWing(SudokuField pivot, Orientation orientation1, IList<SudokuField> list1, Orientation orientation2, IList<SudokuField> list2)
         {
             int count = 0;
             foreach (var pincer1 in list1)
@@ -85,16 +83,16 @@ namespace Sudoku.Solve
                     if (pincer1.AbsRowCol != pincer2.AbsRowCol)
                     {
                         int wingNo;
-                        if (IsXYWing(pivot, pincer1, pincer2, out wingNo))
+                        if (IsXYZWing(pivot, pincer1, pincer2, out wingNo))
                         {
-                            var intersect = pincer1.AbsRowCol
-                                .IntersectFields(pincer2.AbsRowCol)
+                            var intersect = pivot.AbsRowCol
+                                .IntersectFields(new [] {pincer1.AbsRowCol, pincer2.AbsRowCol })
                                 .Where(pos => pos != pincer1.AbsRowCol && pos != pincer2.AbsRowCol)
                                 .Select(pos => Sudoku.GetDef(pos.Row, pos.Col))
                                 .Where(field => field.IsEmpty);
                             foreach (var field in intersect)
                             {
-                                count += UpdateXYWingField(field, wingNo, pivot, pincer1, pincer2);
+                                count += UpdateXYZWingField(field, wingNo, pivot, pincer1, pincer2);
                             }
                         }
                     }
@@ -108,22 +106,24 @@ namespace Sudoku.Solve
         {
             var changeCount     = 0;
             var listOf2Possible = new List<SudokuField>();
+            var listOf3Possible = new List<SudokuField>();
 
             ForEachEmpty(Sudoku.ToGetDef(Orientation.Column), (def, row, col) =>
             {
-                if (def.GetPossibleNos().Count() == 2)
+                switch (def.GetPossibleNos().Count())
                 {
-                    listOf2Possible.Add(def);
+                    case 2: listOf2Possible.Add(def); break;
+                    case 3: listOf3Possible.Add(def); break;
                 }
             });
 
-            foreach (var pivot in listOf2Possible)
+            foreach (var pivot in listOf3Possible)
             {
                 var rowColCol = pivot.AbsRowCol.ConvertTo(Orientation.Column);
                 var rowColRow = pivot.AbsRowCol.ConvertTo(Orientation.Row);
                 var rowColX3  = pivot.AbsRowCol.ConvertTo(Orientation.X3);
 
-                var possible2NotThis = listOf2Possible.Where(field => field.AbsRowCol != pivot.AbsRowCol).ToList();
+                var possible2NotThis = listOf2Possible;
 
                 var sameRow = possible2NotThis.Where(field => field.AbsRowCol.ConvertTo(Orientation.Row).Row == rowColRow.Row).ToList();
                 var sameCol = possible2NotThis.Where(field => field.AbsRowCol.ConvertTo(Orientation.Column).Row == rowColCol.Row).ToList();
@@ -131,17 +131,17 @@ namespace Sudoku.Solve
 
                 if (sameRow.Count >= 1 && sameCol.Count >= 1)
                 {
-                    changeCount += UpdateXYWing(pivot, Orientation.Row, sameRow, Orientation.Column, sameCol);
+                    changeCount += UpdateXYZWing(pivot, Orientation.Row, sameRow, Orientation.Column, sameCol);
                 }
 
                 if (sameRow.Count >= 1 && sameX3.Count >= 1)
                 {
-                    changeCount += UpdateXYWing(pivot, Orientation.Row, sameRow, Orientation.X3, sameX3);
+                    changeCount += UpdateXYZWing(pivot, Orientation.Row, sameRow, Orientation.X3, sameX3);
                 }
 
                 if (sameCol.Count >= 1 && sameX3.Count >= 1)
                 {
-                    changeCount += UpdateXYWing(pivot, Orientation.X3, sameX3, Orientation.Column, sameCol);
+                    changeCount += UpdateXYZWing(pivot, Orientation.X3, sameX3, Orientation.Column, sameCol);
                 }
             }
 

@@ -40,7 +40,7 @@ namespace Sudoku.Solve.NotPossible
         public override IEnumerable<(int Row, int Col, int Level)> Explain(Sudoku sudoku, int myRow, int myCol)
         {
             var expl = new List<(int Row, int Col, int Level)>();
-            var    pos  = (myRow, myCol).ConvertFrom(Orientation);
+            var pos  = (myRow, myCol).ConvertFrom(Orientation);
 
             foreach (var col in BecauseIdx)
             {

@@ -17,52 +17,52 @@
 namespace Sudoku.Solve.NotPossible
 {
     using System.Collections.Generic;
+    using System.Linq;
 
-    using global::Sudoku.Solve.Tools;
-
-    public class NotPossibleBlockade1 : NotPossibleBase
+    public abstract class NotPossibleWingBase : NotPossibleBase
     {
-        public NotPossibleBlockade1()
-        {
-            RoleName = "B1";
-        }
+        public string WingName { get; protected set; }
 
         public override string SerializeTo()
         {
-            return $"{RoleName}:{ForNo}:{Orientation.ToChar()}:{BecauseNo}";
+            return $"{RoleName}:{ForNo}:{Pivot.ToCellString()}:{Pincer1.ToCellString()}:{Pincer2.ToCellString()}";
         }
 
         protected override void SerializeFrom(string[] serialized)
         {
-            ForNo       = int.Parse(serialized[1]);
-            Orientation = serialized[2].ToOrientation();
-            BecauseNo   = int.Parse(serialized[3]);
+            ForNo   = int.Parse(serialized[1]);
+            Pivot   = serialized[2].FromCellString();
+            Pincer1 = serialized[3].FromCellString();
+            Pincer2 = serialized[4].FromCellString();
         }
 
         public override IEnumerable<(int Row, int Col, int Level)> Explain(Sudoku sudoku, int myRow, int myCol)
         {
             var expl = new List<(int Row, int Col, int Level)>();
-            var pos  = (myRow, myCol).ConvertFrom(Orientation);
 
-            foreach (var col in LoopExtensions.Cols)
+            expl.Add((Pivot.Row, Pivot.Col, 3));
+            expl.Add((Pincer1.Row, Pincer1.Col, 4));
+            expl.Add((Pincer2.Row, Pincer2.Col, 4));
+
+            var intersect = IntersectExplain(sudoku, myRow, myCol);
+
+            foreach (var field in intersect)
             {
-                var rowCol = (pos.Row, col).ConvertTo(Orientation);
-                var def    = sudoku.GetDef(rowCol.Row, rowCol.Col);
-
-                if (col != pos.Col && def.IsEmpty)
-                {
-                    expl.Add((rowCol.Row, rowCol.Col, 3));
-                }
+                expl.Add((field.Row, field.Col, 5));
             }
 
             return expl;
         }
 
+        protected abstract IEnumerable<(int Row, int Col)> IntersectExplain(Sudoku sudoku, int row, int col);
+
         public override string ToString()
         {
-            return $"{ForNo}: {BecauseNo} only in {Orientation.ToOrientationDesc()} (B1)";
+            return $"{ForNo}: {WingName}-Wing in {Pivot.ToCellStringUser()} with {Pincer1.ToCellStringUser()}:{Pincer2.ToCellStringUser()} ({RoleName})";
         }
 
-        public int BecauseNo { get; set; }
+        public (int Row, int Col) Pivot   { get; set; }
+        public (int Row, int Col) Pincer1 { get; set; }
+        public (int Row, int Col) Pincer2 { get; set; }
     }
 }

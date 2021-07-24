@@ -381,14 +381,23 @@ namespace Sudoku.Solve
 
             CommitChanges();
 
-            var solverB1        = new SolverBlockade1(this);
-            var solverB2        = new SolverBlockade2(this);
-            var solverB2B       = new SolverBlockade2SubSet(this);
-            var solverB3        = new SolverBlockade3(this);
-            var solverXWing     = new SolverXWing(this);
-            var solverSwordfish = new SolverSwordfish(this);
-            var solverJellyfish = new SolverJellyfish(this);
-            var solverXYWing    = new SolverXYWing(this);
+            var solverB1 = new SolverBlockade1(this);
+
+            var solverBase = new SolverBase[]
+            {
+                new SolverBlockade3(this),
+                new SolverBlockade2(this),
+                new SolverBlockade2SubSet(this),
+            };
+
+            var solverExtended = new SolverBase[]
+            {
+                new SolverXWing(this),
+                new SolverSwordfish(this),
+                new SolverJellyfish(this),
+                new SolverXYWing(this),
+                new SolverXYZWing(this),
+            };
 
             solverB1.Solve(Orientation.X3);
 
@@ -405,15 +414,17 @@ namespace Sudoku.Solve
 
                 var changeCount = 0;
 
-                if (solverB3.Solve()) changeCount++;
-                if (solverB2.Solve()) changeCount++;
-                if (solverB2B.Solve()) changeCount++;
+                foreach (var solver in solverBase)
+                {
+                    if (solver.Solve()) changeCount++;
+                }
 
-                // only use xWing as last option is no other works
-                if (changeCount == 0 && solverXWing.Solve()) changeCount++;
-                if (changeCount == 0 && solverSwordfish.Solve()) changeCount++;
-                if (changeCount == 0 && solverJellyfish.Solve()) changeCount++;
-                if (changeCount == 0 && solverXYWing.Solve()) changeCount++;
+                // only use extended as last option if no other works
+                
+                foreach (var solver in solverExtended)
+                {
+                    if (changeCount == 0 && solver.Solve()) changeCount++;
+                }
 
                 CommitChanges();
 
