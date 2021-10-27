@@ -129,7 +129,14 @@ namespace Sudoku.Test
                         }
                     }
 
-                    toolTips[i].Should().MatchRegex(regex);
+                    if (string.IsNullOrEmpty(regex))
+                    {
+                        toolTips[i].Should().BeEmpty();
+                    }
+                    else
+                    {
+                        toolTips[i].Should().MatchRegex(regex);
+                    }
                 }
             }
         }

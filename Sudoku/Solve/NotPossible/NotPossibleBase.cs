@@ -57,6 +57,7 @@ namespace Sudoku.Solve.NotPossible
                 case "B6":  return Serialize(new NotPossibleJellyfish(),       val);
                 case "B7":  return Serialize(new NotPossibleXYWing(),          val);
                 case "B8":  return Serialize(new NotPossibleXYZWing(),         val);
+                case "B9":  return Serialize(new NotPossibleWWing(),           val);
                 default:    return null;
             }
         }

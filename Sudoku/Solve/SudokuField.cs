@@ -31,6 +31,8 @@ namespace Sudoku.Solve
 
         public (int Row, int Col) AbsRowCol => (AbsRow, AbsCol);
 
+        public int Abs3x3Row => AbsRowCol.ConvertTo(Orientation.X3).Row;
+
         public int No { get; internal set; }
 
         public bool IsEmpty => No == 0;

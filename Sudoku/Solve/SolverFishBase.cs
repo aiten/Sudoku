@@ -49,7 +49,7 @@ namespace Sudoku.Solve
                             foreach (var row in LoopExtensions.Rows.Where(row => !rowIdx.Contains(row)))
                             {
                                 foreach (var def in colIdx
-                                    .SelectField(getDef, row)
+                                    .SelectFieldEmpty(getDef, row)
                                     .Where(def => def.IsPossible(no)))
                                 {
                                     SetNotPossible(def, no, orientation, rowIdx.ToList(), colIdx);

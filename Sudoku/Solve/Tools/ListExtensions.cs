@@ -19,20 +19,27 @@ namespace Sudoku.Solve.Tools
     using System.Collections.Generic;
     using System.Linq;
 
-    public static class LoopExtensions
+    public static class ListExtensions
     {
-        public static readonly IEnumerable<int> Rows = Enumerable.Range(0, 9);
-        public static readonly IEnumerable<int> Cols = Enumerable.Range(0, 9);
-        public static readonly IEnumerable<int> Nos  = Enumerable.Range(1, 9);
-
-        public static IEnumerable<SudokuField> SelectField(this IEnumerable<int> cols, Sudoku.GetSudokuField getDef, int row)
+        public static IEnumerable<(T, T)> AllPairs<T>(this IEnumerable<T> list)
         {
-            return cols.Select(col => getDef(row, col));
+            var asArray = list.ToArray();
+            var pairs  = new List<(T, T)>();
+
+            for (var i = 0; i < asArray.Length - 1; i++)
+            {
+                for (var j = i + 1; j < asArray.Length; j++)
+                {
+                    pairs.Add((asArray[i], asArray[j]));
+                }
+            }
+
+            return pairs;
         }
 
-        public static IEnumerable<SudokuField> SelectFieldEmpty(this IEnumerable<int> cols, Sudoku.GetSudokuField getDef, int row)
+        public static IEnumerable<(T, T)> CartesianProduct<T>(this IEnumerable<T> list1, IEnumerable<T> list2)
         {
-            return cols.SelectField(getDef,row).Where(def => def.IsEmpty);
+            return list1.SelectMany(l => list2, (r, l) => (r, l));
         }
     }
 }

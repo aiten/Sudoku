@@ -87,14 +87,12 @@ namespace Sudoku.Solve
 
         public GetSudokuField ToGetDef(Orientation orientation)
         {
-            switch (orientation)
+            return orientation switch
             {
-                case Orientation.Column: return GetSudokuFieldCol;
-                case Orientation.Row:    return GetSudokuFieldRow;
-                case Orientation.X3:     return GetSudokuFieldS3;
-            }
-
-            throw new ArgumentException();
+                Orientation.Column => GetSudokuFieldCol,
+                Orientation.Row    => GetSudokuFieldRow,
+                Orientation.X3     => GetSudokuFieldS3
+            };
         }
 
         public static (int Row, int Col) ConvertToRow(int row, int col)
@@ -116,6 +114,16 @@ namespace Sudoku.Solve
             var dCol = col % 3;
 
             return (rowX3 + dRow, colX3 + dCol);
+        }
+
+        public (int row, int col) ConvertTo(Orientation orientation, (int row, int col) absRowCol)
+        {
+            return orientation switch
+            {
+                Orientation.Column => ConvertToCol(absRowCol.row, absRowCol.col),
+                Orientation.Row    => ConvertToRow(absRowCol.row, absRowCol.col),
+                Orientation.X3     => ConvertToS3(absRowCol.row, absRowCol.col)
+            };
         }
 
         public static (int Row, int Col) ConvertFromRow(int row, int col)
@@ -395,6 +403,7 @@ namespace Sudoku.Solve
                 new SolverXWing(this),
                 new SolverSwordfish(this),
                 new SolverJellyfish(this),
+                new SolverWWing(this),
                 new SolverXYWing(this),
                 new SolverXYZWing(this),
             };

@@ -162,5 +162,8 @@
     <XmlSudoku02>
       <XmlNo>3</XmlNo>
     </XmlSudoku02>
+    <XmlSudoku21>
+      <XmlNo>2</XmlNo>
+    </XmlSudoku21>
   </XmlSudoku22>
 </Sudoku>

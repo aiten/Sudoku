@@ -107,15 +107,10 @@ namespace Sudoku.Solve
         public override bool Solve(Orientation orientation)
         {
             var changeCount     = 0;
-            var listOf2Possible = new List<SudokuField>();
+            var listOf2Possible = EmptyFields()
+                .Where(def => def.GetPossibleNos().Count() == 2)
+                .ToList();
 
-            ForEachEmpty(Sudoku.ToGetDef(Orientation.Column), (def, row, col) =>
-            {
-                if (def.GetPossibleNos().Count() == 2)
-                {
-                    listOf2Possible.Add(def);
-                }
-            });
 
             foreach (var pivot in listOf2Possible)
             {

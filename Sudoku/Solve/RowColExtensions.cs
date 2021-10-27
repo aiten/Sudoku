@@ -46,6 +46,14 @@ namespace Sudoku.Solve
             };
         }
 
+        public static bool IsIntersect(this (int Row, int Col) field, (int Row, int Col) intersectWith)
+        {
+            var s31 = Sudoku.ConvertToS3(field.Row,         field.Col);
+            var s32 = Sudoku.ConvertToS3(intersectWith.Row, intersectWith.Col);
+
+            return field.Col == intersectWith.Col || field.Row == intersectWith.Row || s31.Row == s32.Row;
+        }
+
         public static IEnumerable<(int Row, int Col)> DependentFields(this (int Row, int Col) field)
         {
             var rowColRowFromX3 = field.ConvertTo(Orientation.X3);
