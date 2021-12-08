@@ -66,19 +66,22 @@ namespace Sudoku.Solve
                     var field1 = pair.Item1;
                     var field2 = pair.Item2;
 
-                    var stringLinkWithNo = GetStrongLink(field1, field2);
-                    if (stringLinkWithNo != null)
+                    var strongLink = GetStrongLink(field1, field2);
+                    if (strongLink.No != null)
                     {
                         var possibleNos = field1.GetPossibleNos().ToArray();
-                        var excludeNo   = possibleNos[0] == stringLinkWithNo ? possibleNos[1] : possibleNos[0];
+                        var excludeNo   = possibleNos[0] == strongLink.No ? possibleNos[1] : possibleNos[0];
                         foreach (var excludeField in EmptyFields(field1.AbsRowCol.IntersectFields(field2.AbsRowCol))
                             .Where(def => def.IsPossible(excludeNo)))
                         {
                             excludeField.SetNotPossible(excludeNo, new NotPossibleWWing()
                             {
-                                ForNo   = excludeNo,
-                                Pincer1 = field1.AbsRowCol,
-                                Pincer2 = field2.AbsRowCol,
+                                ForNo            = excludeNo,
+                                PairField1       = field1.AbsRowCol,
+                                PairField2       = field2.AbsRowCol,
+                                StrongLinkNo     = strongLink.No.Value,
+                                StrongLinkField1 = strongLink.link1.AbsRowCol,
+                                StrongLinkField2 = strongLink.link2.AbsRowCol
                             });
                             changeCount++;
                         }
@@ -89,11 +92,11 @@ namespace Sudoku.Solve
             return changeCount > 0;
         }
 
-        int? GetStrongLink(SudokuField field1, SudokuField field2)
+        (int? No, SudokuField link1, SudokuField link2)  GetStrongLink(SudokuField field1, SudokuField field2)
         {
             if (field1.AbsRowCol.IsIntersect(field2.AbsRowCol))
             {
-                return null;
+                return new (null,null,null);
             }
 
             var allOrientations = new[] { Orientation.Column, Orientation.Row, Orientation.X3 };
@@ -110,12 +113,12 @@ namespace Sudoku.Solve
 
                     if (linked.Any())
                     {
-                        return no;
+                        return new (no, linked[0].Item1, linked[0].Item2);
                     }
                 }
             }
 
-            return null;
+            return new(null, null, null); ;
         }
     }
 }
