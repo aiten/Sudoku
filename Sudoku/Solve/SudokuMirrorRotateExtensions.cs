@@ -20,18 +20,18 @@ namespace Sudoku.Solve
     {
         public static Sudoku Clone(this Sudoku sudoku)
         {
-            var newsoduku = new Solve.Sudoku();
+            var newSoduku = new Solve.Sudoku();
             for (var row = 0; row < 9; row++)
             {
                 for (var col = 0; col < 9; col++)
                 {
                     var no = sudoku.Get(row, col);
-                    newsoduku.Set(row, col, no);
+                    newSoduku.Set(row, col, no);
                 }
             }
 
-            newsoduku.ClearUndo();
-            return newsoduku;
+            newSoduku.ClearUndo();
+            return newSoduku;
         }
 
         public static Sudoku Rotate(this Sudoku sudoku)
