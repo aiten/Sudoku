@@ -1,4 +1,4 @@
-﻿/*
+/*
   This file is part of Sudoku - A library to solve a sudoku.
 
   Copyright (c) Herbert Aitenbichler
@@ -14,76 +14,32 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Server
+using System.Reflection;
+
+using Framework.NLogTools;
+
+Framework.NLogTools.NLogConfigExtensions.ConfigureNLogLocation("SolveSudoku", Assembly.GetExecutingAssembly());
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.UseNLog();
+
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+
+// if (app.Environment.IsDevelopment())
 {
-    using System;
-
-    using Framework.WebAPI.Host;
-
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.Hosting;
-
-    using NLog;
-    using NLog.Web;
-
-    using System.IO;
-    using System.Reflection;
-
-    public class Program
-    {
-        protected static string BaseDirectory => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-        public static void Main(string[] args)
-        {
-            var logDir = Microsoft.Azure.Web.DataProtection.Util.IsAzureEnvironment()
-                ? $"{BaseDirectory}/data/logs"
-                : $"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}/Sudoku.Server/logs";
-
-            if (!Directory.Exists(logDir))
-            {
-                Directory.CreateDirectory(logDir);
-            }
-
-            GlobalDiagnosticsContext.Set("logDir", logDir);
-
-            var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
-
-#if DEBUG
-            LogManager.ThrowExceptions = true;
-#endif
-            try
-            {
-                ProgramUtilities.StartWebService(args, CreateHostBuilder);
-            }
-            catch (Exception e)
-            {
-                logger.Error(e);
-                throw;
-            }
-        }
-
-        private static IHostBuilder CreateHostBuilder(string[] args)
-        {
-            var hostConfig = new ConfigurationBuilder()
-                .AddJsonFile("hosting.json", optional: true)
-                .Build();
-
-            return Host.CreateDefaultBuilder(args)
-                .UseContentRoot(BaseDirectory)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder
-                        .UseConfiguration(hostConfig)
-                        .UseStartup<Startup>()
-                        .ConfigureLogging(logging =>
-                        {
-                            logging.ClearProviders();
-                            logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
-                        })
-                        .UseNLog();
-                });
-        }
-    }
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();

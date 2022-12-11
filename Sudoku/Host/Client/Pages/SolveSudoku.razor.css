@@ -1,0 +1,28 @@
+﻿.mytoolbar {
+    height: 40px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 15px repeat(9, 1fr);
+    grid-template-rows: repeat(9, minmax(20px, auto));
+    padding: 0px;
+}
+
+.colno {
+    max-width: 15px;
+}
+
+.rowno {
+    text-align: center;
+}
+
+.scell {
+    text-align: center;
+    border: 0.5px solid rgba(0, 0, 0, 0.8);
+    padding: 0px;
+}
+
+.scell:nth-child(3n-1) {
+    border-left: 2px solid rgba(0, 0, 0, 0.8);
+}

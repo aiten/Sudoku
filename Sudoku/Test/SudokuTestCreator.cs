@@ -16,6 +16,7 @@
 
 namespace Sudoku.Test
 {
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
 
@@ -62,6 +63,8 @@ namespace Sudoku.Test
         {
             var dirInfo = Directory.EnumerateFiles(@"C:\dev\Sudoku\Sudoku\Test\TestSamples", "_*.sud");
 
+            var asCsvList = new List<string> { "Id;Comment;Content;LastStored" };
+
             using (var sw = new StreamWriter(@"c:\tmp\test.txt"))
             {
                 foreach (var file in dirInfo)
@@ -78,7 +81,10 @@ namespace Sudoku.Test
                     sw.WriteLine("              {");
                     var newSudoku = SudokuLoadSaveExtensions.Load(file);
                     newSudoku.UpdatePossible();
-                    var lines = newSudoku.SmartPrint();
+                    var lines = newSudoku.SmartPrint(" ");
+
+                    asCsvList.Add($"{asCsvList.Count};{testName};{string.Join('|',newSudoku.SmartPrint(string.Empty))};2022/10/20 00:00:00");
+
                     foreach (var line in lines)
                     {
                         sw.WriteLine($"                \"{line}\",");
@@ -134,6 +140,8 @@ namespace Sudoku.Test
                     sw.WriteLine("        }");
                 }
             }
+
+            File.WriteAllLines(@"c:\tmp\test.csv", asCsvList);
         }
     }
 }

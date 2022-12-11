@@ -99,7 +99,7 @@ namespace Sudoku.Test
         {
             s.UpdatePossible();
 
-            var lines = s.SmartPrint();
+            var lines = s.SmartPrint(" ");
 
             foreach (var expect in expected)
             {

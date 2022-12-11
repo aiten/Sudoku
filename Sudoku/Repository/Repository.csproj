@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>$(TargetFrameworkForProject)</TargetFramework>
+	</PropertyGroup>
+	<ItemGroup>
+	  <None Remove="DefaultData\Category.csv" />
+	  <None Remove="DefaultData\Sudoku.csv" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Content Include="DefaultData\Category.csv">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="DefaultData\Sudoku.csv">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Framework\Repository\Repository.csproj" />
+		<ProjectReference Include="..\Framework\Tools\Tools.csproj">    </ProjectReference>
+	</ItemGroup>
+</Project>

@@ -2,4 +2,7 @@
   <PropertyGroup>
     <TargetFramework>$(TargetFrameworkForProject)</TargetFramework>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Solve.Abstraction\Solve.Abstraction.csproj" />
+  </ItemGroup>
 </Project>

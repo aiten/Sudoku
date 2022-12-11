@@ -18,6 +18,9 @@ namespace Sudoku.Solve
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+
+    using Abstraction;
 
     public static class SudokuExtensions
     {
@@ -51,7 +54,7 @@ namespace Sudoku.Solve
             return s;
         }
 
-        public static IList<string> SmartPrint(this Solve.Sudoku s)
+        public static IList<string> SmartPrint(this Solve.Sudoku s, string emptyField)
         {
             var lines = new List<string>();
             for (int row = 0; row < 9; row++)
@@ -59,7 +62,7 @@ namespace Sudoku.Solve
                 string GetValue(int row, int col)
                 {
                     var no = s.Get(row, col);
-                    return no == 0 ? " " : no.ToString();
+                    return no == 0 ? emptyField : no.ToString();
                 }
 
                 var line = GetValue(row, 0);
@@ -100,6 +103,37 @@ namespace Sudoku.Solve
                     {
                         info[row, col] = $"{field.No}";
                     }
+                }
+            }
+
+            return info;
+        }
+
+        public static SudokuSolveResult GetSolveInfo(this Solve.Sudoku s)
+        {
+            s.UpdatePossible();
+
+            var list = new List<SudokuSolveField>();
+            var info = new SudokuSolveResult
+            {
+                Field = list
+            };
+
+
+            for (int row = 0; row < 9; row++)
+            {
+                for (int col = 0; col < 9; col++)
+                {
+                    var field = s.GetDef(row, col);
+
+                    list.Add(new SudokuSolveField()
+                    {
+                        Col         = col,
+                        Row         = row,
+                        No          = field.IsEmpty ? null : field.No,
+                        AllPossible = field.GetPossibleMainRuleNos(),
+                        Possible    = field.GetPossibleNos()
+                    });
                 }
             }
 

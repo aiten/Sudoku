@@ -1,0 +1,49 @@
+﻿@using Sudoku.Solve.Abstraction
+@using Sudoku.Host.Shared
+@{
+    if (HasValue)
+    {
+        <button class="haveNo mycell" @onclick="@(() => OnNextNo.InvokeAsync())" @onkeydown="@(OnMyKeyDown)">
+            @No
+        </button>
+    }
+    else if (IsOnlyOnePossible)
+    {
+        <button class="isOnlyOne mycell" @onclick="@(() => OnNextNo.InvokeAsync())" @onkeydown="@(OnMyKeyDown)">
+            @Possibilities
+        </button>
+    }
+    else
+    {
+        <button class="isEmpty mycell" @onclick="@(() => OnNextNo.InvokeAsync())" @onkeydown="@(OnMyKeyDown)">
+            @Possibilities
+        </button>
+    }
+}
+
+@code {
+
+    protected async Task OnMyKeyDown(KeyboardEventArgs eventArgs)
+    {
+        if (uint.TryParse(eventArgs.Key, out uint code))
+        {
+            await OnSetNo.InvokeAsync((int )code);
+        }
+    }
+
+    private bool HasValue => Field.No.HasValue;
+    private string No => Field?.No.ToString()??"";
+
+    private bool IsOnlyOnePossible => Field.Possible.Count() == 1;
+    private string Possibilities => Field?.ToPossibleMessage()??"";
+
+    [Parameter]
+    public SudokuSolveField? Field { get; set; }
+
+    [Parameter]
+    public EventCallback OnNextNo { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnSetNo { get; set; }
+}
+

@@ -76,7 +76,7 @@ namespace Sudoku.Test
             s.Set(1, 1, 10).Should().BeFalse();
             s.Set(1, 1, -1).Should().BeFalse();
 
-            var nowLines = s.SmartPrint();
+            var nowLines = s.SmartPrint(" ");
 
             for (int col = 0; col < 9; col++)
             {

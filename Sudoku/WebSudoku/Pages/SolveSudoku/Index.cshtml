@@ -1,0 +1,79 @@
+﻿@page
+@using WebSudoku
+@model WebSudoku.Pages.SolveSudoku.IndexModel
+@{
+}
+
+<PageTitle>Solve Sudoku</PageTitle>
+
+@if (Model._sudokuResult == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    @Html.HiddenFor(m => m.Sudoku);
+
+    <form method="post" asp-page-handler="NewSudoku">
+        <div class="mytoolbar">
+            <h1>
+                Solve sudoku
+                <span>
+                    <button type="submit" class="btn btn-danger">New</button>
+                </span>
+            </h1>
+        </div>
+    </form>
+
+    <h1></h1>
+
+    <div class="grid-container-fluid">
+        <div class="row">
+            <div class="col colno rowno"> </div>
+            @{
+                for (char ch = 'A'; ch <= 'I'; ch++)
+                {
+                    <div class="col rowno">@ch</div>
+                }
+            }
+        </div>
+
+        @{
+            for (int row = 0; row < 9; row++)
+            {
+                <div class="row">
+                    <div class="col colno">@(row + 1)</div>
+                    @{
+                        for (int col = 0; col < 9; col++)
+                        {
+                            var field = Model._sudokuResult.Field.FirstOrDefault(f => f.Row == row && f.Col == col);
+                            <div class="col scell">
+                                <form asp-page-handler="NextNo" asp-route-row="@field.Row" asp-route-col="@field.Col" asp-route-sudoku="@Model.SudokuAsString" method="post">
+                                    @{
+                                        if (field.HasValue())
+                                        {
+                                            <button class="haveNo mycell">@field.No</button>
+                                        }
+                                        else if (field.IsOnlyOnePossible())
+                                        {
+                                            <button class="isOnlyOne mycell">@field.Possibilities()</button>
+                                        }
+                                        else
+                                        {
+                                            <button class="isEmpty mycell">@field.Possibilities()</button>
+                                        }
+                                    }
+                                </form>
+                            </div>
+                        }
+                    }
+                </div>
+            }
+        }
+    </div>
+    <div>
+        @Html.LabelFor(m => m.SolutionCount) = @Model.SolutionCount
+    </div>
+}
