@@ -1,4 +1,4 @@
-namespace WebSudoku.Pages.SolveSudoku
+namespace Sudoku.WebSudoku.Pages.SolveSudoku
 {
     using Microsoft.AspNetCore.Components.Web;
     using Microsoft.AspNetCore.Mvc;

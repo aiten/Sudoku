@@ -14,13 +14,11 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace WebSudoku
+namespace Sudoku.WebSudoku.Pages.Admin
 {
-    using Microsoft.AspNetCore.Mvc.RazorPages;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
     using Sudoku.Repository.Abstraction;
-    using Sudoku.Solve.Abstraction;
 
     public static class AdminPageExtensions
     {

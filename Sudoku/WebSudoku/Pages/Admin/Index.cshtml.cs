@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-
-using Sudoku.Repository.Abstraction.Entities;
-
-namespace WebSudoku.Pages.Admin
+﻿namespace Sudoku.WebSudoku.Pages.Admin
 {
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+
     using Framework.Repository.Abstraction;
 
+    using Microsoft.AspNetCore.Mvc.RazorPages;
+
     using Sudoku.Repository.Abstraction;
+    using Sudoku.Repository.Abstraction.Entities;
 
     public class IndexModel : PageModel
     {
