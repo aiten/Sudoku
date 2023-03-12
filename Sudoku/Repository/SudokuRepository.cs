@@ -41,7 +41,7 @@ public class SudokuRepository : CrudRepository<SudokuContext, SudokuEntity, int>
             PrimaryWhereIn = (query, keys) => query.Where(item => keys.Contains(item.Id))
         };
 
-    protected override IQueryable<SudokuEntity> AddInclude(IQueryable<SudokuEntity> query)
+    protected override IQueryable<SudokuEntity> AddInclude(IQueryable<SudokuEntity> query, params string[] includeProperties)
     {
         return query.Include(x => x.Category);
     }

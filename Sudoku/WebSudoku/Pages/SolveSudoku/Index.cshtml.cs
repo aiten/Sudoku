@@ -15,7 +15,7 @@ namespace Sudoku.WebSudoku.Pages.SolveSudoku
 
         private IHttpClientFactory _httpFactory;
 
-        public HttpClient Http => _httpFactory.CreateClient("pi");
+        public HttpClient Http => _httpFactory.CreateClient("local");
 
         public async Task OnGetAsync(string sudoku)
         {

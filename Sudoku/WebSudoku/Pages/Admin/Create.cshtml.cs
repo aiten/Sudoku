@@ -53,7 +53,7 @@
             using (var trans = _uow.BeginTransaction())
             {
                 SudokuEntity.LastStored = DateTime.Now;
-                _sudokuRepository.Add(SudokuEntity);
+                await _sudokuRepository.AddAsync(SudokuEntity);
                 await _uow.SaveChangesAsync();
                 await trans.CommitTransactionAsync();
             }
