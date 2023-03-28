@@ -14,65 +14,64 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Test
+namespace Sudoku.Test;
+
+using System.IO;
+
+using Sudoku.Solve;
+
+using FluentAssertions;
+
+using Sudoku.Solve.Serialization;
+
+using Xunit;
+
+public class SudokuLoadSaveTest : SudokuBaseUnitTest
 {
-    using System.IO;
-
-    using Sudoku.Solve;
-
-    using FluentAssertions;
-
-    using Sudoku.Solve.Serialization;
-
-    using Xunit;
-
-    public class SudokuLoadSaveTest : SudokuBaseUnitTest
+    [Fact]
+    public void LoadSaveTest()
     {
-        [Fact]
-        public void LoadSaveTest()
+        var lines = new[]
         {
-            var lines = new[]
-            {
-                " , ,6,5, ,3,7, , ",
-                " , , ,7, ,1, , , ",
-                "7, , , ,9, , , ,2",
-                "8,7,1,2,5, , ,4,3",
-                " , ,9,3, , ,2, , ",
-                "4,2,3,1, , , ,7,5",
-                "3, , , ,1, , , ,4",
-                " , , ,4, ,5, , , ",
-                " , ,4,9, ,2,5, , ",
-            };
+            " , ,6,5, ,3,7, , ",
+            " , , ,7, ,1, , , ",
+            "7, , , ,9, , , ,2",
+            "8,7,1,2,5, , ,4,3",
+            " , ,9,3, , ,2, , ",
+            "4,2,3,1, , , ,7,5",
+            "3, , , ,1, , , ,4",
+            " , , ,4, ,5, , , ",
+            " , ,4,9, ,2,5, , ",
+        };
 
-            var save = lines.CreateSudoku();
+        var save = lines.CreateSudoku();
 
-            for (var x = 0; x < 9; x++)
+        for (var x = 0; x < 9; x++)
+        {
+            save.SetUserNoteCol(x, $"col{x}");
+            save.SetUserNoteRow(x, $"row{x}");
+            for (var y = 0; y < 9; y++)
             {
-                save.SetUserNoteCol(x, $"col{x}");
-                save.SetUserNoteRow(x, $"row{x}");
-                for (var y = 0; y < 9; y++)
-                {
-                    save.SetUserNote(x, y, $"rowcol{x}{y}");
-                }
+                save.SetUserNote(x, y, $"rowcol{x}{y}");
             }
+        }
 
-            var filename = Path.GetTempFileName();
+        var filename = Path.GetTempFileName();
 
-            save.SaveXml(filename).Should().BeTrue();
+        save.SaveXml(filename).Should().BeTrue();
 
-            var loaded = SudokuLoadSaveExtensions.Load(filename);
+        var loaded = SudokuLoadSaveExtensions.Load(filename);
 
-            File.Delete(filename);
+        File.Delete(filename);
 
-            for (var x = 0; x < 9; x++)
+        for (var x = 0; x < 9; x++)
+        {
+            loaded.GetUserNoteCol(x).Should().Be(save.GetUserNoteCol(x));
+            loaded.GetUserNoteRow(x).Should().Be(save.GetUserNoteRow(x));
+            for (var y = 0; y < 9; y++)
             {
-                loaded.GetUserNoteCol(x).Should().Be(save.GetUserNoteCol(x));
-                loaded.GetUserNoteRow(x).Should().Be(save.GetUserNoteRow(x));
-                for (var y = 0; y < 9; y++)
-                {
-                    loaded.Get(x, y).Should().Be(save.Get(x, y));
-                    loaded.GetDef(x, y).UserNote.Should().Be(save.GetDef(x, y).UserNote);
-                }
+                loaded.Get(x, y).Should().Be(save.Get(x, y));
+                loaded.GetDef(x, y).UserNote.Should().Be(save.GetDef(x, y).UserNote);
             }
         }
     }

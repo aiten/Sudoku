@@ -14,55 +14,54 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Solve.NotPossible
+namespace Sudoku.Solve.NotPossible;
+
+using System.Collections.Generic;
+
+using global::Sudoku.Solve.Tools;
+
+public class NotPossibleBlockade1 : NotPossibleBase
 {
-    using System.Collections.Generic;
-
-    using global::Sudoku.Solve.Tools;
-
-    public class NotPossibleBlockade1 : NotPossibleBase
+    public NotPossibleBlockade1()
     {
-        public NotPossibleBlockade1()
-        {
-            RoleName = "B1";
-        }
-
-        public override string SerializeTo()
-        {
-            return $"{RoleName}:{ForNo}:{Orientation.ToChar()}:{BecauseNo}";
-        }
-
-        protected override void SerializeFrom(string[] serialized)
-        {
-            ForNo       = int.Parse(serialized[1]);
-            Orientation = serialized[2].ToOrientation();
-            BecauseNo   = int.Parse(serialized[3]);
-        }
-
-        public override IEnumerable<(int Row, int Col, int Level)> Explain(Sudoku sudoku, int myRow, int myCol)
-        {
-            var expl = new List<(int Row, int Col, int Level)>();
-            var pos  = (myRow, myCol).ConvertFrom(Orientation);
-
-            foreach (var col in LoopExtensions.Cols)
-            {
-                var rowCol = (pos.Row, col).ConvertTo(Orientation);
-                var def    = sudoku.GetDef(rowCol.Row, rowCol.Col);
-
-                if (col != pos.Col && def.IsEmpty)
-                {
-                    expl.Add((rowCol.Row, rowCol.Col, 3));
-                }
-            }
-
-            return expl;
-        }
-
-        public override string ToString()
-        {
-            return $"{ForNo}: {BecauseNo} only in {Orientation.ToOrientationDesc()} (B1)";
-        }
-
-        public int BecauseNo { get; set; }
+        RoleName = "B1";
     }
+
+    public override string SerializeTo()
+    {
+        return $"{RoleName}:{ForNo}:{Orientation.ToChar()}:{BecauseNo}";
+    }
+
+    protected override void SerializeFrom(string[] serialized)
+    {
+        ForNo       = int.Parse(serialized[1]);
+        Orientation = serialized[2].ToOrientation();
+        BecauseNo   = int.Parse(serialized[3]);
+    }
+
+    public override IEnumerable<(int Row, int Col, int Level)> Explain(Sudoku sudoku, int myRow, int myCol)
+    {
+        var expl = new List<(int Row, int Col, int Level)>();
+        var pos  = (myRow, myCol).ConvertFrom(Orientation);
+
+        foreach (var col in LoopExtensions.Cols)
+        {
+            var rowCol = (pos.Row, col).ConvertTo(Orientation);
+            var def    = sudoku.GetDef(rowCol.Row, rowCol.Col);
+
+            if (col != pos.Col && def.IsEmpty)
+            {
+                expl.Add((rowCol.Row, rowCol.Col, 3));
+            }
+        }
+
+        return expl;
+    }
+
+    public override string ToString()
+    {
+        return $"{ForNo}: {BecauseNo} only in {Orientation.ToOrientationDesc()} (B1)";
+    }
+
+    public int BecauseNo { get; set; }
 }

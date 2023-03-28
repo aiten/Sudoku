@@ -14,100 +14,99 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Solve
+namespace Sudoku.Solve;
+
+using System.Collections.Generic;
+using System.Linq;
+
+using global::Sudoku.Solve.NotPossible;
+using global::Sudoku.Solve.Tools;
+
+public class SolverBlockade2SubSet : SolverBase
 {
-    using System.Collections.Generic;
-    using System.Linq;
-
-    using global::Sudoku.Solve.NotPossible;
-    using global::Sudoku.Solve.Tools;
-
-    public class SolverBlockade2SubSet : SolverBase
+    public SolverBlockade2SubSet(Sudoku sudoku) : base(sudoku)
     {
-        public SolverBlockade2SubSet(Sudoku sudoku) : base(sudoku)
+    }
+
+    public override bool Solve()
+    {
+        var isCol = Solve(Orientation.Column);
+        var isRow = Solve(Orientation.Row);
+        var isX3  = Solve(Orientation.X3);
+
+        return isCol || isRow || isX3;
+    }
+
+    public override bool Solve(Orientation orientation)
+    {
+        return UpdatePossibleBlockade2SubSet(Sudoku.ToGetDef(orientation), orientation) > 0;
+    }
+
+    public int UpdatePossibleBlockade2SubSet(Sudoku.GetSudokuField getDef, Orientation orientation)
+    {
+        var changeCount = 0;
+
+        ForEachEmpty(getDef, (def, row, col) =>
         {
-        }
+            var used   = new bool[9];
+            var notSet = new bool[9];
 
-        public override bool Solve()
-        {
-            var isCol = Solve(Orientation.Column);
-            var isRow = Solve(Orientation.Row);
-            var isX3  = Solve(Orientation.X3);
+            used[col] = true;
 
-            return isCol || isRow || isX3;
-        }
-
-        public override bool Solve(Orientation orientation)
-        {
-            return UpdatePossibleBlockade2SubSet(Sudoku.ToGetDef(orientation), orientation) > 0;
-        }
-
-        public int UpdatePossibleBlockade2SubSet(Sudoku.GetSudokuField getDef, Orientation orientation)
-        {
-            var changeCount = 0;
-
-            ForEachEmpty(getDef, (def, row, col) =>
+            if (FindSubSet(getDef, row, col + 1, used, notSet))
             {
-                var used   = new bool[9];
-                var notSet = new bool[9];
+                var reason = ReasonPossible(getDef, used, notSet, row);
 
-                used[col] = true;
-
-                if (FindSubSet(getDef, row, col + 1, used, notSet))
+                foreach (var def2 in LoopExtensions.Cols
+                             .Where(col2 => !used[col2])
+                             .SelectFieldEmpty(getDef, row))
                 {
-                    var reason = ReasonPossible(getDef, used, notSet, row);
-
-                    foreach (var def2 in LoopExtensions.Cols
-                        .Where(col2 => !used[col2])
-                        .SelectFieldEmpty(getDef, row))
+                    foreach (var no in LoopExtensions.Nos)
                     {
-                        foreach (var no in LoopExtensions.Nos)
+                        if (notSet[no - 1] && def2.IsPossible(no))
                         {
-                            if (notSet[no - 1] && def2.IsPossible(no))
+                            changeCount++;
+                            def2.SetNotPossible(no, new NotPossibleBlockade2SubSet()
                             {
-                                changeCount++;
-                                def2.SetNotPossible(no, new NotPossibleBlockade2SubSet()
-                                {
-                                    ForNo       = no,
-                                    Orientation = orientation,
-                                    BecauseIdx  = reason.Index,
-                                    BecauseNos  = reason.Possible
-                                });
-                            }
+                                ForNo       = no,
+                                Orientation = orientation,
+                                BecauseIdx  = reason.Index,
+                                BecauseNos  = reason.Possible
+                            });
                         }
                     }
-                }
-            });
-
-            return changeCount;
-        }
-
-        private (IEnumerable<int> Possible, IEnumerable<int> Index) ReasonPossible(Sudoku.GetSudokuField getDef, bool[] used, bool[] notSet, int row)
-        {
-            var reasonPossible = new List<int>();
-            var reasonIndex    = new List<int>();
-            foreach (var col in LoopExtensions.Cols
-                .Where(col => used[col]))
-            {
-                var def = getDef(row, col);
-                if (def.IsEmpty)
-                {
-                    if (reasonPossible.Count == 0)
-                    {
-                        foreach (var no in LoopExtensions.Nos)
-                        {
-                            if (notSet[no - 1])
-                            {
-                                reasonPossible.Add(no);
-                            }
-                        }
-                    }
-
-                    reasonIndex.Add(col);
                 }
             }
+        });
 
-            return (reasonPossible, reasonIndex);
+        return changeCount;
+    }
+
+    private (IEnumerable<int> Possible, IEnumerable<int> Index) ReasonPossible(Sudoku.GetSudokuField getDef, bool[] used, bool[] notSet, int row)
+    {
+        var reasonPossible = new List<int>();
+        var reasonIndex    = new List<int>();
+        foreach (var col in LoopExtensions.Cols
+                     .Where(col => used[col]))
+        {
+            var def = getDef(row, col);
+            if (def.IsEmpty)
+            {
+                if (reasonPossible.Count == 0)
+                {
+                    foreach (var no in LoopExtensions.Nos)
+                    {
+                        if (notSet[no - 1])
+                        {
+                            reasonPossible.Add(no);
+                        }
+                    }
+                }
+
+                reasonIndex.Add(col);
+            }
         }
+
+        return (reasonPossible, reasonIndex);
     }
 }

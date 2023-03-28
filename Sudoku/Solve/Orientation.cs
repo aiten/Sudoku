@@ -14,60 +14,59 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Solve
-{
-    using System;
+namespace Sudoku.Solve;
 
-    public enum Orientation
+using System;
+
+public enum Orientation
+{
+    Column,
+    Row,
+    X3
+}
+
+public static class OrientationExtensions
+{
+    public static string ToOrientationDesc(this Orientation orientation)
     {
-        Column,
-        Row,
-        X3
+        switch (orientation)
+        {
+            case Orientation.Row:    return "row";
+            case Orientation.Column: return "col";
+            case Orientation.X3:     return "3*3";
+            default:                 throw new ArgumentException();
+        }
     }
 
-    public static class OrientationExtensions
+    public static char ToChar(this Orientation orientation)
     {
-        public static string ToOrientationDesc(this Orientation orientation)
+        switch (orientation)
         {
-            switch (orientation)
-            {
-                case Orientation.Row:    return "row";
-                case Orientation.Column: return "col";
-                case Orientation.X3:     return "3*3";
-                default:                 throw new ArgumentException();
-            }
+            case Orientation.Row:    return 'R';
+            case Orientation.Column: return 'C';
+            case Orientation.X3:     return 'X';
+            default:                 throw new ArgumentException();
         }
+    }
 
-        public static char ToChar(this Orientation orientation)
+    public static Orientation ToOrientation(this string orientation)
+    {
+        switch (orientation)
         {
-            switch (orientation)
-            {
-                case Orientation.Row:    return 'R';
-                case Orientation.Column: return 'C';
-                case Orientation.X3:     return 'X';
-                default:                 throw new ArgumentException();
-            }
+            case "R": return Orientation.Row;
+            case "C": return Orientation.Column;
+            case "X": return Orientation.X3;
+            default:  throw new ArgumentException();
         }
+    }
 
-        public static Orientation ToOrientation(this string orientation)
+    public static Orientation ToOppositeOrientation(this Orientation orientation)
+    {
+        switch (orientation)
         {
-            switch (orientation)
-            {
-                case "R": return Orientation.Row;
-                case "C": return Orientation.Column;
-                case "X": return Orientation.X3;
-                default:  throw new ArgumentException();
-            }
-        }
-
-        public static Orientation ToOppositeOrientation(this Orientation orientation)
-        {
-            switch (orientation)
-            {
-                case Orientation.Row:    return Orientation.Column;
-                case Orientation.Column: return Orientation.Row;
-                default:                 return orientation;
-            }
+            case Orientation.Row:    return Orientation.Column;
+            case Orientation.Column: return Orientation.Row;
+            default:                 return orientation;
         }
     }
 }

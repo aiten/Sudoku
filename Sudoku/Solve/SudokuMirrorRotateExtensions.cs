@@ -14,72 +14,71 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Solve
+namespace Sudoku.Solve;
+
+public static class SudokuMirrorRotateExtensions
 {
-    public static class SudokuMirrorRotateExtensions
+    public static Sudoku Clone(this Sudoku sudoku)
     {
-        public static Sudoku Clone(this Sudoku sudoku)
+        var newSoduku = new Solve.Sudoku();
+        for (var row = 0; row < 9; row++)
         {
-            var newSoduku = new Solve.Sudoku();
-            for (var row = 0; row < 9; row++)
+            for (var col = 0; col < 9; col++)
             {
-                for (var col = 0; col < 9; col++)
-                {
-                    var no = sudoku.Get(row, col);
-                    newSoduku.Set(row, col, no);
-                }
+                var no = sudoku.Get(row, col);
+                newSoduku.Set(row, col, no);
             }
-
-            newSoduku.ClearUndo();
-            return newSoduku;
         }
 
-        public static Sudoku Rotate(this Sudoku sudoku)
+        newSoduku.ClearUndo();
+        return newSoduku;
+    }
+
+    public static Sudoku Rotate(this Sudoku sudoku)
+    {
+        var newSudoku = new Sudoku();
+
+        for (var row = 0; row < 9; row++)
         {
-            var newSudoku = new Sudoku();
-
-            for (var row = 0; row < 9; row++)
+            newSudoku.SetUserNoteCol(row, sudoku.GetUserNoteRow(row));
+            newSudoku.SetUserNoteRow(row, sudoku.GetUserNoteCol(row));
+            for (var col = 0; col < 9; col++)
             {
-                newSudoku.SetUserNoteCol(row, sudoku.GetUserNoteRow(row));
-                newSudoku.SetUserNoteRow(row, sudoku.GetUserNoteCol(row));
-                for (var col = 0; col < 9; col++)
-                {
-                    int myRow = 8 - col;
-                    int myCol = row;
+                int myRow = 8 - col;
+                int myCol = row;
 
-                    var def = sudoku.GetDef(myRow, myCol);
-                    newSudoku.SetUserNote(row, col, def.UserNote);
-                    if (def.HasNo)
-                        newSudoku.Set(row, col, def.No);
-                }
+                var def = sudoku.GetDef(myRow, myCol);
+                newSudoku.SetUserNote(row, col, def.UserNote);
+                if (def.HasNo)
+                    newSudoku.Set(row, col, def.No);
             }
-
-            newSudoku.ClearUndo();
-            return newSudoku;
         }
 
-        public static Sudoku Mirror(this Sudoku sudoku)
+        newSudoku.ClearUndo();
+        return newSudoku;
+    }
+
+    public static Sudoku Mirror(this Sudoku sudoku)
+    {
+        var newSudoku = new Sudoku();
+
+        for (var row = 0; row < 9; row++)
         {
-            var newSudoku = new Sudoku();
-
-            for (var row = 0; row < 9; row++)
+            newSudoku.SetUserNoteCol(row, sudoku.GetUserNoteRow(row));
+            newSudoku.SetUserNoteRow(row, sudoku.GetUserNoteCol(row));
+            for (var col = 0; col < 9; col++)
             {
-                newSudoku.SetUserNoteCol(row, sudoku.GetUserNoteRow(row));
-                newSudoku.SetUserNoteRow(row, sudoku.GetUserNoteCol(row));
-                for (var col = 0; col < 9; col++)
-                {
-                    var myx = row;
-                    var myy = 8 - col;
+                var myx = row;
+                var myy = 8 - col;
 
-                    var def = sudoku.GetDef(myx, myy);
-                    newSudoku.SetUserNote(row, col, def.UserNote);
-                    if (def.No > 0)
-                        newSudoku.Set(row, col, def.No);
-                }
+                var def = sudoku.GetDef(myx, myy);
+                newSudoku.SetUserNote(row, col, def.UserNote);
+                if (def.No > 0)
+                    newSudoku.Set(row, col, def.No);
             }
-
-            newSudoku.ClearUndo();
-            return newSudoku;
         }
+
+        newSudoku.ClearUndo();
+        return newSudoku;
     }
 }

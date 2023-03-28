@@ -14,61 +14,60 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Solve
+namespace Sudoku.Solve;
+
+using global::Sudoku.Solve.NotPossible;
+using global::Sudoku.Solve.Tools;
+
+public class SolverBlockade1 : SolverBase
 {
-    using global::Sudoku.Solve.NotPossible;
-    using global::Sudoku.Solve.Tools;
-
-    public class SolverBlockade1 : SolverBase
+    public SolverBlockade1(Sudoku sudoku) : base(sudoku)
     {
-        public SolverBlockade1(Sudoku sudoku) : base(sudoku)
+    }
+
+    public override bool Solve()
+    {
+        var isCol = Solve(Orientation.Column);
+        var isRow = Solve(Orientation.Row);
+        var isX3  = Solve(Orientation.X3);
+
+        return isCol || isRow || isX3;
+    }
+
+    public override bool Solve(Orientation orientation)
+    {
+        return UpdatePossibleBlockade1(Sudoku.ToGetDef(orientation), orientation) > 0;
+    }
+
+    public int UpdatePossibleBlockade1(Sudoku.GetSudokuField getDef, Orientation orientation)
+    {
+        var changeCount = 0;
+
+        ForEachEmpty(getDef, (def, row, col) =>
         {
-        }
-
-        public override bool Solve()
-        {
-            var isCol = Solve(Orientation.Column);
-            var isRow = Solve(Orientation.Row);
-            var isX3  = Solve(Orientation.X3);
-
-            return isCol || isRow || isX3;
-        }
-
-        public override bool Solve(Orientation orientation)
-        {
-            return UpdatePossibleBlockade1(Sudoku.ToGetDef(orientation), orientation) > 0;
-        }
-
-        public int UpdatePossibleBlockade1(Sudoku.GetSudokuField getDef, Orientation orientation)
-        {
-            var changeCount = 0;
-
-            ForEachEmpty(getDef, (def, row, col) =>
+            foreach (var no in LoopExtensions.Nos)
             {
-                foreach (var no in LoopExtensions.Nos)
+                if (def.IsPossible(no))
                 {
-                    if (def.IsPossible(no))
+                    if (CountPossible(getDef, no, row) == 1)
                     {
-                        if (CountPossible(getDef, no, row) == 1)
+                        foreach (var no2 in LoopExtensions.Nos)
                         {
-                            foreach (var no2 in LoopExtensions.Nos)
+                            if (no2 != no && def.IsPossible(no2))
                             {
-                                if (no2 != no && def.IsPossible(no2))
+                                changeCount++;
+                                def.SetNotPossible(no2, new NotPossibleBlockade1()
                                 {
-                                    changeCount++;
-                                    def.SetNotPossible(no2, new NotPossibleBlockade1()
-                                    {
-                                        ForNo       = no2,
-                                        Orientation = orientation,
-                                        BecauseNo   = no
-                                    });
-                                }
+                                    ForNo       = no2,
+                                    Orientation = orientation,
+                                    BecauseNo   = no
+                                });
                             }
                         }
                     }
                 }
-            });
-            return changeCount;
-        }
+            }
+        });
+        return changeCount;
     }
 }

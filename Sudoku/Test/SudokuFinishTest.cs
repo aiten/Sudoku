@@ -14,106 +14,105 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Test
+namespace Sudoku.Test;
+
+using System.Threading;
+
+using FluentAssertions;
+
+using Sudoku.Solve;
+
+using Xunit;
+
+public class SudokuFinishTest : SudokuBaseUnitTest
 {
-    using System.Threading;
-
-    using FluentAssertions;
-
-    using Sudoku.Solve;
-
-    using Xunit;
-
-    public class SudokuFinishTest : SudokuBaseUnitTest
+    [Fact]
+    public void FinishTest()
     {
-        [Fact]
-        public void FinishTest()
+        var lines = new[]
         {
-            var lines = new[]
-            {
-                " , ,7,8, ,4,3, , ",
-                " , , ,7, ,2, , , ",
-                "6, , ,1,9,3, , ,4",
-                "5,7, ,2,3,1, ,4,9",
-                " , ,9,5, , ,1, , ",
-                "3,1, , , , , ,5,2",
-                "7, , , ,2, , , ,5",
-                " , , ,4, ,7, , , ",
-                " , ,2,3, ,5,4, , ",
-            };
+            " , ,7,8, ,4,3, , ",
+            " , , ,7, ,2, , , ",
+            "6, , ,1,9,3, , ,4",
+            "5,7, ,2,3,1, ,4,9",
+            " , ,9,5, , ,1, , ",
+            "3,1, , , , , ,5,2",
+            "7, , , ,2, , , ,5",
+            " , , ,4, ,7, , , ",
+            " , ,2,3, ,5,4, , ",
+        };
 
-            var s = lines.CreateSudoku();
+        var s = lines.CreateSudoku();
 
-            s.StepCount.Should().Be(34);
-            s.CalcPossibleSolutions(new CancellationToken(false)).Should().Be(1);
-            s.UndoAvailable = true;
-            s.CanUndo().Should().BeFalse();
+        s.StepCount.Should().Be(34);
+        s.CalcPossibleSolutions(new CancellationToken(false)).Should().Be(1);
+        s.UndoAvailable = true;
+        s.CanUndo().Should().BeFalse();
 
-            s.Clear(2, 0);
+        s.Clear(2, 0);
 
-            s.StepCount.Should().Be(33);
-            s.CalcPossibleSolutions(new CancellationToken(false)).Should().Be(3);
+        s.StepCount.Should().Be(33);
+        s.CalcPossibleSolutions(new CancellationToken(false)).Should().Be(3);
 
-            s.CanUndo().Should().BeTrue();
-            s.Undo();
-            s.CanUndo().Should().BeFalse();
+        s.CanUndo().Should().BeTrue();
+        s.Undo();
+        s.CanUndo().Should().BeFalse();
 
-            s.StepCount.Should().Be(34);
-            s.CalcPossibleSolutions(new CancellationToken(false)).Should().Be(1);
+        s.StepCount.Should().Be(34);
+        s.CalcPossibleSolutions(new CancellationToken(false)).Should().Be(1);
 
-            s.UpdatePossible();
-            s.SetNextPossible(6, 6);
-            s.GetDef(6, 6).No.Should().Be(8);
+        s.UpdatePossible();
+        s.SetNextPossible(6, 6);
+        s.GetDef(6, 6).No.Should().Be(8);
 
-            s.SetNextPossible(3, 6);
-            s.GetDef(3, 6).No.Should().Be(6);
+        s.SetNextPossible(3, 6);
+        s.GetDef(3, 6).No.Should().Be(6);
 
-            s.SetNextPossible(3, 6);
-            s.GetDef(3, 6).No.Should().Be(0);
+        s.SetNextPossible(3, 6);
+        s.GetDef(3, 6).No.Should().Be(0);
 
-            s.SetNextPossible(1, 5);
-            s.GetDef(1, 5).No.Should().Be(6);
-            s.CalcPossibleSolutions(new CancellationToken(false)).Should().Be(0);
+        s.SetNextPossible(1, 5);
+        s.GetDef(1, 5).No.Should().Be(6);
+        s.CalcPossibleSolutions(new CancellationToken(false)).Should().Be(0);
 
-            s.Finish().Should().BeFalse();
-            s.Set(1, 5, 2);
-            s.Finish().Should().BeTrue();
-        }
+        s.Finish().Should().BeFalse();
+        s.Set(1, 5, 2);
+        s.Finish().Should().BeTrue();
+    }
 
-        [Fact]
-        public void FoundSolutionTest()
+    [Fact]
+    public void FoundSolutionTest()
+    {
+        var lines = new[]
         {
-            var lines = new[]
+            " , ,7,8, ,4,3, , ",
+            " , , ,7, ,2, , , ",
+            "6, , ,1,9,3, , ,4",
+            "5,7, ,2,3,1, ,4,9",
+            " , ,9,5, , ,1, , ",
+            "3,1, , , , , ,5,2",
+            "7, , , ,2, , , ,5",
+            " , , ,4, ,7, , , ",
+            " , ,2,3, ,5,4, , ",
+        };
+
+        var s = lines.CreateSudoku();
+
+        s.Clear(2, 0);
+        s.StepCount.Should().Be(33);
+
+        var count = 1;
+
+        s.FoundSolution += (object sudoku, SudokuEventArgs sarg) =>
+        {
+            if (sarg.FindSolutionsFinished)
             {
-                " , ,7,8, ,4,3, , ",
-                " , , ,7, ,2, , , ",
-                "6, , ,1,9,3, , ,4",
-                "5,7, ,2,3,1, ,4,9",
-                " , ,9,5, , ,1, , ",
-                "3,1, , , , , ,5,2",
-                "7, , , ,2, , , ,5",
-                " , , ,4, ,7, , , ",
-                " , ,2,3, ,5,4, , ",
-            };
+                sarg.PossibleSolutions.Should().Be(3);
+                count = sarg.PossibleSolutions;
+            }
+        };
 
-            var s = lines.CreateSudoku();
-
-            s.Clear(2, 0);
-            s.StepCount.Should().Be(33);
-
-            var count = 1;
-
-            s.FoundSolution += (object sudoku, SudokuEventArgs sarg) =>
-            {
-                if (sarg.FindSolutionsFinished)
-                {
-                    sarg.PossibleSolutions.Should().Be(3);
-                    count = sarg.PossibleSolutions;
-                }
-            };
-
-            s.CalcPossibleSolutions(new CancellationToken(false)).Should().Be(3);
-            count.Should().Be(3);
-        }
+        s.CalcPossibleSolutions(new CancellationToken(false)).Should().Be(3);
+        count.Should().Be(3);
     }
 }

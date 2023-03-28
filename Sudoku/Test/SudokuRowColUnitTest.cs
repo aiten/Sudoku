@@ -14,78 +14,77 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Test
+namespace Sudoku.Test;
+
+using FluentAssertions;
+
+using Sudoku.Solve;
+using Sudoku.Solve.Tools;
+
+using Xunit;
+
+public class SudokuRowColUnitTest
 {
-    using FluentAssertions;
-
-    using Sudoku.Solve;
-    using Sudoku.Solve.Tools;
-
-    using Xunit;
-
-    public class SudokuRowColUnitTest
+    [Theory]
+    [InlineData(0, 0, Orientation.Row,    0, 0)]
+    [InlineData(0, 1, Orientation.Row,    0, 1)]
+    [InlineData(0, 9, Orientation.Row,    0, 9)]
+    [InlineData(9, 0, Orientation.Row,    9, 0)]
+    [InlineData(9, 1, Orientation.Row,    9, 1)]
+    [InlineData(9, 8, Orientation.Row,    9, 8)]
+    [InlineData(9, 9, Orientation.Row,    9, 9)]
+    [InlineData(0, 0, Orientation.Column, 0, 0)]
+    [InlineData(0, 1, Orientation.Column, 1, 0)]
+    [InlineData(0, 9, Orientation.Column, 9, 0)]
+    [InlineData(9, 0, Orientation.Column, 0, 9)]
+    [InlineData(9, 1, Orientation.Column, 1, 9)]
+    [InlineData(9, 8, Orientation.Column, 8, 9)]
+    [InlineData(9, 9, Orientation.Column, 9, 9)]
+    [InlineData(0, 0, Orientation.X3,     0, 0)]
+    [InlineData(0, 2, Orientation.X3,     0, 2)]
+    [InlineData(1, 0, Orientation.X3,     0, 3)]
+    [InlineData(1, 2, Orientation.X3,     0, 5)]
+    [InlineData(2, 0, Orientation.X3,     0, 6)]
+    [InlineData(2, 2, Orientation.X3,     0, 8)]
+    [InlineData(0, 3, Orientation.X3,     1, 0)]
+    [InlineData(0, 5, Orientation.X3,     1, 2)]
+    [InlineData(1, 3, Orientation.X3,     1, 3)]
+    [InlineData(1, 5, Orientation.X3,     1, 5)]
+    [InlineData(2, 3, Orientation.X3,     1, 6)]
+    [InlineData(2, 5, Orientation.X3,     1, 8)]
+    [InlineData(6, 0, Orientation.X3,     6, 0)]
+    [InlineData(6, 2, Orientation.X3,     6, 2)]
+    [InlineData(7, 0, Orientation.X3,     6, 3)]
+    [InlineData(7, 2, Orientation.X3,     6, 5)]
+    [InlineData(8, 0, Orientation.X3,     6, 6)]
+    [InlineData(8, 2, Orientation.X3,     6, 8)]
+    [InlineData(6, 6, Orientation.X3,     8, 0)]
+    [InlineData(6, 8, Orientation.X3,     8, 2)]
+    [InlineData(7, 6, Orientation.X3,     8, 3)]
+    [InlineData(7, 8, Orientation.X3,     8, 5)]
+    [InlineData(8, 6, Orientation.X3,     8, 6)]
+    [InlineData(8, 8, Orientation.X3,     8, 8)]
+    public void TestConvertToRowCol(int row, int col, Orientation orientation, int toRow, int toCol)
     {
-        [Theory]
-        [InlineData(0, 0, Orientation.Row,    0, 0)]
-        [InlineData(0, 1, Orientation.Row,    0, 1)]
-        [InlineData(0, 9, Orientation.Row,    0, 9)]
-        [InlineData(9, 0, Orientation.Row,    9, 0)]
-        [InlineData(9, 1, Orientation.Row,    9, 1)]
-        [InlineData(9, 8, Orientation.Row,    9, 8)]
-        [InlineData(9, 9, Orientation.Row,    9, 9)]
-        [InlineData(0, 0, Orientation.Column, 0, 0)]
-        [InlineData(0, 1, Orientation.Column, 1, 0)]
-        [InlineData(0, 9, Orientation.Column, 9, 0)]
-        [InlineData(9, 0, Orientation.Column, 0, 9)]
-        [InlineData(9, 1, Orientation.Column, 1, 9)]
-        [InlineData(9, 8, Orientation.Column, 8, 9)]
-        [InlineData(9, 9, Orientation.Column, 9, 9)]
-        [InlineData(0, 0, Orientation.X3,     0, 0)]
-        [InlineData(0, 2, Orientation.X3,     0, 2)]
-        [InlineData(1, 0, Orientation.X3,     0, 3)]
-        [InlineData(1, 2, Orientation.X3,     0, 5)]
-        [InlineData(2, 0, Orientation.X3,     0, 6)]
-        [InlineData(2, 2, Orientation.X3,     0, 8)]
-        [InlineData(0, 3, Orientation.X3,     1, 0)]
-        [InlineData(0, 5, Orientation.X3,     1, 2)]
-        [InlineData(1, 3, Orientation.X3,     1, 3)]
-        [InlineData(1, 5, Orientation.X3,     1, 5)]
-        [InlineData(2, 3, Orientation.X3,     1, 6)]
-        [InlineData(2, 5, Orientation.X3,     1, 8)]
-        [InlineData(6, 0, Orientation.X3,     6, 0)]
-        [InlineData(6, 2, Orientation.X3,     6, 2)]
-        [InlineData(7, 0, Orientation.X3,     6, 3)]
-        [InlineData(7, 2, Orientation.X3,     6, 5)]
-        [InlineData(8, 0, Orientation.X3,     6, 6)]
-        [InlineData(8, 2, Orientation.X3,     6, 8)]
-        [InlineData(6, 6, Orientation.X3,     8, 0)]
-        [InlineData(6, 8, Orientation.X3,     8, 2)]
-        [InlineData(7, 6, Orientation.X3,     8, 3)]
-        [InlineData(7, 8, Orientation.X3,     8, 5)]
-        [InlineData(8, 6, Orientation.X3,     8, 6)]
-        [InlineData(8, 8, Orientation.X3,     8, 8)]
-        public void TestConvertToRowCol(int row, int col, Orientation orientation, int toRow, int toCol)
-        {
-            var toRowCol = (row, col).ConvertTo(orientation);
+        var toRowCol = (row, col).ConvertTo(orientation);
 
-            toRowCol.Should().Be((toRow, toCol));
-        }
+        toRowCol.Should().Be((toRow, toCol));
+    }
 
-        [Theory]
-        [InlineData(Orientation.Row)]
-        [InlineData(Orientation.Column)]
-        [InlineData(Orientation.X3)]
-        public void TestConvertFromTo(Orientation orientation)
+    [Theory]
+    [InlineData(Orientation.Row)]
+    [InlineData(Orientation.Column)]
+    [InlineData(Orientation.X3)]
+    public void TestConvertFromTo(Orientation orientation)
+    {
+        foreach (var row in LoopExtensions.Rows)
         {
-            foreach (var row in LoopExtensions.Rows)
+            foreach (var col in LoopExtensions.Cols)
             {
-                foreach (var col in LoopExtensions.Cols)
-                {
-                    var toRowCol   = (row, col).ConvertTo(orientation);
-                    var fromRowCol = (toRowCol.Row, toRowCol.Col).ConvertFrom(orientation);
+                var toRowCol   = (row, col).ConvertTo(orientation);
+                var fromRowCol = (toRowCol.Row, toRowCol.Col).ConvertFrom(orientation);
 
-                    fromRowCol.Should().Be((row, col));
-                }
+                fromRowCol.Should().Be((row, col));
             }
         }
     }

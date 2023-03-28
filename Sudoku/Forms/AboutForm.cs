@@ -14,15 +14,14 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Forms
-{
-    using System.Windows.Forms;
+namespace Sudoku.Forms;
 
-    public partial class AboutForm : Form
+using System.Windows.Forms;
+
+public partial class AboutForm : Form
+{
+    public AboutForm()
     {
-        public AboutForm()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

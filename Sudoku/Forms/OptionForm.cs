@@ -14,34 +14,33 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Forms
+namespace Sudoku.Forms;
+
+using System.Windows.Forms;
+
+public partial class OptionForm : Form
 {
-    using System.Windows.Forms;
-
-    public partial class OptionForm : Form
+    public OptionForm()
     {
-        public OptionForm()
+        InitializeComponent();
+    }
+
+    private SudokuOptions _options;
+
+    public SudokuOptions Options
+    {
+        get
         {
-            InitializeComponent();
+            _options.Help        = _Help.Checked;
+            _options.ShowToolTip = _ShowToolTip.Checked;
+
+            return _options;
         }
-
-        private SudokuOptions _options;
-
-        public SudokuOptions Options
+        set
         {
-            get
-            {
-                _options.Help        = _Help.Checked;
-                _options.ShowToolTip = _ShowToolTip.Checked;
-
-                return _options;
-            }
-            set
-            {
-                _options             = value;
-                _Help.Checked        = _options.Help;
-                _ShowToolTip.Checked = _options.ShowToolTip;
-            }
+            _options             = value;
+            _Help.Checked        = _options.Help;
+            _ShowToolTip.Checked = _options.ShowToolTip;
         }
     }
 }

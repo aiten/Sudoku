@@ -14,130 +14,129 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Solve
+namespace Sudoku.Solve;
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+
+using Abstraction;
+
+public static class SudokuExtensions
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-
-    using Abstraction;
-
-    public static class SudokuExtensions
+    public static Solve.Sudoku CreateSudoku(this string[] lines)
     {
-        public static Solve.Sudoku CreateSudoku(this string[] lines)
+        var s = new Solve.Sudoku();
+
+        for (var row = 0; row < 9 && row < lines.Length; row++)
         {
-            var s = new Solve.Sudoku();
-
-            for (var row = 0; row < 9 && row < lines.Length; row++)
+            if (!string.IsNullOrEmpty(lines[row]))
             {
-                if (!string.IsNullOrEmpty(lines[row]))
-                {
-                    var cols = lines[row].Split(',', StringSplitOptions.None);
+                var cols = lines[row].Split(',', StringSplitOptions.None);
 
-                    for (var col = 0; col < 9; col++)
+                for (var col = 0; col < 9; col++)
+                {
+                    if (cols.Length > col && !string.IsNullOrEmpty(cols[col]))
                     {
-                        if (cols.Length > col && !string.IsNullOrEmpty(cols[col]))
+                        if (cols[col] != " ")
                         {
-                            if (cols[col] != " ")
+                            if (!s.Set(row, col, int.Parse(cols[col])))
                             {
-                                if (!s.Set(row, col, int.Parse(cols[col])))
-                                {
-                                    throw new ArgumentException("illegal sudoku");
-                                }
+                                throw new ArgumentException("illegal sudoku");
                             }
                         }
                     }
                 }
             }
-
-            s.ClearUndo();
-            return s;
         }
 
-        public static IList<string> SmartPrint(this Solve.Sudoku s, string emptyField)
+        s.ClearUndo();
+        return s;
+    }
+
+    public static IList<string> SmartPrint(this Solve.Sudoku s, string emptyField)
+    {
+        var lines = new List<string>();
+        for (int row = 0; row < 9; row++)
         {
-            var lines = new List<string>();
-            for (int row = 0; row < 9; row++)
+            string GetValue(int row, int col)
             {
-                string GetValue(int row, int col)
-                {
-                    var no = s.Get(row, col);
-                    return no == 0 ? emptyField : no.ToString();
-                }
-
-                var line = GetValue(row, 0);
-                for (int col = 1; col < 9; col++)
-                {
-                    line += "," + GetValue(row, col);
-                }
-
-                lines.Add(line);
+                var no = s.Get(row, col);
+                return no == 0 ? emptyField : no.ToString();
             }
 
-            return lines;
+            var line = GetValue(row, 0);
+            for (int col = 1; col < 9; col++)
+            {
+                line += "," + GetValue(row, col);
+            }
+
+            lines.Add(line);
         }
 
-        public static string[,] SmartPrintInfo(this Solve.Sudoku s)
+        return lines;
+    }
+
+    public static string[,] SmartPrintInfo(this Solve.Sudoku s)
+    {
+        s.UpdatePossible();
+        var info = new string[9, 9];
+        for (int row = 0; row < 9; row++)
         {
-            s.UpdatePossible();
-            var info = new string[9, 9];
-            for (int row = 0; row < 9; row++)
+            for (int col = 0; col < 9; col++)
             {
-                for (int col = 0; col < 9; col++)
+                var field = s.GetDef(row, col);
+                if (field.IsEmpty)
                 {
-                    var field = s.GetDef(row, col);
-                    if (field.IsEmpty)
+                    var possible    = field.PossibleString();
+                    var possibleOpt = field.NotPossibleExplanation();
+                    if (string.IsNullOrEmpty(possibleOpt))
                     {
-                        var possible    = field.PossibleString();
-                        var possibleOpt = field.NotPossibleExplanation();
-                        if (string.IsNullOrEmpty(possibleOpt))
-                        {
-                            info[row, col] = $"[{possible}]";
-                        }
-                        else
-                        {
-                            info[row, col] = $"[{possible}]=>{possibleOpt}";
-                        }
+                        info[row, col] = $"[{possible}]";
                     }
                     else
                     {
-                        info[row, col] = $"{field.No}";
+                        info[row, col] = $"[{possible}]=>{possibleOpt}";
                     }
                 }
-            }
-
-            return info;
-        }
-
-        public static SudokuSolveResult GetSolveInfo(this Solve.Sudoku s)
-        {
-            s.UpdatePossible();
-
-            var list = new List<SudokuSolveField>();
-            var info = new SudokuSolveResult
-            {
-                Field = list
-            };
-
-
-            for (int row = 0; row < 9; row++)
-            {
-                for (int col = 0; col < 9; col++)
+                else
                 {
-                    var field = s.GetDef(row, col);
-
-                    list.Add(new SudokuSolveField()
-                    {
-                        Col         = col,
-                        Row         = row,
-                        No          = field.IsEmpty ? null : field.No,
-                        AllPossible = field.GetPossibleMainRuleNos(),
-                        Possible    = field.GetPossibleNos()
-                    });
+                    info[row, col] = $"{field.No}";
                 }
             }
-
-            return info;
         }
+
+        return info;
+    }
+
+    public static SudokuSolveResult GetSolveInfo(this Solve.Sudoku s)
+    {
+        s.UpdatePossible();
+
+        var list = new List<SudokuSolveField>();
+        var info = new SudokuSolveResult
+        {
+            Field = list
+        };
+
+
+        for (int row = 0; row < 9; row++)
+        {
+            for (int col = 0; col < 9; col++)
+            {
+                var field = s.GetDef(row, col);
+
+                list.Add(new SudokuSolveField()
+                {
+                    Col         = col,
+                    Row         = row,
+                    No          = field.IsEmpty ? null : field.No,
+                    AllPossible = field.GetPossibleMainRuleNos(),
+                    Possible    = field.GetPossibleNos()
+                });
+            }
+        }
+
+        return info;
     }
 }

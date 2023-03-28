@@ -1,0 +1,48 @@
+﻿@page
+@model Sudoku.Server.Areas.Data.Pages.Sudokus.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>SudokuEntity</h4>
+<hr/>
+
+@Html.HiddenFor(m => m.SudokuEntity.LastStored)
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="SudokuEntity.Id"/>
+            <div class="form-group">
+                <label asp-for="SudokuEntity.CategoryId" class="control-label"></label>
+                <select asp-for="SudokuEntity.CategoryId" asp-items="@Model.Categories" class="form-control"></select>
+                <span asp-validation-for="SudokuEntity.CategoryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SudokuEntity.Comment" class="control-label"></label>
+                <input asp-for="SudokuEntity.Comment" class="form-control"/>
+                <span asp-validation-for="SudokuEntity.Comment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SudokuEntity.Content" class="control-label"></label>
+                <input asp-for="SudokuEntity.Content" class="form-control"/>
+                <span asp-validation-for="SudokuEntity.Content" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

@@ -14,74 +14,73 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Test
+namespace Sudoku.Test;
+
+using System.Linq;
+
+using Sudoku.Solve;
+
+public static class SudokuExtensions
 {
-    using System.Linq;
-
-    using Sudoku.Solve;
-
-    public static class SudokuExtensions
+    private static string ToButtonStringMainRuleOnly(this SudokuField field)
     {
-        private static string ToButtonStringMainRuleOnly(this SudokuField field)
+        if (field.HasNo)
         {
-            if (field.HasNo)
-            {
-                return field.No.ToString();
-            }
-
-            return string.Join(',', field.GetPossibleMainRuleNos());
+            return field.No.ToString();
         }
 
-        public static string ToButtonString(this SudokuField field)
+        return string.Join(',', field.GetPossibleMainRuleNos());
+    }
+
+    public static string ToButtonString(this SudokuField field)
+    {
+        if (field.HasNo)
         {
-            if (field.HasNo)
-            {
-                return field.No.ToString();
-            }
-
-            var possible    = string.Join(',', field.GetPossibleNos());
-            var notPossible = string.Join(',', field.GetNotPossibleNos());
-
-            if (string.IsNullOrEmpty(notPossible))
-            {
-                return possible;
-            }
-
-            return possible + " - " + notPossible;
+            return field.No.ToString();
         }
 
-        public static string GetFullFiledInfo(this SudokuField field)
+        var possible    = string.Join(',', field.GetPossibleNos());
+        var notPossible = string.Join(',', field.GetNotPossibleNos());
+
+        if (string.IsNullOrEmpty(notPossible))
         {
-            var reason = field.ToButtonString();
-            if (field.IsEmpty)
-            {
-                var notPossibleExplanation = string.Join('\n', field.GetNotPossible().Select(notPossible => notPossible.SerializeTo()));
-
-                if (!string.IsNullOrEmpty(notPossibleExplanation))
-                {
-                    reason += "\n";
-                    reason += notPossibleExplanation;
-                }
-            }
-
-            return reason;
+            return possible;
         }
 
-        public static string ToButtonToolTip(this SudokuField field)
+        return possible + " - " + notPossible;
+    }
+
+    public static string GetFullFiledInfo(this SudokuField field)
+    {
+        var reason = field.ToButtonString();
+        if (field.IsEmpty)
         {
-            var reason = field.ToButtonString();
-            if (field.IsEmpty)
+            var notPossibleExplanation = string.Join('\n', field.GetNotPossible().Select(notPossible => notPossible.SerializeTo()));
+
+            if (!string.IsNullOrEmpty(notPossibleExplanation))
             {
-                var notPossibleExplanation = string.Join('\n', field.GetNotPossible().Select(notPossible => notPossible.ToString()));
-
-                if (!string.IsNullOrEmpty(notPossibleExplanation))
-                {
-                    reason += "\n";
-                    reason += notPossibleExplanation;
-                }
+                reason += "\n";
+                reason += notPossibleExplanation;
             }
-
-            return reason;
         }
-    };
-}
+
+        return reason;
+    }
+
+    public static string ToButtonToolTip(this SudokuField field)
+    {
+        var reason = field.ToButtonString();
+        if (field.IsEmpty)
+        {
+            var notPossibleExplanation = string.Join('\n', field.GetNotPossible().Select(notPossible => notPossible.ToString()));
+
+            if (!string.IsNullOrEmpty(notPossibleExplanation))
+            {
+                reason += "\n";
+                reason += notPossibleExplanation;
+            }
+        }
+
+        return reason;
+    }
+};

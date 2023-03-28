@@ -14,103 +14,102 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Solve
+namespace Sudoku.Solve;
+
+using System.Collections.Generic;
+using System.Linq;
+
+using global::Sudoku.Solve.NotPossible;
+using global::Sudoku.Solve.Tools;
+
+public class SolverBlockade2 : SolverBase
 {
-    using System.Collections.Generic;
-    using System.Linq;
-
-    using global::Sudoku.Solve.NotPossible;
-    using global::Sudoku.Solve.Tools;
-
-    public class SolverBlockade2 : SolverBase
+    public SolverBlockade2(Sudoku sudoku) : base(sudoku)
     {
-        public SolverBlockade2(Sudoku sudoku) : base(sudoku)
+    }
+
+    private readonly bool[] _foundIdx1 = new bool[9];
+
+    public override bool Solve()
+    {
+        var isCol = Solve(Orientation.Column);
+        var isRow = Solve(Orientation.Row);
+        var isX3  = Solve(Orientation.X3);
+
+        return isCol || isRow || isX3;
+    }
+
+    public override bool Solve(Orientation orientation)
+    {
+        return UpdatePossibleBlockade2(Sudoku.ToGetDef(orientation), orientation) > 0;
+    }
+
+    public int UpdatePossibleBlockade2(Sudoku.GetSudokuField getDef, Orientation orientation)
+    {
+        var changeCount = 0;
+
+        ForEachEmpty(getDef, (def, row, col) =>
         {
-        }
+            _foundIdx1.Init(false);
 
-        private readonly bool[] _foundIdx1 = new bool[9];
+            _foundIdx1[col] = true;
+            var foundCount = 1;
 
-        public override bool Solve()
-        {
-            var isCol = Solve(Orientation.Column);
-            var isRow = Solve(Orientation.Row);
-            var isX3  = Solve(Orientation.X3);
-
-            return isCol || isRow || isX3;
-        }
-
-        public override bool Solve(Orientation orientation)
-        {
-            return UpdatePossibleBlockade2(Sudoku.ToGetDef(orientation), orientation) > 0;
-        }
-
-        public int UpdatePossibleBlockade2(Sudoku.GetSudokuField getDef, Orientation orientation)
-        {
-            var changeCount = 0;
-
-            ForEachEmpty(getDef, (def, row, col) =>
+            foreach (var col2 in LoopExtensions.Cols.Where(col2 => col2 != col))
             {
-                _foundIdx1.Init(false);
+                var def2 = getDef(row, col2);
+                if (def2.IsEmpty)
+                {
+                    if (def.IsSubSetPossible(def2))
+                    {
+                        _foundIdx1[col2] = true;
+                        foundCount++;
+                    }
+                }
+            }
 
-                _foundIdx1[col] = true;
-                var foundCount = 1;
-
-                foreach (var col2 in LoopExtensions.Cols.Where(col2 => col2 != col))
+            if (foundCount == def.PossibleCount())
+            {
+                var reasonPossible = new List<int>();
+                var reasonIndex    = new List<int>();
+                foreach (var col2 in LoopExtensions.Cols.Where(col2 => _foundIdx1[col2]))
                 {
                     var def2 = getDef(row, col2);
                     if (def2.IsEmpty)
                     {
-                        if (def.IsSubSetPossible(def2))
+                        if (reasonPossible.Count == 0)
                         {
-                            _foundIdx1[col2] = true;
-                            foundCount++;
+                            reasonPossible.AddRange(def2.GetPossibleNos());
                         }
+
+                        reasonIndex.Add(col2);
                     }
                 }
 
-                if (foundCount == def.PossibleCount())
+                foreach (var col2 in LoopExtensions.Cols.Where(col2 => !_foundIdx1[col2]))
                 {
-                    var reasonPossible = new List<int>();
-                    var reasonIndex    = new List<int>();
-                    foreach (var col2 in LoopExtensions.Cols.Where(col2 => _foundIdx1[col2]))
+                    var def2 = getDef(row, col2);
+                    if (def2.IsEmpty)
                     {
-                        var def2 = getDef(row, col2);
-                        if (def2.IsEmpty)
+                        foreach (var no in LoopExtensions.Nos)
                         {
-                            if (reasonPossible.Count == 0)
+                            if (def.IsPossible(no) && def2.IsPossible(no))
                             {
-                                reasonPossible.AddRange(def2.GetPossibleNos());
-                            }
-
-                            reasonIndex.Add(col2);
-                        }
-                    }
-
-                    foreach (var col2 in LoopExtensions.Cols.Where(col2 => !_foundIdx1[col2]))
-                    {
-                        var def2 = getDef(row, col2);
-                        if (def2.IsEmpty)
-                        {
-                            foreach (var no in LoopExtensions.Nos)
-                            {
-                                if (def.IsPossible(no) && def2.IsPossible(no))
+                                changeCount++;
+                                def2.SetNotPossible(no, new NotPossibleBlockade2()
                                 {
-                                    changeCount++;
-                                    def2.SetNotPossible(no, new NotPossibleBlockade2()
-                                    {
-                                        ForNo       = no,
-                                        Orientation = orientation,
-                                        BecauseIdx  = reasonIndex,
-                                        BecauseNos  = reasonPossible
-                                    });
-                                }
+                                    ForNo       = no,
+                                    Orientation = orientation,
+                                    BecauseIdx  = reasonIndex,
+                                    BecauseNos  = reasonPossible
+                                });
                             }
                         }
                     }
                 }
-            });
+            }
+        });
 
-            return changeCount;
-        }
+        return changeCount;
     }
 }

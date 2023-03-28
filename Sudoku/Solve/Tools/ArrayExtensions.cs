@@ -14,16 +14,15 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Solve.Tools
+namespace Sudoku.Solve.Tools;
+
+public static class ArrayExtensions
 {
-    public static class ArrayExtensions
+    public static void Init(this bool[] ar, bool with)
     {
-        public static void Init(this bool[] ar, bool with)
+        for (int i = 0; i < ar.Length; i++)
         {
-            for (int i = 0; i < ar.Length; i++)
-            {
-                ar[i] = with;
-            }
+            ar[i] = with;
         }
     }
 }

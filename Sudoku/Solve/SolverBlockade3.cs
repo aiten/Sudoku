@@ -14,96 +14,95 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Solve
+namespace Sudoku.Solve;
+
+using System.Collections.Generic;
+
+using global::Sudoku.Solve.NotPossible;
+
+public class SolverBlockade3 : SolverBase
 {
-    using System.Collections.Generic;
-
-    using global::Sudoku.Solve.NotPossible;
-
-    public class SolverBlockade3 : SolverBase
+    public SolverBlockade3(Sudoku sudoku) : base(sudoku)
     {
-        public SolverBlockade3(Sudoku sudoku) : base(sudoku)
+    }
+
+    public override bool Solve()
+    {
+        var isCol = Solve(Orientation.Column);
+        var isRow = Solve(Orientation.Row);
+
+        return isCol || isRow;
+    }
+
+    public override bool Solve(Orientation orientation)
+    {
+        return UpdatePossibleBlockade3(Sudoku.ToGetDef(orientation), orientation) > 0;
+    }
+
+    private int UpdatePossibleBlockade3(Sudoku.GetSudokuField getDef, Orientation orientation)
+    {
+        var changeCount = 0;
+
+        ForEachEmpty(getDef, (def, row, col) =>
         {
-        }
-
-        public override bool Solve()
-        {
-            var isCol = Solve(Orientation.Column);
-            var isRow = Solve(Orientation.Row);
-
-            return isCol || isRow;
-        }
-
-        public override bool Solve(Orientation orientation)
-        {
-            return UpdatePossibleBlockade3(Sudoku.ToGetDef(orientation), orientation) > 0;
-        }
-
-        private int UpdatePossibleBlockade3(Sudoku.GetSudokuField getDef, Orientation orientation)
-        {
-            var changeCount = 0;
-
-            ForEachEmpty(getDef, (def, row, col) =>
+            for (var no = 1; no <= 9; no++)
             {
-                for (var no = 1; no <= 9; no++)
+                var colIdx = new List<int>();
+
+                if (def.IsPossible(no))
                 {
-                    var colIdx = new List<int>();
+                    // test all in same sudoku but not in same row/col
 
-                    if (def.IsPossible(no))
+                    var s3Row = row / 3;
+                    var s3Col = col / 3;
+                    int t;
+
+                    for (t = 0; t < 9; t++)
                     {
-                        // test all in same sudoku but not in same row/col
-
-                        var s3Row = row / 3;
-                        var s3Col = col / 3;
-                        int t;
-
-                        for (t = 0; t < 9; t++)
+                        var sRow = s3Row * 3 + t / 3;
+                        var sCol = s3Col * 3 + t % 3;
+                        var def2 = getDef(sRow, sCol);
+                        if (def2.IsEmpty)
                         {
-                            var sRow = s3Row * 3 + t / 3;
-                            var sCol = s3Col * 3 + t % 3;
-                            var def2 = getDef(sRow, sCol);
-                            if (def2.IsEmpty)
+                            if (row != sRow)
                             {
-                                if (row != sRow)
+                                if (def2.IsPossible(no))
                                 {
-                                    if (def2.IsPossible(no))
-                                    {
-                                        // abort with z
-                                        break;
-                                    }
-                                }
-                                else if (def2.IsPossible(no))
-                                {
-                                    colIdx.Add(sCol);
+                                    // abort with z
+                                    break;
                                 }
                             }
-                        }
-
-                        if (t >= 9)
-                        {
-                            for (t = 0; t < 9; t++)
+                            else if (def2.IsPossible(no))
                             {
-                                if (t / 3 != col / 3)
+                                colIdx.Add(sCol);
+                            }
+                        }
+                    }
+
+                    if (t >= 9)
+                    {
+                        for (t = 0; t < 9; t++)
+                        {
+                            if (t / 3 != col / 3)
+                            {
+                                var def2 = getDef(row, t);
+                                if (def2.IsEmpty && def2.IsPossible(no))
                                 {
-                                    var def2 = getDef(row, t);
-                                    if (def2.IsEmpty && def2.IsPossible(no))
+                                    changeCount++;
+                                    def2.SetNotPossible(no, new NotPossibleBlockade3()
                                     {
-                                        changeCount++;
-                                        def2.SetNotPossible(no, new NotPossibleBlockade3()
-                                        {
-                                            ForNo       = no,
-                                            Orientation = orientation,
-                                            BecauseIdx  = colIdx
-                                        });
-                                    }
+                                        ForNo       = no,
+                                        Orientation = orientation,
+                                        BecauseIdx  = colIdx
+                                    });
                                 }
                             }
                         }
                     }
                 }
-            });
+            }
+        });
 
-            return changeCount;
-        }
+        return changeCount;
     }
 }

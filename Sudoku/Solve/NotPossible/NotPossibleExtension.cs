@@ -14,70 +14,69 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Solve.NotPossible
+namespace Sudoku.Solve.NotPossible;
+
+using System.Collections.Generic;
+using System.Linq;
+
+public static class NotPossibleExtension
 {
-    using System.Collections.Generic;
-    using System.Linq;
+    #region For Display
 
-    public static class NotPossibleExtension
+    const string ColNames = "ABCDEFGHI";
+    const string RowNames = "123456789";
+    const string X3Names  = "123456789";
+
+    public static string ToUserRowList(this IEnumerable<int> because, Orientation orientation)
     {
-        #region For Display
-
-        const string ColNames = "ABCDEFGHI";
-        const string RowNames = "123456789";
-        const string X3Names  = "123456789";
-
-        public static string ToUserRowList(this IEnumerable<int> because, Orientation orientation)
+        return orientation switch
         {
-            return orientation switch
-            {
-                Orientation.Row    => string.Join(',', because.Select(idx => RowNames[idx])),
-                Orientation.Column => string.Join(',', because.Select(idx => ColNames[idx])),
-                Orientation.X3     => string.Join(',', because.Select(idx => X3Names[idx])),
-            };
-        }
+            Orientation.Row    => string.Join(',', because.Select(idx => RowNames[idx])),
+            Orientation.Column => string.Join(',', because.Select(idx => ColNames[idx])),
+            Orientation.X3     => string.Join(',', because.Select(idx => X3Names[idx])),
+        };
+    }
 
-        public static string ToUserNoList(this IEnumerable<int> because)
-        {
-            return string.Join(',', because);
-        }
+    public static string ToUserNoList(this IEnumerable<int> because)
+    {
+        return string.Join(',', because);
+    }
 
-        public static string ToCellStringUser(this (int Row, int Col) rowCol)
-        {
-            return $"{RowNames[rowCol.Row]}{ColNames[rowCol.Col]}";
-        }
+    public static string ToCellStringUser(this (int Row, int Col) rowCol)
+    {
+        return $"{RowNames[rowCol.Row]}{ColNames[rowCol.Col]}";
+    }
 
-        #endregion
+    #endregion
 
-        public static string ToRowList(this IEnumerable<int> because)
-        {
-            return string.Join(',', because);
-        }
+    public static string ToRowList(this IEnumerable<int> because)
+    {
+        return string.Join(',', because);
+    }
 
 
-        public static string ToNoList(this IEnumerable<int> because)
-        {
-            return string.Join(',', because);
-        }
+    public static string ToNoList(this IEnumerable<int> because)
+    {
+        return string.Join(',', because);
+    }
 
-        public static IEnumerable<int> FromNoList(this string noList)
-        {
-            return noList.Split(',').Select(int.Parse);
-        }
+    public static IEnumerable<int> FromNoList(this string noList)
+    {
+        return noList.Split(',').Select(int.Parse);
+    }
 
-        public static IEnumerable<int> FromRowList(this string noList)
-        {
-            return noList.Split(',').Select(int.Parse);
-        }
+    public static IEnumerable<int> FromRowList(this string noList)
+    {
+        return noList.Split(',').Select(int.Parse);
+    }
 
-        public static string ToCellString(this (int row, int col) rowCol)
-        {
-            return $"{rowCol.row}{rowCol.col}";
-        }
+    public static string ToCellString(this (int row, int col) rowCol)
+    {
+        return $"{rowCol.row}{rowCol.col}";
+    }
 
-        public static (int Row, int Col) FromCellString(this string rowCol)
-        {
-            return (rowCol[0] - '0', rowCol[1] - '0');
-        }
+    public static (int Row, int Col) FromCellString(this string rowCol)
+    {
+        return (rowCol[0] - '0', rowCol[1] - '0');
     }
 }

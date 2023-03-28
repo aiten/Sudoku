@@ -14,54 +14,53 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Test
+namespace Sudoku.Test;
+
+using FluentAssertions;
+
+using Sudoku.Solve;
+
+using Xunit;
+
+public class SudokuTextTest : SudokuBaseUnitTest
 {
-    using FluentAssertions;
-
-    using Sudoku.Solve;
-
-    using Xunit;
-
-    public class SudokuTextTest : SudokuBaseUnitTest
+    [Fact]
+    public void PossibilityTextTest()
     {
-        [Fact]
-        public void PossibilityTextTest()
+        var lines = new[]
         {
-            var lines = new[]
-            {
-                " , ,9, ,8, , , ,6",
-                " ,3, , , ,5, , ,7",
-                " , ,4, ,7, , , ,8",
-                " ,4, , , ,6,3,5,9",
-                "1, , , , , , , , ",
-                " , , , , , , , , ",
-                "2, , , , , , , , ",
-                " , , , , , , , , ",
-                " , , , , , , , , ",
-            };
+            " , ,9, ,8, , , ,6",
+            " ,3, , , ,5, , ,7",
+            " , ,4, ,7, , , ,8",
+            " ,4, , , ,6,3,5,9",
+            "1, , , , , , , , ",
+            " , , , , , , , , ",
+            "2, , , , , , , , ",
+            " , , , , , , , , ",
+            " , , , , , , , , ",
+        };
 
-            var s = lines.CreateSudoku();
-            s.UpdatePossible();
+        var s = lines.CreateSudoku();
+        s.UpdatePossible();
 
-            for (var x = 0; x < 9; x++)
+        for (var x = 0; x < 9; x++)
+        {
+            for (var y = 0; y < 9; y++)
             {
-                for (var y = 0; y < 9; y++)
+                var def = s.GetDef(x, y);
+                if (def.IsEmpty)
                 {
-                    var def = s.GetDef(x, y);
-                    if (def.IsEmpty)
-                    {
-                        var toolTipsText = s.GetDef(x, y).GetFullFiledInfo();
-                        var toolTips     = toolTipsText.Split('\n');
+                    var toolTipsText = s.GetDef(x, y).GetFullFiledInfo();
+                    var toolTips     = toolTipsText.Split('\n');
 
-                        if (def.PossibleString() != toolTipsText)
+                    if (def.PossibleString() != toolTipsText)
+                    {
+                        for (int i = 1; i < toolTips.Length; i++)
                         {
-                            for (int i = 1; i < toolTips.Length; i++)
-                            {
-                                var toolTip = toolTips[i];
-                                toolTip.Should().StartWith("B");
-                                var localized = toolTip;
-                                localized.Should().NotBeEmpty();
-                            }
+                            var toolTip = toolTips[i];
+                            toolTip.Should().StartWith("B");
+                            var localized = toolTip;
+                            localized.Should().NotBeEmpty();
                         }
                     }
                 }

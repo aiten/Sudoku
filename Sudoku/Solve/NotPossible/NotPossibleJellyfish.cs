@@ -14,14 +14,13 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Solve.NotPossible
+namespace Sudoku.Solve.NotPossible;
+
+public class NotPossibleJellyfish : NotPossibleFish
 {
-    public class NotPossibleJellyfish : NotPossibleFish
+    public NotPossibleJellyfish()
     {
-        public NotPossibleJellyfish()
-        {
-            RoleName = "B6";
-            FishName = "jellyfish";
-        }
+        RoleName = "B6";
+        FishName = "jellyfish";
     }
 }

@@ -15,8 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Test\Test.csproj", "{BC529007-0120-4EA6-9157-56D4C6ACBF3E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Start", "Start\Start.csproj", "{8DCA8362-653E-42B7-A30B-A3B4ECB385EA}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{156DF97D-AE8B-4F4D-AEC8-B6F6DD5BF556}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI.Host", "Framework\WebAPI.Host\WebAPI.Host.csproj", "{7A831BE5-7451-4A52-B827-6D412E20D8D8}"
@@ -45,8 +43,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Solve.Abstraction", "Solve.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Host.Blazor", "Host.Blazor", "{117DEB7B-C53F-4252-ADDC-0A39EE91AC18}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSudoku", "WebSudoku\WebSudoku.csproj", "{64537610-E6B3-4293-B0F2-FFBA587D7454}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository", "Repository\Repository.csproj", "{733E92D4-F49D-43C3-9F15-04A3C9084C68}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository", "Framework\Repository\Repository.csproj", "{B3C1520F-819B-403D-A7B8-F1B9CEA3696F}"
@@ -57,7 +53,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository.Abstraction", "F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLogTools", "Framework\NLogTools\NLogTools.csproj", "{7CA8B273-A74D-4C5A-93FF-FE01DAAFCD60}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{9467BB86-74C1-4918-A370-F55632773376}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Solve.Server", "Solve.Server\Solve.Server.csproj", "{9467BB86-74C1-4918-A370-F55632773376}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server\Server.csproj", "{B9B591CA-4420-495B-9C6C-CA603E0E4AF3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{88D3EF28-F39E-4725-AB8F-D12B1FDA5E9C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,10 +77,6 @@ Global
 		{BC529007-0120-4EA6-9157-56D4C6ACBF3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC529007-0120-4EA6-9157-56D4C6ACBF3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC529007-0120-4EA6-9157-56D4C6ACBF3E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8DCA8362-653E-42B7-A30B-A3B4ECB385EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8DCA8362-653E-42B7-A30B-A3B4ECB385EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8DCA8362-653E-42B7-A30B-A3B4ECB385EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8DCA8362-653E-42B7-A30B-A3B4ECB385EA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7A831BE5-7451-4A52-B827-6D412E20D8D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7A831BE5-7451-4A52-B827-6D412E20D8D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A831BE5-7451-4A52-B827-6D412E20D8D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -129,10 +125,6 @@ Global
 		{186F7CD5-26C9-465E-B3ED-3937AE882596}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{186F7CD5-26C9-465E-B3ED-3937AE882596}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{186F7CD5-26C9-465E-B3ED-3937AE882596}.Release|Any CPU.Build.0 = Release|Any CPU
-		{64537610-E6B3-4293-B0F2-FFBA587D7454}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{64537610-E6B3-4293-B0F2-FFBA587D7454}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{64537610-E6B3-4293-B0F2-FFBA587D7454}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{64537610-E6B3-4293-B0F2-FFBA587D7454}.Release|Any CPU.Build.0 = Release|Any CPU
 		{733E92D4-F49D-43C3-9F15-04A3C9084C68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{733E92D4-F49D-43C3-9F15-04A3C9084C68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{733E92D4-F49D-43C3-9F15-04A3C9084C68}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -157,6 +149,14 @@ Global
 		{9467BB86-74C1-4918-A370-F55632773376}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9467BB86-74C1-4918-A370-F55632773376}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9467BB86-74C1-4918-A370-F55632773376}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9B591CA-4420-495B-9C6C-CA603E0E4AF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9B591CA-4420-495B-9C6C-CA603E0E4AF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9B591CA-4420-495B-9C6C-CA603E0E4AF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9B591CA-4420-495B-9C6C-CA603E0E4AF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88D3EF28-F39E-4725-AB8F-D12B1FDA5E9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88D3EF28-F39E-4725-AB8F-D12B1FDA5E9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88D3EF28-F39E-4725-AB8F-D12B1FDA5E9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88D3EF28-F39E-4725-AB8F-D12B1FDA5E9C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -14,18 +14,17 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Solve.Abstraction
+namespace Sudoku.Solve.Abstraction;
+
+using System.Collections.Generic;
+
+public class SudokuSolveField
 {
-    using System.Collections.Generic;
+    public int Row { get; set; }
+    public int Col { get; set; }
 
-    public class SudokuSolveField
-    {
-        public int Row { get; set; }
-        public int Col { get; set; }
+    public int? No { get; set; }
 
-        public int? No { get; set; }
-
-        public IEnumerable<int> AllPossible { get; set; }
-        public IEnumerable<int> Possible    { get; set; }
-    }
+    public IEnumerable<int> AllPossible { get; set; }
+    public IEnumerable<int> Possible    { get; set; }
 }

@@ -14,90 +14,89 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Solve
+namespace Sudoku.Solve;
+
+using System.Collections.Generic;
+using System.Linq;
+
+using global::Sudoku.Solve.Tools;
+
+public abstract class SolverFishBase : SolverBase
 {
-    using System.Collections.Generic;
-    using System.Linq;
-
-    using global::Sudoku.Solve.Tools;
-
-    public abstract class SolverFishBase : SolverBase
+    protected SolverFishBase(Sudoku sudoku) : base(sudoku)
     {
-        protected SolverFishBase(Sudoku sudoku) : base(sudoku)
+    }
+
+    protected abstract void SetNotPossible(SudokuField def, int forNo, Orientation orientation, IEnumerable<int> becauseRow, IEnumerable<int> becauseCol);
+
+    protected int UpdateFish(Sudoku.GetSudokuField getDef, int fishSize, Orientation orientation)
+    {
+        var changeCount = 0;
+
+        foreach (var no in LoopExtensions.Nos)
         {
-        }
+            var countPerRow = LoopExtensions.Rows.Select(row => CountPossible(getDef, no, row)).ToArray();
+            var rowIdx      = GetRowIdx(fishSize);
 
-        protected abstract void SetNotPossible(SudokuField def, int forNo, Orientation orientation, IEnumerable<int> becauseRow, IEnumerable<int> becauseCol);
-
-        protected int UpdateFish(Sudoku.GetSudokuField getDef, int fishSize, Orientation orientation)
-        {
-            var changeCount = 0;
-
-            foreach (var no in LoopExtensions.Nos)
+            do
             {
-                var countPerRow = LoopExtensions.Rows.Select(row => CountPossible(getDef, no, row)).ToArray();
-                var rowIdx      = GetRowIdx(fishSize);
-
-                do
+                if (rowIdx.All(row => countPerRow[row] > 0 && countPerRow[row] <= fishSize))
                 {
-                    if (rowIdx.All(row => countPerRow[row] > 0 && countPerRow[row] <= fishSize))
-                    {
-                        var colIdx = LoopExtensions.Cols.Where(col => rowIdx.Any(row => getDef(row, col).IsPossible(no))).ToArray();
+                    var colIdx = LoopExtensions.Cols.Where(col => rowIdx.Any(row => getDef(row, col).IsPossible(no))).ToArray();
 
-                        if (colIdx.Length == fishSize)
+                    if (colIdx.Length == fishSize)
+                    {
+                        foreach (var row in LoopExtensions.Rows.Where(row => !rowIdx.Contains(row)))
                         {
-                            foreach (var row in LoopExtensions.Rows.Where(row => !rowIdx.Contains(row)))
+                            foreach (var def in colIdx
+                                         .SelectFieldEmpty(getDef, row)
+                                         .Where(def => def.IsPossible(no)))
                             {
-                                foreach (var def in colIdx
-                                    .SelectFieldEmpty(getDef, row)
-                                    .Where(def => def.IsPossible(no)))
-                                {
-                                    SetNotPossible(def, no, orientation, rowIdx.ToList(), colIdx);
-                                    changeCount++;
-                                }
+                                SetNotPossible(def, no, orientation, rowIdx.ToList(), colIdx);
+                                changeCount++;
                             }
                         }
                     }
-                } while (GetNext(fishSize - 1, rowIdx));
-            }
-
-            return changeCount;
-        }
-
-        private int[] GetRowIdx(int count)
-        {
-            var rows = new int[count];
-            for (var i = 0; i < count; i++)
-            {
-                rows[i] = i;
-            }
-
-            return rows;
-        }
-
-        private bool GetNext(int idx, int[] rows)
-        {
-            if (rows[idx] < 8)
-            {
-                rows[idx]++;
-                return true;
-            }
-
-            if (idx > 0 && GetNext(idx - 1, rows))
-            {
-                while (rows[idx - 1] >= 7)
-                {
-                    if (!GetNext(idx - 1, rows))
-                    {
-                        return false;
-                    }
                 }
+            } while (GetNext(fishSize - 1, rowIdx));
+        }
 
-                rows[idx] = rows[idx - 1] + 1;
-                return true;
+        return changeCount;
+    }
+
+    private int[] GetRowIdx(int count)
+    {
+        var rows = new int[count];
+        for (var i = 0; i < count; i++)
+        {
+            rows[i] = i;
+        }
+
+        return rows;
+    }
+
+    private bool GetNext(int idx, int[] rows)
+    {
+        if (rows[idx] < 8)
+        {
+            rows[idx]++;
+            return true;
+        }
+
+        if (idx > 0 && GetNext(idx - 1, rows))
+        {
+            while (rows[idx - 1] >= 7)
+            {
+                if (!GetNext(idx - 1, rows))
+                {
+                    return false;
+                }
             }
 
-            return false;
+            rows[idx] = rows[idx - 1] + 1;
+            return true;
         }
+
+        return false;
     }
 }

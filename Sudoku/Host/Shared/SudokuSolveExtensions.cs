@@ -14,28 +14,27 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Host.Shared
+namespace Sudoku.Host.Shared;
+
+using Sudoku.Solve.Abstraction;
+
+public static class SudokuSolveExtensions
 {
-    using Sudoku.Solve.Abstraction;
-
-    public static class SudokuSolveExtensions
+    public static string ToPossibleMessage(this SudokuSolveField field)
     {
-        public static string ToPossibleMessage(this SudokuSolveField field)
+        if (field.No.HasValue)
         {
-            if (field.No.HasValue)
-            {
-                return (field.No??0).ToString();
-            }
-
-            var possible    = string.Join(',', field.Possible);
-            var notPossible = string.Join(',', field.AllPossible.Except(field.Possible));
-
-            if (string.IsNullOrEmpty(notPossible))
-            {
-                return possible;
-            }
-
-            return possible + " - " + notPossible;
+            return (field.No??0).ToString();
         }
+
+        var possible    = string.Join(',', field.Possible);
+        var notPossible = string.Join(',', field.AllPossible.Except(field.Possible));
+
+        if (string.IsNullOrEmpty(notPossible))
+        {
+            return possible;
+        }
+
+        return possible + " - " + notPossible;
     }
 }

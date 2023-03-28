@@ -14,27 +14,26 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Forms
+namespace Sudoku.Forms;
+
+using System.Windows.Forms;
+
+public partial class EnterFieldForm : Form
 {
-    using System.Windows.Forms;
-
-    public partial class EnterFieldForm : Form
+    public EnterFieldForm()
     {
-        public EnterFieldForm()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        public string UserNote
-        {
-            get { return _UserNote.Text; }
-            set { _UserNote.Text = value; }
-        }
+    public string UserNote
+    {
+        get { return _UserNote.Text; }
+        set { _UserNote.Text = value; }
+    }
 
-        public int No
-        {
-            get { return _No.SelectedIndex; }
-            set { _No.SelectedIndex = value; }
-        }
+    public int No
+    {
+        get { return _No.SelectedIndex; }
+        set { _No.SelectedIndex = value; }
     }
 }

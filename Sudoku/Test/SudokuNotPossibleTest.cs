@@ -14,216 +14,215 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Test
+namespace Sudoku.Test;
+
+using FluentAssertions;
+
+using Sudoku.Solve;
+using Sudoku.Solve.NotPossible;
+
+using Xunit;
+
+public class SudokuNotPossibleTest : SudokuBaseUnitTest
 {
-    using FluentAssertions;
-
-    using Sudoku.Solve;
-    using Sudoku.Solve.NotPossible;
-
-    using Xunit;
-
-    public class SudokuNotPossibleTest : SudokuBaseUnitTest
+    private void CloneAndCompare(NotPossibleBase notPossible)
     {
-        private void CloneAndCompare(NotPossibleBase notPossible)
+        var serialized       = notPossible.SerializeTo();
+        var notPossibleClone = NotPossibleBase.Create(serialized);
+
+        notPossibleClone.SerializeTo().Should().Be(serialized);
+        notPossibleClone.Should().BeEquivalentTo(notPossible);
+    }
+
+    [Fact]
+    public void SerializeNotPossibleB1()
+    {
+        var notPossible = new NotPossibleBlockade1()
         {
-            var serialized       = notPossible.SerializeTo();
-            var notPossibleClone = NotPossibleBase.Create(serialized);
+            BecauseNo   = 1,
+            ForNo       = 2,
+            Orientation = Orientation.Column
+        };
 
-            notPossibleClone.SerializeTo().Should().Be(serialized);
-            notPossibleClone.Should().BeEquivalentTo(notPossible);
-        }
+        CloneAndCompare(notPossible);
+    }
 
-        [Fact]
-        public void SerializeNotPossibleB1()
+    [Fact]
+    public void SerializeNotPossibleB2()
+    {
+        var notPossible = new NotPossibleBlockade2()
         {
-            var notPossible = new NotPossibleBlockade1()
-            {
-                BecauseNo   = 1,
-                ForNo       = 2,
-                Orientation = Orientation.Column
-            };
+            ForNo       = 2,
+            Orientation = Orientation.Column,
+            BecauseIdx  = new[] { 1, 2, 3 },
+            BecauseNos  = new[] { 9, 8, 7 }
+        };
 
-            CloneAndCompare(notPossible);
-        }
+        CloneAndCompare(notPossible);
+    }
 
-        [Fact]
-        public void SerializeNotPossibleB2()
+    [Fact]
+    public void SerializeNotPossibleB2SubSet()
+    {
+        var notPossible = new NotPossibleBlockade2SubSet()
         {
-            var notPossible = new NotPossibleBlockade2()
-            {
-                ForNo       = 2,
-                Orientation = Orientation.Column,
-                BecauseIdx  = new[] { 1, 2, 3 },
-                BecauseNos  = new[] { 9, 8, 7 }
-            };
+            ForNo       = 2,
+            Orientation = Orientation.Column,
+            BecauseIdx  = new[] { 1, 2, 3 },
+            BecauseNos  = new[] { 9, 8, 7 }
+        };
 
-            CloneAndCompare(notPossible);
-        }
+        CloneAndCompare(notPossible);
+    }
 
-        [Fact]
-        public void SerializeNotPossibleB2SubSet()
+    [Fact]
+    public void SerializeNotPossibleB3()
+    {
+        var notPossible = new NotPossibleBlockade3()
         {
-            var notPossible = new NotPossibleBlockade2SubSet()
-            {
-                ForNo       = 2,
-                Orientation = Orientation.Column,
-                BecauseIdx  = new[] { 1, 2, 3 },
-                BecauseNos  = new[] { 9, 8, 7 }
-            };
+            ForNo       = 3,
+            Orientation = Orientation.Column,
+            BecauseIdx  = new[] { 1, 2, 3 },
+        };
 
-            CloneAndCompare(notPossible);
-        }
+        CloneAndCompare(notPossible);
+    }
 
-        [Fact]
-        public void SerializeNotPossibleB3()
+    [Fact]
+    public void SerializeNotPossibleXWing()
+    {
+        var notPossible = new NotPossibleXWing()
         {
-            var notPossible = new NotPossibleBlockade3()
-            {
-                ForNo       = 3,
-                Orientation = Orientation.Column,
-                BecauseIdx  = new[] { 1, 2, 3 },
-            };
+            ForNo       = 4,
+            Orientation = Orientation.Column,
+            BecauseCol  = new[] { 1, 2 },
+            BecauseRow  = new[] { 8, 7 },
+        };
 
-            CloneAndCompare(notPossible);
-        }
+        CloneAndCompare(notPossible);
+    }
 
-        [Fact]
-        public void SerializeNotPossibleXWing()
+    [Fact]
+    public void SerializeNotPossibleSwordfish()
+    {
+        var notPossible = new NotPossibleSwordfish()
         {
-            var notPossible = new NotPossibleXWing()
-            {
-                ForNo       = 4,
-                Orientation = Orientation.Column,
-                BecauseCol  = new[] { 1, 2 },
-                BecauseRow  = new[] { 8, 7 },
-            };
+            ForNo       = 4,
+            Orientation = Orientation.Column,
+            BecauseCol  = new[] { 1, 2, 3 },
+            BecauseRow  = new[] { 8, 7, 6 },
+        };
 
-            CloneAndCompare(notPossible);
-        }
+        CloneAndCompare(notPossible);
+    }
 
-        [Fact]
-        public void SerializeNotPossibleSwordfish()
+    [Fact]
+    public void SerializeNotPossibleJellyfish()
+    {
+        var notPossible = new NotPossibleJellyfish()
         {
-            var notPossible = new NotPossibleSwordfish()
-            {
-                ForNo       = 4,
-                Orientation = Orientation.Column,
-                BecauseCol  = new[] { 1, 2, 3 },
-                BecauseRow  = new[] { 8, 7, 6 },
-            };
+            ForNo       = 4,
+            Orientation = Orientation.Column,
+            BecauseCol  = new[] { 1, 2, 3, 4 },
+            BecauseRow  = new[] { 8, 7, 6, 5 },
+        };
 
-            CloneAndCompare(notPossible);
-        }
+        CloneAndCompare(notPossible);
+    }
 
-        [Fact]
-        public void SerializeNotPossibleJellyfish()
+    [Fact]
+    public void ToStringNotPossibleB1()
+    {
+        var notPossible = new NotPossibleBlockade1()
         {
-            var notPossible = new NotPossibleJellyfish()
-            {
-                ForNo       = 4,
-                Orientation = Orientation.Column,
-                BecauseCol  = new[] { 1, 2, 3, 4 },
-                BecauseRow  = new[] { 8, 7, 6, 5 },
-            };
+            BecauseNo   = 1,
+            ForNo       = 2,
+            Orientation = Orientation.Column
+        };
 
-            CloneAndCompare(notPossible);
-        }
+        notPossible.ToString().Should().Be("2: 1 only in col (B1)");
+    }
 
-        [Fact]
-        public void ToStringNotPossibleB1()
+    [Fact]
+    public void ToStringNotPossibleB2()
+    {
+        var notPossible = new NotPossibleBlockade2()
         {
-            var notPossible = new NotPossibleBlockade1()
-            {
-                BecauseNo   = 1,
-                ForNo       = 2,
-                Orientation = Orientation.Column
-            };
+            ForNo       = 2,
+            Orientation = Orientation.Column,
+            BecauseIdx  = new[] { 1, 2, 3 },
+            BecauseNos  = new[] { 9, 8, 7 }
+        };
 
-            notPossible.ToString().Should().Be("2: 1 only in col (B1)");
-        }
+        notPossible.ToString().Should().Be("2: 9,8,7 in col at row 2,3,4 (B2)");
+    }
 
-        [Fact]
-        public void ToStringNotPossibleB2()
+    [Fact]
+    public void ToStringNotPossibleB2SubSet()
+    {
+        var notPossible = new NotPossibleBlockade2SubSet()
         {
-            var notPossible = new NotPossibleBlockade2()
-            {
-                ForNo       = 2,
-                Orientation = Orientation.Column,
-                BecauseIdx  = new[] { 1, 2, 3 },
-                BecauseNos  = new[] { 9, 8, 7 }
-            };
+            ForNo       = 2,
+            Orientation = Orientation.Column,
+            BecauseIdx  = new[] { 1, 2, 3 },
+            BecauseNos  = new[] { 9, 8, 7 }
+        };
 
-            notPossible.ToString().Should().Be("2: 9,8,7 in col at row 2,3,4 (B2)");
-        }
+        notPossible.ToString().Should().Be("2: 9,8,7 in col at row 2,3,4 (B2+)");
+    }
 
-        [Fact]
-        public void ToStringNotPossibleB2SubSet()
+    [Fact]
+    public void ToStringNotPossibleB3()
+    {
+        var notPossible = new NotPossibleBlockade3()
         {
-            var notPossible = new NotPossibleBlockade2SubSet()
-            {
-                ForNo       = 2,
-                Orientation = Orientation.Column,
-                BecauseIdx  = new[] { 1, 2, 3 },
-                BecauseNos  = new[] { 9, 8, 7 }
-            };
+            ForNo       = 3,
+            Orientation = Orientation.Column,
+            BecauseIdx  = new[] { 1, 2, 3 },
+        };
 
-            notPossible.ToString().Should().Be("2: 9,8,7 in col at row 2,3,4 (B2+)");
-        }
+        notPossible.ToString().Should().Be("3: only in col at row: 2,3,4 (B3)");
+    }
 
-        [Fact]
-        public void ToStringNotPossibleB3()
+    [Fact]
+    public void ToStringNotPossibleXWing()
+    {
+        var notPossible = new NotPossibleXWing()
         {
-            var notPossible = new NotPossibleBlockade3()
-            {
-                ForNo       = 3,
-                Orientation = Orientation.Column,
-                BecauseIdx  = new[] { 1, 2, 3 },
-            };
+            ForNo       = 4,
+            Orientation = Orientation.Column,
+            BecauseCol  = new[] { 1, 2 },
+            BecauseRow  = new[] { 8, 7 },
+        };
 
-            notPossible.ToString().Should().Be("3: only in col at row: 2,3,4 (B3)");
-        }
+        notPossible.ToString().Should().Be("4: X-Wing col I,H with row 2,3");
+    }
 
-        [Fact]
-        public void ToStringNotPossibleXWing()
+    [Fact]
+    public void ToStringNotPossibleSwordfish()
+    {
+        var notPossible = new NotPossibleSwordfish()
         {
-            var notPossible = new NotPossibleXWing()
-            {
-                ForNo       = 4,
-                Orientation = Orientation.Column,
-                BecauseCol  = new[] { 1, 2 },
-                BecauseRow  = new[] { 8, 7 },
-            };
+            ForNo       = 4,
+            Orientation = Orientation.Column,
+            BecauseCol  = new[] { 1, 2, 3 },
+            BecauseRow  = new[] { 8, 7, 6 },
+        };
 
-            notPossible.ToString().Should().Be("4: X-Wing col I,H with row 2,3");
-        }
+        notPossible.ToString().Should().Be("4: swordfish col I,H,G with row 2,3,4");
+    }
 
-        [Fact]
-        public void ToStringNotPossibleSwordfish()
+    [Fact]
+    public void ToStringNotPossibleJellyfish()
+    {
+        var notPossible = new NotPossibleJellyfish()
         {
-            var notPossible = new NotPossibleSwordfish()
-            {
-                ForNo       = 4,
-                Orientation = Orientation.Column,
-                BecauseCol  = new[] { 1, 2, 3 },
-                BecauseRow  = new[] { 8, 7, 6 },
-            };
+            ForNo       = 4,
+            Orientation = Orientation.Column,
+            BecauseCol  = new[] { 1, 2, 3, 4 },
+            BecauseRow  = new[] { 8, 7, 6, 5 },
+        };
 
-            notPossible.ToString().Should().Be("4: swordfish col I,H,G with row 2,3,4");
-        }
-
-        [Fact]
-        public void ToStringNotPossibleJellyfish()
-        {
-            var notPossible = new NotPossibleJellyfish()
-            {
-                ForNo       = 4,
-                Orientation = Orientation.Column,
-                BecauseCol  = new[] { 1, 2, 3, 4 },
-                BecauseRow  = new[] { 8, 7, 6, 5 },
-            };
-
-            notPossible.ToString().Should().Be("4: jellyfish col I,H,G,F with row 2,3,4,5");
-        }
+        notPossible.ToString().Should().Be("4: jellyfish col I,H,G,F with row 2,3,4,5");
     }
 }

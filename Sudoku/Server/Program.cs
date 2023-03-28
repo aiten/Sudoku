@@ -18,17 +18,55 @@ using System.Reflection;
 
 using Framework.NLogTools;
 
-Framework.NLogTools.NLogConfigExtensions.ConfigureNLogLocation("SolveSudoku", Assembly.GetExecutingAssembly());
 
+using Microsoft.AspNetCore.Identity;
+
+using Sudoku.Repository;
+using Sudoku.Repository.Abstraction.Entities;
+using Sudoku.Repository.Context;
+using Sudoku.Server.Tools;
+
+Framework.NLogTools.NLogConfigExtensions.ConfigureNLogLocation("SolveSudoku", Assembly.GetExecutingAssembly());
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+builder.Services.AddRazorPages();
+
+builder.Services.AddHttpClient("Azure", httpClient => { httpClient.BaseAddress = new Uri("https://sudokusolve.azurewebsites.net/api/"); });
+builder.Services.AddHttpClient("local", httpClient => { httpClient.BaseAddress = new Uri("http://localhost:5185/api/"); });
+builder.Services.AddHttpClient("pi",    httpClient => { httpClient.BaseAddress = new Uri("https://ait.dyndns-home.com/sudokusolve/api/"); });
+
 builder.UseNLog();
+
+builder.Host.UseSystemd();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+builder.Services
+    .AddSudokuRepository(SqlServerDatabaseTools.OptionBuilder)
+    ;
+
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<SudokuContext>()
+    .AddUserManager<UserManager<ApplicationUser>>()
+    .AddRoleManager<RoleManager<IdentityRole>>()
+    ;
+
+builder.Services.AddTransient<AuthInitializer>();
 var app = builder.Build();
+
+var supportedCultures = new[] { "de", "en-US", "fr" };
+var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(supportedCultures[0])
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
+
+app.UseRequestLocalization(localizationOptions);
+
+app.UsePathBase("/sudokusolver");
 
 // if (app.Environment.IsDevelopment())
 {
@@ -37,9 +75,22 @@ var app = builder.Build();
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 
+app.UseRouting();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapRazorPages();
+
+SudokuContext.InitializeDatabase(app.Services);
+
+using (var scope = app.Services.CreateScope())
+{
+    var authInitializer = scope.ServiceProvider.GetRequiredService<AuthInitializer>();
+    await authInitializer.Initalize();
+}
 
 app.Run();

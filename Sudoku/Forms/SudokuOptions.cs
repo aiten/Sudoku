@@ -14,12 +14,11 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Forms
+namespace Sudoku.Forms;
+
+public struct SudokuOptions
 {
-    public struct SudokuOptions
-    {
-        public bool Help;
-        public bool ShowToolTip;
-        public bool ShowNormalized;
-    };
-}
+    public bool Help;
+    public bool ShowToolTip;
+    public bool ShowNormalized;
+};

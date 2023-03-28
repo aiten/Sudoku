@@ -1,10 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>$(TargetFrameworkForUnitTest)-windows</TargetFramework>
-    <ExtrasEnableWpfProjectSetup>true</ExtrasEnableWpfProjectSetup>
-	  <UseWindowsForms>true</UseWindowsForms>
-  </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Solve\Solve.csproj" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>$(TargetFrameworkForUnitTest)-windows</TargetFramework>
+		<ExtrasEnableWpfProjectSetup>true</ExtrasEnableWpfProjectSetup>
+		<UseWindowsForms>true</UseWindowsForms>
+		<OutputType>WinExe</OutputType>
+	</PropertyGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Solve\Solve.csproj" />
+	</ItemGroup>
 </Project>

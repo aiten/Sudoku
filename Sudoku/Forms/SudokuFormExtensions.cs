@@ -14,88 +14,87 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Forms
+namespace Sudoku.Forms;
+
+using System.Drawing;
+
+using Sudoku.Solve;
+
+public static class SudokuFormExtensions
 {
-    using System.Drawing;
-
-    using Sudoku.Solve;
-
-    public static class SudokuFormExtensions
+    public static Color ToButtonColor(this SudokuField field, SudokuOptions opt)
     {
-        public static Color ToButtonColor(this SudokuField field, SudokuOptions opt)
-        {
-            if (field.HasNo)
-                return Color.Green;
+        if (field.HasNo)
+            return Color.Green;
 
-            if (opt.Help)
+        if (opt.Help)
+        {
+            switch (field.PossibleCount())
             {
-                switch (field.PossibleCount())
+                default: return Color.Gray;
+                case 0:  return Color.Red;
+                case 1:  return Color.LightGray;
+            }
+        }
+
+        return Color.Gray;
+    }
+
+    private static string ToButtonStringMainRuleOnly(this SudokuField field)
+    {
+        if (field.HasNo)
+        {
+            return field.No.ToString();
+        }
+
+        return string.Join(',', field.GetPossibleMainRuleNos());
+    }
+
+    public static string ToButtonString(this SudokuField field, SudokuOptions opt)
+    {
+        if (field.HasNo)
+        {
+            return field.No.ToString();
+        }
+
+        if (opt.Help)
+        {
+            var possible    = string.Join(',', field.GetPossibleNos());
+            var notPossible = string.Join(',', field.GetNotPossibleNos());
+
+            if (string.IsNullOrEmpty(notPossible))
+            {
+                return possible;
+            }
+
+            return possible + " - " + notPossible;
+        }
+
+        return field.UserNote;
+    }
+
+    public static string ToButtonToolTip(this SudokuField field, SudokuOptions opt)
+    {
+        if (!opt.ShowToolTip)
+            return "";
+
+        if (opt.Help)
+        {
+            var reason = field.ToButtonString(opt);
+            if (field.IsEmpty)
+            {
+                var notPossibleExplanation = field.NotPossibleExplanation();
+
+                if (!string.IsNullOrEmpty(notPossibleExplanation))
                 {
-                    default: return Color.Gray;
-                    case 0:  return Color.Red;
-                    case 1:  return Color.LightGray;
+                    reason += "\n";
+                    reason += notPossibleExplanation;
                 }
             }
 
-            return Color.Gray;
+            return reason;
         }
 
-        private static string ToButtonStringMainRuleOnly(this SudokuField field)
-        {
-            if (field.HasNo)
-            {
-                return field.No.ToString();
-            }
-
-            return string.Join(',', field.GetPossibleMainRuleNos());
-        }
-
-        public static string ToButtonString(this SudokuField field, SudokuOptions opt)
-        {
-            if (field.HasNo)
-            {
-                return field.No.ToString();
-            }
-
-            if (opt.Help)
-            {
-                var possible    = string.Join(',', field.GetPossibleNos());
-                var notPossible = string.Join(',', field.GetNotPossibleNos());
-
-                if (string.IsNullOrEmpty(notPossible))
-                {
-                    return possible;
-                }
-
-                return possible + " - " + notPossible;
-            }
-
-            return field.UserNote;
-        }
-
-        public static string ToButtonToolTip(this SudokuField field, SudokuOptions opt)
-        {
-            if (!opt.ShowToolTip)
-                return "";
-
-            if (opt.Help)
-            {
-                var reason = field.ToButtonString(opt);
-                if (field.IsEmpty)
-                {
-                    var notPossibleExplanation = field.NotPossibleExplanation();
-
-                    if (!string.IsNullOrEmpty(notPossibleExplanation))
-                    {
-                        reason += "\n";
-                        reason += notPossibleExplanation;
-                    }
-                }
-
-                return reason;
-            }
-
-            return field.ToButtonStringMainRuleOnly();
-        }
-    };
-}
+        return field.ToButtonStringMainRuleOnly();
+    }
+};

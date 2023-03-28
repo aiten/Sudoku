@@ -14,40 +14,39 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Solve
+namespace Sudoku.Solve;
+
+using System.Collections.Generic;
+
+using global::Sudoku.Solve.NotPossible;
+
+public class SolverJellyfish : SolverFishBase
 {
-    using System.Collections.Generic;
-
-    using global::Sudoku.Solve.NotPossible;
-
-    public class SolverJellyfish : SolverFishBase
+    public SolverJellyfish(Sudoku sudoku) : base(sudoku)
     {
-        public SolverJellyfish(Sudoku sudoku) : base(sudoku)
-        {
-        }
+    }
 
-        public override bool Solve()
-        {
-            var isCol = Solve(Orientation.Column);
-            var isRow = Solve(Orientation.Row);
+    public override bool Solve()
+    {
+        var isCol = Solve(Orientation.Column);
+        var isRow = Solve(Orientation.Row);
 
-            return isCol || isRow;
-        }
+        return isCol || isRow;
+    }
 
-        protected override void SetNotPossible(SudokuField def, int forNo, Orientation orientation, IEnumerable<int> becauseRow, IEnumerable<int> becauseCol)
+    protected override void SetNotPossible(SudokuField def, int forNo, Orientation orientation, IEnumerable<int> becauseRow, IEnumerable<int> becauseCol)
+    {
+        def.SetNotPossible(forNo, new NotPossibleJellyfish()
         {
-            def.SetNotPossible(forNo, new NotPossibleJellyfish()
-            {
-                Orientation = orientation,
-                BecauseCol  = becauseCol,
-                BecauseRow  = becauseRow,
-                ForNo       = forNo,
-            });
-        }
+            Orientation = orientation,
+            BecauseCol  = becauseCol,
+            BecauseRow  = becauseRow,
+            ForNo       = forNo,
+        });
+    }
 
-        public override bool Solve(Orientation orientation)
-        {
-            return UpdateFish(Sudoku.ToGetDef(orientation), 4, orientation) > 0;
-        }
+    public override bool Solve(Orientation orientation)
+    {
+        return UpdateFish(Sudoku.ToGetDef(orientation), 4, orientation) > 0;
     }
 }

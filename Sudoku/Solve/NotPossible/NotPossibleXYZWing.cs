@@ -14,26 +14,25 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Solve.NotPossible
+namespace Sudoku.Solve.NotPossible;
+
+using System.Collections.Generic;
+using System.Linq;
+
+public class NotPossibleXYZWing : NotPossibleWingBase
 {
-    using System.Collections.Generic;
-    using System.Linq;
-
-    public class NotPossibleXYZWing : NotPossibleWingBase
+    public NotPossibleXYZWing()
     {
-        public NotPossibleXYZWing()
-        {
-            RoleName = "B8";
-            WingName = "XYZ";
-        }
+        RoleName = "B8";
+        WingName = "XYZ";
+    }
 
-        protected override IEnumerable<(int Row, int Col)> IntersectExplain(Sudoku sudoku, int row, int col)
-        {
-            var intersect = Pivot.IntersectFields(new[] { Pincer1, Pincer2 })
-                .Where(pos => pos != Pincer1 && pos != Pincer2 && pos != Pivot)
-                .Where(pos => sudoku.GetDef(pos.Row, pos.Col).IsEmpty && sudoku.GetDef(pos.Row, pos.Col).IsPossibleMainRule(ForNo));
+    protected override IEnumerable<(int Row, int Col)> IntersectExplain(Sudoku sudoku, int row, int col)
+    {
+        var intersect = Pivot.IntersectFields(new[] { Pincer1, Pincer2 })
+            .Where(pos => pos != Pincer1 && pos != Pincer2 && pos != Pivot)
+            .Where(pos => sudoku.GetDef(pos.Row, pos.Col).IsEmpty && sudoku.GetDef(pos.Row, pos.Col).IsPossibleMainRule(ForNo));
 
-            return intersect;
-        }
+        return intersect;
     }
 }

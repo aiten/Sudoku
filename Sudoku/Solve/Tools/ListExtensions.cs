@@ -14,32 +14,31 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Solve.Tools
+namespace Sudoku.Solve.Tools;
+
+using System.Collections.Generic;
+using System.Linq;
+
+public static class ListExtensions
 {
-    using System.Collections.Generic;
-    using System.Linq;
-
-    public static class ListExtensions
+    public static IEnumerable<(T, T)> AllPairs<T>(this IEnumerable<T> list)
     {
-        public static IEnumerable<(T, T)> AllPairs<T>(this IEnumerable<T> list)
-        {
-            var asArray = list.ToArray();
-            var pairs  = new List<(T, T)>();
+        var asArray = list.ToArray();
+        var pairs   = new List<(T, T)>();
 
-            for (var i = 0; i < asArray.Length - 1; i++)
+        for (var i = 0; i < asArray.Length - 1; i++)
+        {
+            for (var j = i + 1; j < asArray.Length; j++)
             {
-                for (var j = i + 1; j < asArray.Length; j++)
-                {
-                    pairs.Add((asArray[i], asArray[j]));
-                }
+                pairs.Add((asArray[i], asArray[j]));
             }
-
-            return pairs;
         }
 
-        public static IEnumerable<(T, T)> CartesianProduct<T>(this IEnumerable<T> list1, IEnumerable<T> list2)
-        {
-            return list1.SelectMany(l => list2, (r, l) => (r, l));
-        }
+        return pairs;
+    }
+
+    public static IEnumerable<(T, T)> CartesianProduct<T>(this IEnumerable<T> list1, IEnumerable<T> list2)
+    {
+        return list1.SelectMany(l => list2, (r, l) => (r, l));
     }
 }

@@ -14,69 +14,68 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Host.Server.Controllers
+namespace Sudoku.Host.Server.Controllers;
+
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Mvc;
+
+using Sudoku.Host.Shared;
+using Sudoku.Solve;
+using Sudoku.Solve.Abstraction;
+
+[Route("[controller]")]
+public class SudokuController : ControllerBase
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-
-    using Microsoft.AspNetCore.Mvc;
-
-    using Sudoku.Host.Shared;
-    using Sudoku.Solve;
-    using Sudoku.Solve.Abstraction;
-
-    [Route("[controller]")]
-    public class SudokuController : ControllerBase
+    [HttpGet]
+    public async Task<ActionResult<SudokuSolveResult>> Get(IEnumerable<string> sudoku)
     {
-        [HttpGet]
-        public async Task<ActionResult<SudokuSolveResult>> Get(IEnumerable<string> sudoku)
-        {
-            await Task.CompletedTask;
-            var s    = sudoku.ToArray().CreateSudoku();
-            var info = s.GetSolveInfo();
+        await Task.CompletedTask;
+        var s    = sudoku.ToArray().CreateSudoku();
+        var info = s.GetSolveInfo();
 
-            return Ok(info);
+        return Ok(info);
+    }
+
+    [HttpGet("next")]
+    public async Task<ActionResult<IEnumerable<string>>> SetNext(IEnumerable<string> sudoku, int row, int col)
+    {
+        await Task.CompletedTask;
+        var s = sudoku.ToArray().CreateSudoku();
+        s.UpdatePossible();
+        s.SetNextPossible(row, col);
+
+        return Ok(s.SmartPrint(string.Empty));
+    }
+
+    [HttpGet("set")]
+    public async Task<ActionResult<IEnumerable<string>>> SetNext(IEnumerable<string> sudoku, int row, int col, int no)
+    {
+        await Task.CompletedTask;
+        var s = sudoku.ToArray().CreateSudoku();
+        s.Set(row, col, no);
+
+        return Ok(s.SmartPrint(string.Empty));
+    }
+
+    [HttpGet("solutioncount")]
+    public async Task<ActionResult<int>> SolutionCount(IEnumerable<string> sudoku)
+    {
+        await Task.CompletedTask;
+        var s   = sudoku.ToArray().CreateSudoku();
+        var cts = new CancellationTokenSource();
+
+        var task = Task.Run(() => { return s.CalcPossibleSolutions(cts.Token); });
+
+        bool isCompletedSuccessfully = task.Wait(TimeSpan.FromMilliseconds(1000));
+
+        if (isCompletedSuccessfully)
+        {
+            return Ok(task.Result);
         }
 
-        [HttpGet("next")]
-        public async Task<ActionResult<IEnumerable<string>>> SetNext(IEnumerable<string> sudoku, int row, int col)
-        {
-            await Task.CompletedTask;
-            var s = sudoku.ToArray().CreateSudoku();
-            s.UpdatePossible();
-            s.SetNextPossible(row, col);
-
-            return Ok(s.SmartPrint(string.Empty));
-        }
-
-        [HttpGet("set")]
-        public async Task<ActionResult<IEnumerable<string>>> SetNext(IEnumerable<string> sudoku, int row, int col, int no)
-        {
-            await Task.CompletedTask;
-            var s = sudoku.ToArray().CreateSudoku();
-            s.Set(row, col, no);
-
-            return Ok(s.SmartPrint(string.Empty));
-        }
-
-        [HttpGet("solutioncount")]
-        public async Task<ActionResult<int>> SolutionCount(IEnumerable<string> sudoku)
-        {
-            await Task.CompletedTask;
-            var s   = sudoku.ToArray().CreateSudoku();
-            var cts = new CancellationTokenSource();
-
-            var task = Task.Run(() => { return s.CalcPossibleSolutions(cts.Token); });
-
-            bool isCompletedSuccessfully = task.Wait(TimeSpan.FromMilliseconds(1000));
-
-            if (isCompletedSuccessfully)
-            {
-                return Ok(task.Result);
-            }
-
-            throw new TimeoutException("The function has taken longer than the maximum time allowed.");
-        }
+        throw new TimeoutException("The function has taken longer than the maximum time allowed.");
     }
 }

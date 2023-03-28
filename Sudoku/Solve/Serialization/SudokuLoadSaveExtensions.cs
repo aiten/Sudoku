@@ -14,69 +14,68 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Solve.Serialization
+namespace Sudoku.Solve.Serialization;
+
+using System;
+using System.IO;
+using System.Xml.Serialization;
+
+public static class SudokuLoadSaveExtensions
 {
-    using System;
-    using System.IO;
-    using System.Xml.Serialization;
-
-    public static class SudokuLoadSaveExtensions
+    public static bool SaveXml(this Solve.Sudoku sudoku, string fileName)
     {
-        public static bool SaveXml(this Solve.Sudoku sudoku, string fileName)
+        using (TextWriter fs = new StreamWriter(fileName))
         {
-            using (TextWriter fs = new StreamWriter(fileName))
+            var serializer = new XmlSerializer(typeof(SudokuXml));
+            var sudokuXml  = sudoku.ToSudokuXml();
+
+            try
             {
-                var serializer = new XmlSerializer(typeof(SudokuXml));
-                var sudokuXml  = sudoku.ToSudokuXml();
-
-                try
-                {
-                    serializer.Serialize(fs, sudokuXml);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Failed to serialize. Reason: " + e.Message);
-                    throw;
-                }
-                finally
-                {
-                    fs.Close();
-                }
+                serializer.Serialize(fs, sudokuXml);
             }
-
-            sudoku.Modified = false;
-            return true;
-        }
-
-        private static Sudoku LoadXml(string fileName)
-        {
-            SudokuXml sudokuXml;
-            // Open the file containing the data that you want to deserialize.
-            using (TextReader fs = new StreamReader(fileName))
+            catch (Exception e)
             {
-                var serializer = new XmlSerializer(typeof(SudokuXml));
-
-                try
-                {
-                    sudokuXml = (SudokuXml)serializer.Deserialize(fs);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
-                    throw;
-                }
-                finally
-                {
-                    fs.Close();
-                }
+                Console.WriteLine("Failed to serialize. Reason: " + e.Message);
+                throw;
             }
-
-            return sudokuXml.ToSudoku();
+            finally
+            {
+                fs.Close();
+            }
         }
 
-        public static Sudoku Load(string fileName)
+        sudoku.Modified = false;
+        return true;
+    }
+
+    private static Sudoku LoadXml(string fileName)
+    {
+        SudokuXml sudokuXml;
+        // Open the file containing the data that you want to deserialize.
+        using (TextReader fs = new StreamReader(fileName))
         {
-            return LoadXml(fileName);
+            var serializer = new XmlSerializer(typeof(SudokuXml));
+
+            try
+            {
+                sudokuXml = (SudokuXml)serializer.Deserialize(fs);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
+                throw;
+            }
+            finally
+            {
+                fs.Close();
+            }
         }
+
+        return sudokuXml.ToSudoku();
+    }
+
+    public static Sudoku Load(string fileName)
+    {
+        return LoadXml(fileName);
     }
 }

@@ -14,129 +14,128 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Test
+namespace Sudoku.Test;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+using FluentAssertions;
+
+using Sudoku.Solve;
+using Sudoku.Solve.NotPossible;
+
+public class SudokuBaseUnitTest
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-
-    using FluentAssertions;
-
-    using Sudoku.Solve;
-    using Sudoku.Solve.NotPossible;
-
-    public class SudokuBaseUnitTest
+    protected struct ExpectResult
     {
-        protected struct ExpectResult
+        public ExpectResult(int x, int y, string possibleString, string toButtonToolTip)
         {
-            public ExpectResult(int x, int y, string possibleString, string toButtonToolTip)
-            {
-                X               = x;
-                Y               = y;
-                PossibleString  = possibleString;
-                ToButtonToolTip = toButtonToolTip;
-            }
+            X               = x;
+            Y               = y;
+            PossibleString  = possibleString;
+            ToButtonToolTip = toButtonToolTip;
+        }
 
-            public int    X               { get; set; }
-            public int    Y               { get; set; }
-            public string PossibleString  { get; set; }
-            public string ToButtonToolTip { get; set; }
+        public int    X               { get; set; }
+        public int    Y               { get; set; }
+        public string PossibleString  { get; set; }
+        public string ToButtonToolTip { get; set; }
 
-            public ExpectResult Rotate()
+        public ExpectResult Rotate()
+        {
+            string ToButtonToolTip(string buttonToolTip)
             {
-                string ToButtonToolTip(string buttonToolTip)
+                if (buttonToolTip.Contains(":C:"))
                 {
-                    if (buttonToolTip.Contains(":C:"))
-                    {
-                        return buttonToolTip.Replace(":C:", ":R:");
-                    }
-
-                    return buttonToolTip.Replace(":R:", ":C:");
+                    return buttonToolTip.Replace(":C:", ":R:");
                 }
 
-                return new ExpectResult(Y, 8 - X, PossibleString, ToButtonToolTip(this.ToButtonToolTip));
+                return buttonToolTip.Replace(":R:", ":C:");
             }
+
+            return new ExpectResult(Y, 8 - X, PossibleString, ToButtonToolTip(this.ToButtonToolTip));
         }
+    }
 
-        protected IList<ExpectResult> Rotate(IList<ExpectResult> expected)
+    protected IList<ExpectResult> Rotate(IList<ExpectResult> expected)
+    {
+        return expected.Select(expect => expect.Rotate()).ToList();
+    }
+
+    protected IList<ExpectResult> Mirror(IList<ExpectResult> expected)
+    {
+        return expected.Select(expect => new ExpectResult(expect.X, 8 - expect.Y, expect.PossibleString, expect.ToButtonToolTip)).ToList();
+    }
+
+    protected void CheckSudoku(string[] lines, IEnumerable<ExpectResult> expected, bool rotate = true)
+    {
+        var ex = (IList<ExpectResult>)expected.ToList();
+        var s  = lines.CreateSudoku();
+
+        if (rotate)
         {
-            return expected.Select(expect => expect.Rotate()).ToList();
-        }
-
-        protected IList<ExpectResult> Mirror(IList<ExpectResult> expected)
-        {
-            return expected.Select(expect => new ExpectResult(expect.X, 8 - expect.Y, expect.PossibleString, expect.ToButtonToolTip)).ToList();
-        }
-
-        protected void CheckSudoku(string[] lines, IEnumerable<ExpectResult> expected, bool rotate = true)
-        {
-            var ex = (IList<ExpectResult>)expected.ToList();
-            var s  = lines.CreateSudoku();
-
-            if (rotate)
+            CheckOrigAndMirror(s, ex);
+            for (int i = 0; i < 3; i++)
             {
+                s  = s.Rotate();
+                ex = Rotate(ex);
                 CheckOrigAndMirror(s, ex);
-                for (int i = 0; i < 3; i++)
-                {
-                    s  = s.Rotate();
-                    ex = Rotate(ex);
-                    CheckOrigAndMirror(s, ex);
-                }
-            }
-            else
-            {
-                CheckSudokuInternal(s, ex);
             }
         }
-
-        protected void CheckOrigAndMirror(Solve.Sudoku s, IList<ExpectResult> expected)
+        else
         {
-            CheckSudokuInternal(s,          expected);
-            CheckSudokuInternal(s.Mirror(), Mirror(expected));
+            CheckSudokuInternal(s, ex);
         }
+    }
 
-        protected void CheckSudokuInternal(Solve.Sudoku s, IList<ExpectResult> expected)
+    protected void CheckOrigAndMirror(Solve.Sudoku s, IList<ExpectResult> expected)
+    {
+        CheckSudokuInternal(s,          expected);
+        CheckSudokuInternal(s.Mirror(), Mirror(expected));
+    }
+
+    protected void CheckSudokuInternal(Solve.Sudoku s, IList<ExpectResult> expected)
+    {
+        s.UpdatePossible();
+
+        var lines = s.SmartPrint(" ");
+
+        foreach (var expect in expected)
         {
-            s.UpdatePossible();
-
-            var lines = s.SmartPrint(" ");
-
-            foreach (var expect in expected)
+            s.GetDef(expect.X, expect.Y).PossibleString().Should().Be(expect.PossibleString);
+            var toolTips     = s.GetDef(expect.X, expect.Y).ToButtonToolTip().Split('\n');
+            var toolTipRegEx = expect.ToButtonToolTip.Split('\n');
+            for (int i = 0; i < toolTips.Length && i < toolTipRegEx.Length; i++)
             {
-                s.GetDef(expect.X, expect.Y).PossibleString().Should().Be(expect.PossibleString);
-                var toolTips     = s.GetDef(expect.X, expect.Y).ToButtonToolTip().Split('\n');
-                var toolTipRegEx = expect.ToButtonToolTip.Split('\n');
-                for (int i = 0; i < toolTips.Length && i < toolTipRegEx.Length; i++)
+                var regex = toolTipRegEx[i];
+                if (regex.StartsWith("B"))
                 {
-                    var regex = toolTipRegEx[i];
-                    if (regex.StartsWith("B"))
-                    {
-                        var notPossible = NotPossibleBase.Create(regex);
+                    var notPossible = NotPossibleBase.Create(regex);
 
-                        if (notPossible != null)
-                        {
-                            regex = notPossible.ToString();
-                            regex = regex
-                                .Replace("(", "\\(")
-                                .Replace(")", "\\)")
-                                .Replace("+", "\\+")
-                                .Replace("-", "\\-")
-                                .Replace("*", "\\*");
-                        }
-                        else
-                        {
-                            throw new AggregateException();
-                        }
-                    }
-
-                    if (string.IsNullOrEmpty(regex))
+                    if (notPossible != null)
                     {
-                        toolTips[i].Should().BeEmpty();
+                        regex = notPossible.ToString();
+                        regex = regex
+                            .Replace("(", "\\(")
+                            .Replace(")", "\\)")
+                            .Replace("+", "\\+")
+                            .Replace("-", "\\-")
+                            .Replace("*", "\\*");
                     }
                     else
                     {
-                        toolTips[i].Should().MatchRegex(regex);
+                        throw new AggregateException();
                     }
+                }
+
+                if (string.IsNullOrEmpty(regex))
+                {
+                    toolTips[i].Should().BeEmpty();
+                }
+                else
+                {
+                    toolTips[i].Should().MatchRegex(regex);
                 }
             }
         }

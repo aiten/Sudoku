@@ -14,55 +14,54 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Solve.NotPossible
+namespace Sudoku.Solve.NotPossible;
+
+using System.Collections.Generic;
+using System.Linq;
+
+public abstract class NotPossibleWingBase : NotPossibleBase
 {
-    using System.Collections.Generic;
-    using System.Linq;
+    public string WingName { get; protected set; }
 
-    public abstract class NotPossibleWingBase : NotPossibleBase
+    public override string SerializeTo()
     {
-        public string WingName { get; protected set; }
-
-        public override string SerializeTo()
-        {
-            return $"{RoleName}:{ForNo}:{Pivot.ToCellString()}:{Pincer1.ToCellString()}:{Pincer2.ToCellString()}";
-        }
-
-        protected override void SerializeFrom(string[] serialized)
-        {
-            ForNo   = int.Parse(serialized[1]);
-            Pivot   = serialized[2].FromCellString();
-            Pincer1 = serialized[3].FromCellString();
-            Pincer2 = serialized[4].FromCellString();
-        }
-
-        public override IEnumerable<(int Row, int Col, int Level)> Explain(Sudoku sudoku, int myRow, int myCol)
-        {
-            var expl = new List<(int Row, int Col, int Level)>();
-
-            expl.Add((Pivot.Row, Pivot.Col, 3));
-            expl.Add((Pincer1.Row, Pincer1.Col, 4));
-            expl.Add((Pincer2.Row, Pincer2.Col, 4));
-
-            var intersect = IntersectExplain(sudoku, myRow, myCol);
-
-            foreach (var field in intersect)
-            {
-                expl.Add((field.Row, field.Col, 5));
-            }
-
-            return expl;
-        }
-
-        protected abstract IEnumerable<(int Row, int Col)> IntersectExplain(Sudoku sudoku, int row, int col);
-
-        public override string ToString()
-        {
-            return $"{ForNo}: {WingName}-Wing in {Pivot.ToCellStringUser()} with {Pincer1.ToCellStringUser()}:{Pincer2.ToCellStringUser()} ({RoleName})";
-        }
-
-        public (int Row, int Col) Pivot   { get; set; }
-        public (int Row, int Col) Pincer1 { get; set; }
-        public (int Row, int Col) Pincer2 { get; set; }
+        return $"{RoleName}:{ForNo}:{Pivot.ToCellString()}:{Pincer1.ToCellString()}:{Pincer2.ToCellString()}";
     }
+
+    protected override void SerializeFrom(string[] serialized)
+    {
+        ForNo   = int.Parse(serialized[1]);
+        Pivot   = serialized[2].FromCellString();
+        Pincer1 = serialized[3].FromCellString();
+        Pincer2 = serialized[4].FromCellString();
+    }
+
+    public override IEnumerable<(int Row, int Col, int Level)> Explain(Sudoku sudoku, int myRow, int myCol)
+    {
+        var expl = new List<(int Row, int Col, int Level)>();
+
+        expl.Add((Pivot.Row, Pivot.Col, 3));
+        expl.Add((Pincer1.Row, Pincer1.Col, 4));
+        expl.Add((Pincer2.Row, Pincer2.Col, 4));
+
+        var intersect = IntersectExplain(sudoku, myRow, myCol);
+
+        foreach (var field in intersect)
+        {
+            expl.Add((field.Row, field.Col, 5));
+        }
+
+        return expl;
+    }
+
+    protected abstract IEnumerable<(int Row, int Col)> IntersectExplain(Sudoku sudoku, int row, int col);
+
+    public override string ToString()
+    {
+        return $"{ForNo}: {WingName}-Wing in {Pivot.ToCellStringUser()} with {Pincer1.ToCellStringUser()}:{Pincer2.ToCellStringUser()} ({RoleName})";
+    }
+
+    public (int Row, int Col) Pivot   { get; set; }
+    public (int Row, int Col) Pincer1 { get; set; }
+    public (int Row, int Col) Pincer2 { get; set; }
 }

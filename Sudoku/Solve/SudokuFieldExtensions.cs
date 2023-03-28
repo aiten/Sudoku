@@ -14,25 +14,24 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Solve
+namespace Sudoku.Solve;
+
+using System.Linq;
+
+public static class SudokuFieldExtensions
 {
-    using System.Linq;
-
-    public static class SudokuFieldExtensions
+    public static string PossibleString(this SudokuField field)
     {
-        public static string PossibleString(this SudokuField field)
+        return string.Join(',', field.GetPossibleNos());
+    }
+
+    public static string NotPossibleExplanation(this SudokuField field, char separator = '\n')
+    {
+        if (field.HasNo)
         {
-            return string.Join(',', field.GetPossibleNos());
+            return string.Empty;
         }
 
-        public static string NotPossibleExplanation(this SudokuField field, char separator = '\n')
-        {
-            if (field.HasNo)
-            {
-                return string.Empty;
-            }
-
-            return string.Join(separator, field.GetNotPossible().Select(notPossible => notPossible.ToString()));
-        }
+        return string.Join(separator, field.GetNotPossible().Select(notPossible => notPossible.ToString()));
     }
 }

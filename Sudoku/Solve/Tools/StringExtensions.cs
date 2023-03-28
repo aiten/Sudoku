@@ -14,28 +14,27 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Solve.Tools
+namespace Sudoku.Solve.Tools;
+
+public static class StringExtensions
 {
-    public static class StringExtensions
+    public static string Add(this string str, char separator, int no)
     {
-        public static string Add(this string str, char separator, int no)
+        if (string.IsNullOrEmpty(str))
         {
-            if (string.IsNullOrEmpty(str))
-            {
-                return no.ToString();
-            }
-
-            return $"{str}{separator}{no}";
+            return no.ToString();
         }
 
-        public static string Add(this string str, char separator, string add)
-        {
-            if (string.IsNullOrEmpty(str))
-            {
-                return add;
-            }
+        return $"{str}{separator}{no}";
+    }
 
-            return $"{str}{separator}{add}";
+    public static string Add(this string str, char separator, string add)
+    {
+        if (string.IsNullOrEmpty(str))
+        {
+            return add;
         }
+
+        return $"{str}{separator}{add}";
     }
 }

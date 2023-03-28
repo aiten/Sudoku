@@ -14,19 +14,18 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Solve
+namespace Sudoku.Solve;
+
+using System;
+
+public class SudokuEventArgs : EventArgs
 {
-    using System;
-
-    public class SudokuEventArgs : EventArgs
+    public SudokuEventArgs(int possibleSolutions, bool finished = false)
     {
-        public SudokuEventArgs(int possibleSolutions, bool finished = false)
-        {
-            PossibleSolutions     = possibleSolutions;
-            FindSolutionsFinished = finished;
-        }
+        PossibleSolutions     = possibleSolutions;
+        FindSolutionsFinished = finished;
+    }
 
-        public readonly int  PossibleSolutions;
-        public readonly bool FindSolutionsFinished;
-    };
-}
+    public readonly int  PossibleSolutions;
+    public readonly bool FindSolutionsFinished;
+};

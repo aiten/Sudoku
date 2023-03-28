@@ -14,25 +14,24 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Solve.Tools
+namespace Sudoku.Solve.Tools;
+
+using System.Collections.Generic;
+using System.Linq;
+
+public static class LoopExtensions
 {
-    using System.Collections.Generic;
-    using System.Linq;
+    public static readonly IEnumerable<int> Rows = Enumerable.Range(0, 9);
+    public static readonly IEnumerable<int> Cols = Enumerable.Range(0, 9);
+    public static readonly IEnumerable<int> Nos  = Enumerable.Range(1, 9);
 
-    public static class LoopExtensions
+    public static IEnumerable<SudokuField> SelectField(this IEnumerable<int> cols, Sudoku.GetSudokuField getDef, int row)
     {
-        public static readonly IEnumerable<int> Rows = Enumerable.Range(0, 9);
-        public static readonly IEnumerable<int> Cols = Enumerable.Range(0, 9);
-        public static readonly IEnumerable<int> Nos  = Enumerable.Range(1, 9);
+        return cols.Select(col => getDef(row, col));
+    }
 
-        public static IEnumerable<SudokuField> SelectField(this IEnumerable<int> cols, Sudoku.GetSudokuField getDef, int row)
-        {
-            return cols.Select(col => getDef(row, col));
-        }
-
-        public static IEnumerable<SudokuField> SelectFieldEmpty(this IEnumerable<int> cols, Sudoku.GetSudokuField getDef, int row)
-        {
-            return cols.SelectField(getDef,row).Where(def => def.IsEmpty);
-        }
+    public static IEnumerable<SudokuField> SelectFieldEmpty(this IEnumerable<int> cols, Sudoku.GetSudokuField getDef, int row)
+    {
+        return cols.SelectField(getDef, row).Where(def => def.IsEmpty);
     }
 }

@@ -14,40 +14,40 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Solve.NotPossible
+namespace Sudoku.Solve.NotPossible;
+
+using System.Collections.Generic;
+using System.Linq;
+
+using global::Sudoku.Solve.Tools;
+
+public class NotPossibleFish : NotPossibleBase
 {
-    using System.Collections.Generic;
-    using System.Linq;
-
-    using global::Sudoku.Solve.Tools;
-
-    public class NotPossibleFish : NotPossibleBase
+    protected NotPossibleFish()
     {
-        protected NotPossibleFish()
+    }
+
+    public string FishName { get; protected set; }
+
+    public override string SerializeTo()
+    {
+        return $"{RoleName}:{ForNo}:{Orientation.ToChar()}:{BecauseRow.ToRowList()}:{BecauseCol.ToRowList()}";
+    }
+
+    protected override void SerializeFrom(string[] serialized)
+    {
+        ForNo       = int.Parse(serialized[1]);
+        Orientation = serialized[2].ToOrientation();
+        BecauseRow  = serialized[3].FromRowList();
+        BecauseCol  = serialized[4].FromRowList();
+    }
+
+    public override IEnumerable<(int Row, int Col, int Level)> Explain(Sudoku sudoku, int myRow, int myCol)
+    {
+        var expl = new List<(int Row, int Col, int Level)>();
+
+        foreach (var row in BecauseRow)
         {
-        }
-
-        public string FishName { get; protected set; }
-
-        public override string SerializeTo()
-        {
-            return $"{RoleName}:{ForNo}:{Orientation.ToChar()}:{BecauseRow.ToRowList()}:{BecauseCol.ToRowList()}";
-        }
-
-        protected override void SerializeFrom(string[] serialized)
-        {
-            ForNo       = int.Parse(serialized[1]);
-            Orientation = serialized[2].ToOrientation();
-            BecauseRow  = serialized[3].FromRowList();
-            BecauseCol  = serialized[4].FromRowList();
-        }
-
-        public override IEnumerable<(int Row, int Col, int Level)> Explain(Sudoku sudoku, int myRow, int myCol)
-        {
-            var expl = new List<(int Row, int Col, int Level)>();
-
-            foreach (var row in BecauseRow)
-            {
 /*
                 foreach (var col in LoopExtensions.Cols)
                 {
@@ -58,40 +58,39 @@ namespace Sudoku.Solve.NotPossible
                     }
                 }
 */
-                foreach (var col in BecauseCol)
-                {
-                    var rowCol = (row, col).ConvertTo(Orientation);
-                    if (sudoku.GetDef(rowCol.Row, rowCol.Col).IsEmpty)
-                    {
-                        expl.Add((rowCol.Row, rowCol.Col, 3));
-                    }
-                }
-            }
-
             foreach (var col in BecauseCol)
             {
-                foreach (var row in LoopExtensions.Rows)
+                var rowCol = (row, col).ConvertTo(Orientation);
+                if (sudoku.GetDef(rowCol.Row, rowCol.Col).IsEmpty)
                 {
-                    if (!BecauseRow.Contains(row))
-                    {
-                        var rowCol = (row, col).ConvertTo(Orientation);
-                        var def    = sudoku.GetDef(rowCol.Row, rowCol.Col);
-                        var isRole = def.IsPossibleMainRule(ForNo) && def.IsNotPossible(ForNo) ? 5 : 2;
-                        expl.Add((rowCol.Row, rowCol.Col, isRole));
-                    }
+                    expl.Add((rowCol.Row, rowCol.Col, 3));
                 }
             }
-
-            return expl;
         }
 
-        public override string ToString()
+        foreach (var col in BecauseCol)
         {
-            var opposite = Orientation.ToOppositeOrientation();
-            return $"{ForNo}: {FishName} {Orientation.ToOrientationDesc()} {BecauseRow.ToUserRowList(Orientation)} with {opposite.ToOrientationDesc()} {BecauseCol.ToUserRowList(opposite)}";
+            foreach (var row in LoopExtensions.Rows)
+            {
+                if (!BecauseRow.Contains(row))
+                {
+                    var rowCol = (row, col).ConvertTo(Orientation);
+                    var def    = sudoku.GetDef(rowCol.Row, rowCol.Col);
+                    var isRole = def.IsPossibleMainRule(ForNo) && def.IsNotPossible(ForNo) ? 5 : 2;
+                    expl.Add((rowCol.Row, rowCol.Col, isRole));
+                }
+            }
         }
 
-        public IEnumerable<int> BecauseRow { get; set; }
-        public IEnumerable<int> BecauseCol { get; set; }
+        return expl;
     }
+
+    public override string ToString()
+    {
+        var opposite = Orientation.ToOppositeOrientation();
+        return $"{ForNo}: {FishName} {Orientation.ToOrientationDesc()} {BecauseRow.ToUserRowList(Orientation)} with {opposite.ToOrientationDesc()} {BecauseCol.ToUserRowList(opposite)}";
+    }
+
+    public IEnumerable<int> BecauseRow { get; set; }
+    public IEnumerable<int> BecauseCol { get; set; }
 }

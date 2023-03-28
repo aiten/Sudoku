@@ -22,19 +22,18 @@ using System.Linq;
 using Framework.Repository.Abstraction.Entities;
 using Framework.Repository.Mappings;
 
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 using Sudoku.Repository.Abstraction.Entities;
 using Sudoku.Repository.Mappings;
 
-public class SudokuContext : DbContext
+public class SudokuContext : IdentityDbContext<ApplicationUser>
 {
     public SudokuContext(DbContextOptions<SudokuContext> options) : base(options)
     {
     }
-
-    public DbSet<SudokuEntity> Sudokus { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

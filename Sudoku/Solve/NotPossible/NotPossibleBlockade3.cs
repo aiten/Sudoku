@@ -14,54 +14,53 @@
   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-namespace Sudoku.Solve.NotPossible
+namespace Sudoku.Solve.NotPossible;
+
+using System.Collections.Generic;
+
+public class NotPossibleBlockade3 : NotPossibleBase
 {
-    using System.Collections.Generic;
-
-    public class NotPossibleBlockade3 : NotPossibleBase
+    public NotPossibleBlockade3()
     {
-        public NotPossibleBlockade3()
-        {
-            RoleName = "B3";
-        }
-
-        public override string SerializeTo()
-        {
-            return $"{RoleName}:{ForNo}:{Orientation.ToChar()}:{BecauseIdx.ToRowList()}";
-        }
-
-        protected override void SerializeFrom(string[] serialized)
-        {
-            ForNo       = int.Parse(serialized[1]);
-            Orientation = serialized[2].ToOrientation();
-            BecauseIdx  = serialized[3].FromRowList();
-        }
-
-        public override IEnumerable<(int Row, int Col, int Level)> Explain(Sudoku sudoku, int myRow, int myCol)
-        {
-            var expl = new List<(int Row, int Col, int Level)>();
-            var pos  = (myRow, myCol).ConvertFrom(Orientation);
-
-            foreach (var col in BecauseIdx)
-            {
-                var rowCol = (pos.Row, col).ConvertTo(Orientation);
-                expl.Add((rowCol.Row, rowCol.Col, 3));
-            }
-
-            return expl;
-        }
-
-        public override string ToString()
-        {
-            if (Orientation == Orientation.X3)
-            {
-                return $"{ForNo}: only in {Orientation.ToOrientationDesc()} at {BecauseIdx.ToUserRowList(Orientation)} (B3)";
-            }
-
-            var opossit = Orientation.ToOppositeOrientation();
-            return $"{ForNo}: only in {Orientation.ToOrientationDesc()} at {opossit.ToOrientationDesc()}: {BecauseIdx.ToUserRowList(opossit)} (B3)";
-        }
-
-        public IEnumerable<int> BecauseIdx { get; set; }
+        RoleName = "B3";
     }
+
+    public override string SerializeTo()
+    {
+        return $"{RoleName}:{ForNo}:{Orientation.ToChar()}:{BecauseIdx.ToRowList()}";
+    }
+
+    protected override void SerializeFrom(string[] serialized)
+    {
+        ForNo       = int.Parse(serialized[1]);
+        Orientation = serialized[2].ToOrientation();
+        BecauseIdx  = serialized[3].FromRowList();
+    }
+
+    public override IEnumerable<(int Row, int Col, int Level)> Explain(Sudoku sudoku, int myRow, int myCol)
+    {
+        var expl = new List<(int Row, int Col, int Level)>();
+        var pos  = (myRow, myCol).ConvertFrom(Orientation);
+
+        foreach (var col in BecauseIdx)
+        {
+            var rowCol = (pos.Row, col).ConvertTo(Orientation);
+            expl.Add((rowCol.Row, rowCol.Col, 3));
+        }
+
+        return expl;
+    }
+
+    public override string ToString()
+    {
+        if (Orientation == Orientation.X3)
+        {
+            return $"{ForNo}: only in {Orientation.ToOrientationDesc()} at {BecauseIdx.ToUserRowList(Orientation)} (B3)";
+        }
+
+        var opossit = Orientation.ToOppositeOrientation();
+        return $"{ForNo}: only in {Orientation.ToOrientationDesc()} at {opossit.ToOrientationDesc()}: {BecauseIdx.ToUserRowList(opossit)} (B3)";
+    }
+
+    public IEnumerable<int> BecauseIdx { get; set; }
 }
