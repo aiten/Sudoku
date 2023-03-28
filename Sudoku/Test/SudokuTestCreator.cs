@@ -61,11 +61,11 @@ public class SudokuTestCreator : SudokuBaseUnitTest
     [Fact]
     public void FillTest()
     {
-        var dirInfo = Directory.EnumerateFiles(@"C:\dev\Sudoku\Sudoku\Test\TestSamples", "_*.sud");
+        var dirInfo = Directory.EnumerateFiles(@".\TestSamples", "_*.sud");
 
         var asCsvList = new List<string> { "Id;Comment;Content;LastStored" };
 
-        using (var sw = new StreamWriter(@"c:\tmp\test.txt"))
+        using (var sw = new StreamWriter(@"test.txt"))
         {
             foreach (var file in dirInfo)
             {
@@ -141,6 +141,6 @@ public class SudokuTestCreator : SudokuBaseUnitTest
             }
         }
 
-        File.WriteAllLines(@"c:\tmp\test.csv", asCsvList);
+        File.WriteAllLines(@"test.csv", asCsvList);
     }
 }
