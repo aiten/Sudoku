@@ -42,7 +42,7 @@ public class IndexModel : PageModel
         await StartCalc();
     }
 
-    public IEnumerable<string> Sudoku { get; set; }
+    public IEnumerable<string> Sudoku { get; set; } = new List<string>();
 
     [BindProperty(SupportsGet = true)]
     public string SudokuAsString => string.Join('|', Sudoku);

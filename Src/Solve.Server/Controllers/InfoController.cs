@@ -22,10 +22,10 @@ using Microsoft.AspNetCore.Mvc;
 
 public class Info
 {
-    public string Version   { get; set; }
-    public string Name      { get; set; }
-    public string FullName  { get; set; }
-    public string Copyright { get; set; }
+    public string Version   { get; set; } = string.Empty;
+    public string Name      { get; set; } = string.Empty;
+    public string FullName  { get; set; } = string.Empty;
+    public string Copyright { get; set; } = string.Empty;
 }
 
 [Route("api/[controller]")]
@@ -70,9 +70,9 @@ public class InfoController : Controller
 
         return new Info()
         {
-            Version   = ass.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion,
-            Copyright = ass.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright,
-            Name      = assName.Name,
+            Version   = ass.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion!,
+            Copyright = ass.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright!,
+            Name      = assName.Name!,
             FullName  = assName.FullName,
         };
     }
