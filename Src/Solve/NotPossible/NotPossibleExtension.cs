@@ -16,6 +16,7 @@
 
 namespace Sudoku.Solve.NotPossible;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -34,6 +35,7 @@ public static class NotPossibleExtension
             Orientation.Row    => string.Join(',', because.Select(idx => RowNames[idx])),
             Orientation.Column => string.Join(',', because.Select(idx => ColNames[idx])),
             Orientation.X3     => string.Join(',', because.Select(idx => X3Names[idx])),
+            _ => throw new ArgumentException()
         };
     }
 

@@ -91,7 +91,8 @@ public class Sudoku
         {
             Orientation.Column => GetSudokuFieldCol,
             Orientation.Row    => GetSudokuFieldRow,
-            Orientation.X3     => GetSudokuFieldS3
+            Orientation.X3     => GetSudokuFieldS3,
+            _                  => throw new ArgumentException()
         };
     }
 
@@ -122,7 +123,8 @@ public class Sudoku
         {
             Orientation.Column => ConvertToCol(absRowCol.row, absRowCol.col),
             Orientation.Row    => ConvertToRow(absRowCol.row, absRowCol.col),
-            Orientation.X3     => ConvertToS3(absRowCol.row, absRowCol.col)
+            Orientation.X3     => ConvertToS3(absRowCol.row, absRowCol.col),
+            _                  => throw new ArgumentException()
         };
     }
 
