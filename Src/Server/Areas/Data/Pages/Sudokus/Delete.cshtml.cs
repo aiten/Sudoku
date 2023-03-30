@@ -62,7 +62,7 @@ public class DeleteModel : PageModel
             if (sudokuentity != null)
             {
                 SudokuEntity = sudokuentity;
-                _sudokuRepository.Delete(SudokuEntity);
+                await _sudokuRepository.DeleteAsync(SudokuEntity);
                 await _uow.SaveChangesAsync();
             }
 
