@@ -23,6 +23,9 @@ env:
   AZURE_WEBAPP_NAME: sudokusolve      # set this to the name of your Azure Web App
   AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '7.0.x'             # set this to the .NET Core version to use
+  SolutionPath: Src                              # sub-directory of sln file location
+  SolutionName: Sudoku.sln                       # Replace with your solution name, i.e. MyWpfApp.sln.
+  AppProject: Solve.Server/Solve.Server.csproj   # Replace with the path to your app project, i.e. MyWpfApp\MyWpfApp.csproj.
 
 on:
   push:
@@ -36,6 +39,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: ${{ env.SolutionPath }}
+    
     steps:
       - uses: actions/checkout@v3
 
@@ -56,7 +63,7 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish $env:AppProject -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
