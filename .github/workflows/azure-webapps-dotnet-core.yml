@@ -63,7 +63,7 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build $env:AppProject --configuration Release
 
       - name: dotnet publish
         run: dotnet publish $env:AppProject -c Release -o ${{env.DOTNET_ROOT}}/myapp
