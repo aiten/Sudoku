@@ -17,10 +17,10 @@ COPY ["Solve/Solve.csproj", "Solve/"]
 RUN dotnet restore "Solve.Server/Solve.Server.csproj"
 COPY . .
 WORKDIR "/src/Solve.Server"
-RUN dotnet build "Solve.Server.csproj" -c Release -o /app/build -r linux-arm
+# RUN dotnet build "Solve.Server.csproj" -c Release -o /app/build -r linux-arm
 
 FROM build AS publish
-RUN dotnet publish "Solve.Server.csproj" -c Release -o /app/publish /p:UseAppHost=true /p:SelfContained=true -r linux-arm 
+RUN dotnet publish "Solve.Server.csproj" -c Release -o /app/publish /p:SelfContained=false -r linux-arm 
 
 FROM base AS final
 WORKDIR /app
