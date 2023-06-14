@@ -18,6 +18,11 @@ using System.Reflection;
 
 using Framework.NLogTools;
 
+using Microsoft.AspNetCore.Mvc;
+
+using Sudoku.Solve;
+using Sudoku.Solve.Server.Models;
+
 Framework.NLogTools.NLogConfigExtensions.ConfigureNLogLocation("SolveSudoku", Assembly.GetExecutingAssembly());
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,8 +46,91 @@ app.UsePathBase("/sudokusolve");
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+const string SudokuTag = "Sudoku";
 
-app.MapControllers();
+app.MapGet("/api/sudoku", (string[] sudoku) =>
+    {
+        var s = sudoku.ToArray().CreateSudoku();
+        return s.GetSolveInfo();
+    })
+    .WithOpenApi()
+    .WithTags(SudokuTag);
+
+app.MapGet("/api/sudoku/smart", (string[] sudoku) =>
+    {
+        var s = sudoku.ToArray().CreateSudoku();
+
+        return new SudokuResult()
+        {
+            Sudoku = s.SmartPrint(string.Empty).ToArray(),
+            Info   = s.SmartPrintInfo()
+        };
+    })
+    .WithOpenApi()
+    .WithTags(SudokuTag);
+
+
+app.MapGet("/api/sudoku/next", (string[] sudoku, int row, int col) =>
+    {
+        var s = sudoku.ToArray().CreateSudoku();
+        s.UpdatePossible();
+        s.SetNextPossible(row, col);
+
+        return s.SmartPrint(string.Empty);
+    })
+    .WithOpenApi()
+    .WithTags(SudokuTag);
+
+app.MapGet("/api/sudoku/set", (string[] sudoku, int row, int col, int no) =>
+    {
+        var s = sudoku.ToArray().CreateSudoku();
+        s.Set(row, col, no);
+
+        return s.SmartPrint(string.Empty);
+    })
+    .WithOpenApi()
+    .WithTags(SudokuTag);
+
+app.MapGet("/api/sudoku/solutioncount", (string[] sudoku) =>
+    {
+        var s   = sudoku.ToArray().CreateSudoku();
+        var cts = new CancellationTokenSource();
+
+        var task = Task.Run(() => { return s.CalcPossibleSolutions(cts.Token); });
+
+        bool isCompletedSuccessfully = task.Wait(TimeSpan.FromMilliseconds(1000));
+
+        if (isCompletedSuccessfully)
+        {
+            return task.Result;
+        }
+
+        throw new TimeoutException("The function has taken longer than the maximum time allowed.");
+    })
+    .WithOpenApi()
+    .WithTags(SudokuTag);
+
+static Info Info()
+{
+    var ass     = Assembly.GetExecutingAssembly();
+    var assName = ass.GetName();
+
+    return new Info()
+    {
+        Version   = ass.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion!,
+        Copyright = ass.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright!,
+        Name      = assName.Name!,
+        FullName  = assName.FullName,
+    };
+}
+
+const string InfoTag = "Info";
+
+app.MapGet("/api/info",           () => Info()).WithOpenApi().WithTags(InfoTag);
+app.MapGet("/api/info/version",   () => Info().Version.ToString()).WithOpenApi().WithTags(InfoTag);
+app.MapGet("/api/info/name",      () => Info().Name).WithOpenApi().WithTags(InfoTag);
+app.MapGet("/api/info/fullname",  () => Info().FullName).WithOpenApi().WithTags(InfoTag);
+app.MapGet("/api/info/copyright", () => Info().Copyright).WithOpenApi().WithTags(InfoTag);
+
 
 app.Run();

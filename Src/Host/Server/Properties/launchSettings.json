@@ -8,12 +8,12 @@
       }
     },
     "profiles": {
-      "Sudoku.Server": {
+      "Host.Server": {
         "commandName": "Project",
         "dotnetRunMessages": true,
         "launchBrowser": true,
         "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
-        "applicationUrl": "https://localhost:7115;http://localhost:5115",
+        "applicationUrl": "https://localhost:7115",
         "environmentVariables": {
           "ASPNETCORE_ENVIRONMENT": "Development"
         }

@@ -18,6 +18,6 @@ namespace Sudoku.Solve.Server.Models;
 
 public class SudokuResult
 {
-    public string[]  Sudoku { get; set; }
-    public string[,] Info   { get; set; }
+    public string[]  Sudoku { get; set; } = default!;
+    public string[,] Info   { get; set; } = default!;
 }
