@@ -55,7 +55,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLogTools", "Framework\NLog
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Solve.Server", "Solve.Server\Solve.Server.csproj", "{9467BB86-74C1-4918-A370-F55632773376}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server\Server.csproj", "{B9B591CA-4420-495B-9C6C-CA603E0E4AF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebUi", "WebUi\WebUi.csproj", "{B9B591CA-4420-495B-9C6C-CA603E0E4AF3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{88D3EF28-F39E-4725-AB8F-D12B1FDA5E9C}"
 EndProject
