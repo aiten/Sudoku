@@ -28,17 +28,17 @@ using Sudoku.Repository.Abstraction.Entities;
 public class PageModelBase : PageModel
 {
     protected readonly UserManager<ApplicationUser> _userManager;
-    protected readonly RoleManager<IdentityRole> _roleManager;
-    private readonly ILogger _logger;
+    protected readonly RoleManager<IdentityRole>    _roleManager;
+    private readonly   ILogger                      _logger;
 
     public PageModelBase(
         UserManager<ApplicationUser> userManager,
-        RoleManager<IdentityRole> roleManager,
-        ILogger logger)
+        RoleManager<IdentityRole>    roleManager,
+        ILogger                      logger)
     {
         _userManager = userManager;
         _roleManager = roleManager;
-        _logger = logger;
+        _logger      = logger;
     }
 
     [BindProperty]

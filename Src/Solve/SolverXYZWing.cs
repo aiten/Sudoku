@@ -86,7 +86,7 @@ public class SolverXYZWing : SolverBase
                     if (IsXYZWing(pivot, pincer1, pincer2, out wingNo))
                     {
                         var intersect = pivot.AbsRowCol
-                            .IntersectFields(new [] {pincer1.AbsRowCol, pincer2.AbsRowCol })
+                            .IntersectFields(new[] { pincer1.AbsRowCol, pincer2.AbsRowCol })
                             .Where(pos => pos != pincer1.AbsRowCol && pos != pincer2.AbsRowCol)
                             .Select(pos => Sudoku.GetDef(pos.Row, pos.Col))
                             .Where(field => field.IsEmpty);
@@ -112,8 +112,12 @@ public class SolverXYZWing : SolverBase
         {
             switch (def.GetPossibleNos().Count())
             {
-                case 2: listOf2Possible.Add(def); break;
-                case 3: listOf3Possible.Add(def); break;
+                case 2:
+                    listOf2Possible.Add(def);
+                    break;
+                case 3:
+                    listOf3Possible.Add(def);
+                    break;
             }
         });
 

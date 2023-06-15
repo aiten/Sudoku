@@ -18,6 +18,6 @@ namespace Sudoku.Server.Areas.Admin.Pages.Users;
 
 public class AppUserRole
 {
-    public string RoleName { get; set; } = string.Empty;
-    public bool IsUserInRole { get; set; }
+    public string RoleName     { get; set; } = string.Empty;
+    public bool   IsUserInRole { get; set; }
 }

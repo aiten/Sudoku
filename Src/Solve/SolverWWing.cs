@@ -96,7 +96,7 @@ public class SolverWWing : SolverBase
     {
         if (field1.AbsRowCol.IsIntersect(field2.AbsRowCol))
         {
-            return new (null,null,null);
+            return new(null, null, null);
         }
 
         var allOrientations = new[] { Orientation.Column, Orientation.Row, Orientation.X3 };
@@ -113,11 +113,12 @@ public class SolverWWing : SolverBase
 
                 if (linked.Any())
                 {
-                    return new (no, linked[0].Item1, linked[0].Item2);
+                    return new(no, linked[0].Item1, linked[0].Item2);
                 }
             }
         }
 
-        return new(null, null, null); ;
+        return new(null, null, null);
+        ;
     }
 }

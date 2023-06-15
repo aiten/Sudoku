@@ -17,7 +17,6 @@ using Sudoku.Repository.Abstraction.Entities;
 using Sudoku.Shared;
 
 [Authorize(Roles = SudokuConst.Role_User)]
-
 public class EditModel : PageModel
 {
     private readonly IUnitOfWork         _uow;

@@ -13,7 +13,8 @@
 }
 else
 {
-    @Html.HiddenFor(m => m.Sudoku);
+    @Html.HiddenFor(m => m.Sudoku)
+    ;
 
     <form method="post" asp-page-handler="NewSudoku">
         <div class="mytoolbar">

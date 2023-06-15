@@ -85,7 +85,7 @@ public class IndexModel : PageModel
     {
         try
         {
-            Sudoku = (sudoku??"").Split('|');
+            Sudoku = (sudoku ?? "").Split('|');
             var query = ToFirsteQuery(Sudoku);
             query  += $"&row={row}&col={col}";
             Sudoku =  (await Http.GetFromJsonAsync<IEnumerable<string>>("Sudoku/next" + query))!;

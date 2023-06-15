@@ -18,7 +18,6 @@ using System.Reflection;
 
 using Framework.NLogTools;
 
-
 using Microsoft.AspNetCore.Identity;
 
 using Sudoku.Repository;

@@ -431,7 +431,7 @@ public class Sudoku
             }
 
             // only use extended as last option if no other works
-                
+
             foreach (var solver in solverExtended)
             {
                 if (changeCount == 0 && solver.Solve()) changeCount++;

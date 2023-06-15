@@ -16,18 +16,10 @@
 
 using System.Reflection;
 
-using Framework.NLogTools;
-
-using Microsoft.AspNetCore.Mvc;
-
 using Sudoku.Solve;
 using Sudoku.Solve.Server.Models;
 
-Framework.NLogTools.NLogConfigExtensions.ConfigureNLogLocation("SolveSudoku", Assembly.GetExecutingAssembly());
-
 var builder = WebApplication.CreateBuilder(args);
-
-builder.UseNLog();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

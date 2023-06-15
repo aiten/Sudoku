@@ -21,7 +21,6 @@ using global::Sudoku.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-
 [Authorize(Roles = SudokuConst.Role_Admin)]
 public class IndexModel : PageModel
 {

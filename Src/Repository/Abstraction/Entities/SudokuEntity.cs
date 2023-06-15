@@ -26,6 +26,6 @@ public class SudokuEntity
     public string   Content    { get; set; }
     public DateTime LastStored { get; set; }
 
-    public int CategoryId { get; set; }
-    public CategoryEntity Category { get; set; }
+    public int            CategoryId { get; set; }
+    public CategoryEntity Category   { get; set; }
 }

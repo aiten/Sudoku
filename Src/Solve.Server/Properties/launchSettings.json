@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Server": {
+    "Solve.Server": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",

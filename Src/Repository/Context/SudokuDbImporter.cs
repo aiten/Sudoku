@@ -24,7 +24,7 @@ using Sudoku.Repository.Abstraction.Entities;
 
 public class SudokuDbImporter : DbImporter
 {
-    protected Dictionary<int, SudokuEntity> _sudokuMap;
+    protected Dictionary<int, SudokuEntity>   _sudokuMap;
     protected Dictionary<int, CategoryEntity> _categoryMap;
 
     public SudokuDbImporter(SudokuContext context) : base(context)
