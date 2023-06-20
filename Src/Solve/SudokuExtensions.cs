@@ -77,12 +77,13 @@ public static class SudokuExtensions
         return lines;
     }
 
-    public static string[,] SmartPrintInfo(this Solve.Sudoku s)
+    public static string[][] SmartPrintInfo(this Solve.Sudoku s)
     {
         s.UpdatePossible();
-        var info = new string[9, 9];
+        var info = new string[9][];
         for (int row = 0; row < 9; row++)
         {
+            info[row] = new string[9];
             for (int col = 0; col < 9; col++)
             {
                 var field = s.GetDef(row, col);
@@ -92,16 +93,16 @@ public static class SudokuExtensions
                     var possibleOpt = field.NotPossibleExplanation();
                     if (string.IsNullOrEmpty(possibleOpt))
                     {
-                        info[row, col] = $"[{possible}]";
+                        info[row][col] = $"[{possible}]";
                     }
                     else
                     {
-                        info[row, col] = $"[{possible}]=>{possibleOpt}";
+                        info[row][col] = $"[{possible}]=>{possibleOpt}";
                     }
                 }
                 else
                 {
-                    info[row, col] = $"{field.No}";
+                    info[row][col] = $"{field.No}";
                 }
             }
         }
