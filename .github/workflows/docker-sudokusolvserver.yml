@@ -2,7 +2,7 @@
 name: Build Docker Image for Sudoku Solve Server
 
 env:
-  AZURE_WEBAPP_NAME: sudokusolve      # set this to the name of your Azure Web App
+  ContainerName: sudokusolveserver           # Name of he (docker-)container
   SolutionPath: Src                              # sub-directory of sln file location
   SolutionName: Sudoku.sln                       # Replace with your solution name, i.e. MyWpfApp.sln.
   AppProject: Solve.Server/Solve.Server.csproj   # Replace with the path to your app project, i.e. MyWpfApp\MyWpfApp.csproj.
@@ -47,4 +47,4 @@ jobs:
           file: ./Solve.Server/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: user/app:latest
+          tags: ${{ secrets.DOCKER_USER}}/${{ env.ContainerName}}:latest
