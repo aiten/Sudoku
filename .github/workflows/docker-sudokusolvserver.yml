@@ -47,4 +47,4 @@ jobs:
           file: ./Solve.Server/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ secrets.DOCKER_USER}}/${{ env.ContainerName}}:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.ContainerName}}:latest
