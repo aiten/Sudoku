@@ -6,14 +6,14 @@ EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
-WORKDIR /src
+WORKDIR /Src
 COPY ["Directory.Build.props", "."]
 COPY ["Solve.Server/Solve.Server.csproj", "Solve.Server/"]
 COPY ["Solve.Abstraction/Solve.Abstraction.csproj", "Solve.Abstraction/"]
 COPY ["Solve/Solve.csproj", "Solve/"]
 RUN dotnet restore "Solve.Server/Solve.Server.csproj"
 COPY . .
-WORKDIR "/src/Solve.Server"
+WORKDIR "/Src/Solve.Server"
 #RUN dotnet build "Solve.Server.csproj" -c Release -o /app/build -r linux-arm
 
 FROM build AS publish
