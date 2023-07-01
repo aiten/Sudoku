@@ -1,6 +1,12 @@
 
 name: Build Docker Image for Sudoku Solve Server
 
+env:
+  AZURE_WEBAPP_NAME: sudokusolve      # set this to the name of your Azure Web App
+  SolutionPath: Src                              # sub-directory of sln file location
+  SolutionName: Sudoku.sln                       # Replace with your solution name, i.e. MyWpfApp.sln.
+  AppProject: Solve.Server/Solve.Server.csproj   # Replace with the path to your app project, i.e. MyWpfApp\MyWpfApp.csproj.
+
 on:
   push:
     branches:
@@ -9,6 +15,11 @@ on:
 jobs:
   docker:
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ${{ env.SolutionPath }}
+    
     steps:
       -
         name: Checkout
@@ -33,7 +44,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: ./Src/Solve.Server/Dockerfile
+          file: ./Solve.Server/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
           tags: user/app:latest
