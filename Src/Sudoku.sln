@@ -59,6 +59,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebUi", "WebUi\WebUi.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{88D3EF28-F39E-4725-AB8F-D12B1FDA5E9C}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{93DB21BE-385D-4F2E-B34E-C131E2E2C467}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -157,6 +159,10 @@ Global
 		{88D3EF28-F39E-4725-AB8F-D12B1FDA5E9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88D3EF28-F39E-4725-AB8F-D12B1FDA5E9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88D3EF28-F39E-4725-AB8F-D12B1FDA5E9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93DB21BE-385D-4F2E-B34E-C131E2E2C467}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93DB21BE-385D-4F2E-B34E-C131E2E2C467}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93DB21BE-385D-4F2E-B34E-C131E2E2C467}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93DB21BE-385D-4F2E-B34E-C131E2E2C467}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
