@@ -123,5 +123,6 @@ app.MapGet("/api/info/name",      () => Info().Name).WithOpenApi().WithTags(Info
 app.MapGet("/api/info/fullname",  () => Info().FullName).WithOpenApi().WithTags(InfoTag);
 app.MapGet("/api/info/copyright", () => Info().Copyright).WithOpenApi().WithTags(InfoTag);
 
+app.MapGet("/", () => Info());
 
 app.Run();

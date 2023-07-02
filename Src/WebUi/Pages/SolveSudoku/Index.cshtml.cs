@@ -15,7 +15,7 @@ public class IndexModel : PageModel
 
     private IHttpClientFactory _httpFactory;
 
-    public HttpClient Http => _httpFactory.CreateClient("pi");
+    public HttpClient Http => _httpFactory.CreateClient("leocloud");
 
     public async Task OnGetAsync(string sudoku)
     {

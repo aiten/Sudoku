@@ -34,6 +34,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddHttpClient("Azure", httpClient => { httpClient.BaseAddress = new Uri("https://sudokusolve.azurewebsites.net/api/"); });
 builder.Services.AddHttpClient("local", httpClient => { httpClient.BaseAddress = new Uri("http://localhost:5185/api/"); });
 builder.Services.AddHttpClient("pi",    httpClient => { httpClient.BaseAddress = new Uri("https://ait.dyndns-home.com/sudokusolve/api/"); });
+builder.Services.AddHttpClient("leocloud",    httpClient => { httpClient.BaseAddress = new Uri("https://student.cloud.htl-leonding.ac.at/h.aitenbichler/sudokusolveserver/api/"); });
 
 builder.UseNLog();
 
