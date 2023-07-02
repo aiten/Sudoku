@@ -46,7 +46,7 @@ jobs:
       
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     - name: Restore the application
-      run: dotnet restore
+      run: dotnet restore ${{ env.SolutionName }}
     
     # Execute all unit tests in the solution
     - name: Execute unit tests
