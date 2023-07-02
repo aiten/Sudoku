@@ -50,7 +50,7 @@ jobs:
     
     # Execute all unit tests in the solution
     - name: Execute unit tests
-      run: dotnet test --no-restore
+      run: dotnet test ${{ env.SolutionName }} --no-restore
 
     # Publish the application (WinForm)
     - name: Publish the application
