@@ -83,7 +83,7 @@ public static class SudokuFormExtensions
             var reason = field.ToButtonString(opt);
             if (field.IsEmpty)
             {
-                var notPossibleExplanation = field.NotPossibleExplanation();
+                var notPossibleExplanation = field.NotPossibleExplanationString();
 
                 if (!string.IsNullOrEmpty(notPossibleExplanation))
                 {
