@@ -95,6 +95,8 @@ app.MapGet("/api/sudoku/solutioncount", (string[] sudoku) =>
         {
             return task.Result;
         }
+        
+        cts.Cancel(false);
 
         throw new TimeoutException("The function has taken longer than the maximum time allowed.");
     })

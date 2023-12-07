@@ -90,7 +90,7 @@ public static class SudokuExtensions
                 if (field.IsEmpty)
                 {
                     var possible    = field.PossibleString();
-                    var possibleOpt = field.NotPossibleExplanation();
+                    var possibleOpt = field.NotPossibleExplanationString();
                     if (string.IsNullOrEmpty(possibleOpt))
                     {
                         info[row][col] = $"[{possible}]";
@@ -133,7 +133,8 @@ public static class SudokuExtensions
                     Row         = row,
                     No          = field.IsEmpty ? null : field.No,
                     AllPossible = field.GetPossibleMainRuleNos(),
-                    Possible    = field.GetPossibleNos()
+                    Possible    = field.GetPossibleNos(),
+                    NotPossibleExplanation = field.NotPossibleExplanation()
                 });
             }
         }

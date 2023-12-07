@@ -16,6 +16,8 @@
 
 namespace Sudoku.Solve;
 
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 public static class SudokuFieldExtensions
@@ -25,13 +27,23 @@ public static class SudokuFieldExtensions
         return string.Join(',', field.GetPossibleNos());
     }
 
-    public static string NotPossibleExplanation(this SudokuField field, char separator = '\n')
+    public static string NotPossibleExplanationString(this SudokuField field, char separator = '\n')
     {
         if (field.HasNo)
         {
             return string.Empty;
         }
 
-        return string.Join(separator, field.GetNotPossible().Select(notPossible => notPossible.ToString()));
+        return string.Join(separator, field.NotPossibleExplanation());
+    }
+
+    public static IList<string> NotPossibleExplanation(this SudokuField field)
+    {
+        if (field.HasNo)
+        {
+            return new List<string>();
+        }
+
+        return field.GetNotPossible().Select(notPossible => notPossible.ToString()).ToList();
     }
 }

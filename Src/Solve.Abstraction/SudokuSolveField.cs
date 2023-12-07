@@ -27,4 +27,5 @@ public class SudokuSolveField
 
     public IEnumerable<int> AllPossible { get; set; }
     public IEnumerable<int> Possible    { get; set; }
+    public IEnumerable<string> NotPossibleExplanation { get; set; }
 }
