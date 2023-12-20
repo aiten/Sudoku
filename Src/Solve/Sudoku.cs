@@ -461,7 +461,7 @@ public class Sudoku
 
     public delegate void FoundSolutionHandler(object sudoku, SudokuEventArgs solutionInfo);
 
-    public event FoundSolutionHandler FoundSolution;
+    public event FoundSolutionHandler? FoundSolution;
 
     protected virtual void OnFoundSolution(object sudoku, SudokuEventArgs solutionInfo)
     {
@@ -471,8 +471,8 @@ public class Sudoku
         }
     }
 
-    private volatile bool   _endCalc    = false;
-    private          Sudoku _calcSudoku = null;
+    private volatile bool    _endCalc    = false;
+    private          Sudoku? _calcSudoku = null;
 
     public int CalcPossibleSolutions(CancellationToken cancellationToken)
     {

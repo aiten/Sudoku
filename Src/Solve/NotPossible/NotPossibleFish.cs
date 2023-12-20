@@ -27,7 +27,7 @@ public class NotPossibleFish : NotPossibleBase
     {
     }
 
-    public string FishName { get; protected set; }
+    public string FishName { get; protected set; } = default!;
 
     public override string SerializeTo()
     {
@@ -91,6 +91,6 @@ public class NotPossibleFish : NotPossibleBase
         return $"{ForNo}: {FishName} {Orientation.ToOrientationDesc()} {BecauseRow.ToUserRowList(Orientation)} with {opposite.ToOrientationDesc()} {BecauseCol.ToUserRowList(opposite)}";
     }
 
-    public IEnumerable<int> BecauseRow { get; set; }
-    public IEnumerable<int> BecauseCol { get; set; }
+    public IEnumerable<int> BecauseRow { get; set; } = default!;
+    public IEnumerable<int> BecauseCol { get; set; } = default!;
 }

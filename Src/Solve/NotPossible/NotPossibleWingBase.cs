@@ -21,7 +21,7 @@ using System.Linq;
 
 public abstract class NotPossibleWingBase : NotPossibleBase
 {
-    public string WingName { get; protected set; }
+    public string WingName { get; protected set; } = default!;
 
     public override string SerializeTo()
     {

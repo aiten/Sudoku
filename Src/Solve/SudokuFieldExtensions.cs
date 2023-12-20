@@ -44,6 +44,6 @@ public static class SudokuFieldExtensions
             return new List<string>();
         }
 
-        return field.GetNotPossible().Select(notPossible => notPossible.ToString()).ToList();
+        return field.GetNotPossible().Select(notPossible => notPossible.ToString()!).ToList();
     }
 }

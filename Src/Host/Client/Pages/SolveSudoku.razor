@@ -17,7 +17,7 @@ else
         <h1>
             Solve sudoku
             <span class='right'>
-                <button onclick="@OnNew">New</button>
+                <button onclick="@OnNew()">New</button>
             </span>
         </h1>
     </div>
@@ -42,7 +42,7 @@ else
                     @{
                         for (int col = 0; col < 9; col++)
                         {
-                            var field = _sudokuResult.Field.FirstOrDefault(f => f.Row == row && f.Col == col);
+                            var field = _sudokuResult.Field.FirstOrDefault(f => f.Row == row && f.Col == col)!;
                             <div class="col scell">
                                 <SudokuCell
                                     Field=@field
@@ -96,7 +96,7 @@ else
         {
             return await Http.GetFromJsonAsync<SudokuSolveResult>("Sudoku" + ToFirstQuery(_sudoku));
         }
-        catch (Exception exception)
+        catch (Exception)
         {
             return null;
         }
@@ -120,10 +120,10 @@ else
         {
             var query = ToFirstQuery(_sudoku);
             query += $"&row={row}&col={col}";
-            _sudoku = await Http.GetFromJsonAsync<IEnumerable<string>>("Sudoku/next" + query);
+            _sudoku = (await Http.GetFromJsonAsync<IEnumerable<string>>("Sudoku/next" + query))!;
             await StartCalc();
         }
-        catch (Exception exception)
+        catch (Exception)
         {
         }
     }
@@ -134,10 +134,10 @@ else
         {
             var query = ToFirstQuery(_sudoku);
             query += $"&row={row}&col={col}&no={no}";
-            _sudoku = await Http.GetFromJsonAsync<IEnumerable<string>>("Sudoku/set" + query);
+            _sudoku = (await Http.GetFromJsonAsync<IEnumerable<string>>("Sudoku/set" + query))!;
             await StartCalc();
         }
-        catch (Exception exception)
+        catch (Exception)
         {
         }
     }
@@ -151,7 +151,7 @@ else
             var solutionCount = await Http.GetFromJsonAsync<int>("Sudoku/solutioncount" + query);
             SolutionCount = solutionCount;
         }
-        catch (Exception exception)
+        catch (Exception)
         {
         }
     }

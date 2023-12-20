@@ -63,6 +63,6 @@ public class NotPossibleBlockade2SubSet : NotPossibleBase
         return $"{ForNo}: {BecauseNos.ToUserNoList()} in {Orientation.ToOrientationDesc()} at {opossit.ToOrientationDesc()} {BecauseIdx.ToUserRowList(opossit)} (B2+)";
     }
 
-    public IEnumerable<int> BecauseNos { get; set; }
-    public IEnumerable<int> BecauseIdx { get; set; }
+    public IEnumerable<int> BecauseNos { get; set; } = default!;
+    public IEnumerable<int> BecauseIdx { get; set; } = default!;
 }

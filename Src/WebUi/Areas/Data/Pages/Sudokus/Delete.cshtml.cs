@@ -25,7 +25,7 @@ public class DeleteModel : PageModel
     }
 
     [BindProperty]
-    public SudokuEntity SudokuEntity { get; set; }
+    public SudokuEntity SudokuEntity { get; set; } = default!;
 
     public async Task<IActionResult> OnGetAsync(int? id)
     {

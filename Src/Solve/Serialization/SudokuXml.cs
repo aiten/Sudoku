@@ -21,7 +21,7 @@ using System.Xml.Serialization;
 
 public class SudokuElementXml
 {
-    public string XmlUserNote { get; set; }
+    public string XmlUserNote { get; set; } = string.Empty;
     public int    XmlNo       { get; set; }
 
     public bool ShouldSerializeXmlUserNote() => !string.IsNullOrEmpty(XmlUserNote);

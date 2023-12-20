@@ -165,7 +165,7 @@ public abstract class SolverBase
 
     #endregion
 
-    protected SudokuField GetStrongLink(SudokuField field, Orientation orientation, int no)
+    protected SudokuField? GetStrongLink(SudokuField field, Orientation orientation, int no)
     {
         var weakLink = GetWeakLink(field, orientation, no).ToList();
         return weakLink.Count == 1 ? weakLink.First() : null;

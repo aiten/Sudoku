@@ -39,15 +39,15 @@ public static class SudokuXmlExtension
         {
             for (int col = 0; col < 3; col++)
             {
-                var pi3X3  = typeof(SudokuXml).GetProperty($"XmlSudoku{row}{col}");
-                var xml3x3 = (Sudoku3X3Xml)pi3X3.GetValue(sudokuXml);
+                var pi3X3  = typeof(SudokuXml).GetProperty($"XmlSudoku{row}{col}")!;
+                var xml3x3 = (Sudoku3X3Xml)pi3X3.GetValue(sudokuXml)!;
 
                 for (int iRow = 0; iRow < 3; iRow++)
                 {
                     for (int iCol = 0; iCol < 3; iCol++)
                     {
-                        var piElem  = typeof(Sudoku3X3Xml).GetProperty($"XmlSudoku{iRow}{iCol}");
-                        var xmlElem = (SudokuElementXml)piElem.GetValue(xml3x3);
+                        var piElem  = typeof(Sudoku3X3Xml).GetProperty($"XmlSudoku{iRow}{iCol}")!;
+                        var xmlElem = (SudokuElementXml)piElem.GetValue(xml3x3)!;
                         var def     = sudoku.GetDef(row * 3 + iRow, col * 3 + iCol);
                         xmlElem.XmlNo       = def.No;
                         xmlElem.XmlUserNote = def.UserNote;
@@ -77,15 +77,15 @@ public static class SudokuXmlExtension
         {
             for (int col = 0; col < 3; col++)
             {
-                var pi3X3  = typeof(SudokuXml).GetProperty($"XmlSudoku{row}{col}");
-                var xml3x3 = (Sudoku3X3Xml)pi3X3.GetValue(sudokuXml);
+                var pi3X3  = typeof(SudokuXml).GetProperty($"XmlSudoku{row}{col}")!;
+                var xml3x3 = (Sudoku3X3Xml)pi3X3.GetValue(sudokuXml)!;
 
                 for (int iRow = 0; iRow < 3; iRow++)
                 {
                     for (int iCol = 0; iCol < 3; iCol++)
                     {
-                        var piElem  = typeof(Sudoku3X3Xml).GetProperty($"XmlSudoku{iRow}{iCol}");
-                        var xmlElem = (SudokuElementXml)piElem.GetValue(xml3x3);
+                        var piElem  = typeof(Sudoku3X3Xml).GetProperty($"XmlSudoku{iRow}{iCol}")!;
+                        var xmlElem = (SudokuElementXml)piElem.GetValue(xml3x3)!;
 
                         var myRow = row * 3 + iRow;
                         var myCol = col * 3 + iCol;

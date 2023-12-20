@@ -20,5 +20,5 @@ using System.Collections.Generic;
 
 public class SudokuSolveResult
 {
-    public IEnumerable<SudokuSolveField> Field { get; set; }
+    public IEnumerable<SudokuSolveField> Field { get; set; } = default!;
 }

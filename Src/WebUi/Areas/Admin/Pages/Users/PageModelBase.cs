@@ -80,7 +80,7 @@ public class PageModelBase : PageModel
 
     public async Task<IList<string>> GetRolesAsync()
     {
-        return await _roleManager.Roles.Select(r => r.Name).ToListAsync();
+        return await _roleManager.Roles.Select(r => r.Name!).ToListAsync();
     }
 
     public async Task<bool> IsInRoleAsync(ApplicationUser user, string role)

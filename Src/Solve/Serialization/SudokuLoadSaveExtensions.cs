@@ -58,7 +58,7 @@ public static class SudokuLoadSaveExtensions
 
             try
             {
-                sudokuXml = (SudokuXml)serializer.Deserialize(fs);
+                sudokuXml = (SudokuXml)serializer.Deserialize(fs)!;
             }
             catch (Exception e)
             {
