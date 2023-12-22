@@ -27,8 +27,8 @@ public static class SudokuSolveExtensions
             return (field.No??0).ToString();
         }
 
-        var possible    = string.Join(',', field.Possible);
-        var notPossible = string.Join(',', field.AllPossible.Except(field.Possible));
+        var possible    = string.Join(',', field.Possible!);
+        var notPossible = string.Join(',', field.AllPossible!.Except(field.Possible!));
 
         if (string.IsNullOrEmpty(notPossible))
         {

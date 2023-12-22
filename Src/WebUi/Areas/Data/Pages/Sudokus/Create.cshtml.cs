@@ -42,7 +42,7 @@ public class CreateModel : PageModel
     }
 
     [BindProperty]
-    public SudokuEntity SudokuEntity { get; set; }
+    public SudokuEntity SudokuEntity { get; set; } = default!;
 
 
     // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD

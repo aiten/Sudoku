@@ -24,7 +24,7 @@ public class DetailsModel : PageModel
         _sudokuRepository = sudokuRepository;
     }
 
-    public SudokuEntity SudokuEntity { get; set; }
+    public SudokuEntity SudokuEntity { get; set; } = default!;
 
     public async Task<IActionResult> OnGetAsync(int? id)
     {

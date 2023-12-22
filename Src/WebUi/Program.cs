@@ -36,7 +36,7 @@ builder.Services.AddHttpClient("local", httpClient => { httpClient.BaseAddress =
 builder.Services.AddHttpClient("pi",    httpClient => { httpClient.BaseAddress = new Uri("https://ait.dyndns-home.com/sudokusolve/api/"); });
 builder.Services.AddHttpClient("leocloud",    httpClient => { httpClient.BaseAddress = new Uri("https://student.cloud.htl-leonding.ac.at/h.aitenbichler/sudokusolveserver/api/"); });
 
-builder.UseNLog();
+builder.UseFrwNLog();
 
 builder.Host.UseSystemd();
 

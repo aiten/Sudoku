@@ -45,7 +45,7 @@ public class SudokuField
         _userNote = userNote;
     }
 
-    private string _userNote;
+    private string? _userNote;
 
     #endregion
 
@@ -54,8 +54,8 @@ public class SudokuField
     private readonly bool[]            _mainRulePossible  = new bool[9];
     private readonly NotPossibleBase[] _notPossibleReason = new NotPossibleBase[9];
 
-    private bool[] _notPossible = new bool[9];
-    private bool[] _notPossibleUncommitted;
+    private bool[]  _notPossible = new bool[9];
+    private bool[]? _notPossibleUncommitted;
 
     internal bool[] MainRulePossible => _mainRulePossible;
 
@@ -114,7 +114,7 @@ public class SudokuField
     }
 
 
-    public NotPossibleBase GetNotPossible(int no)
+    public NotPossibleBase? GetNotPossible(int no)
     {
         return IsNotPossible(no) ? _notPossibleReason[NoToIdx(no)] : null;
     }

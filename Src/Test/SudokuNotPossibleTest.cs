@@ -28,7 +28,7 @@ public class SudokuNotPossibleTest : SudokuBaseUnitTest
     private void CloneAndCompare(NotPossibleBase notPossible)
     {
         var serialized       = notPossible.SerializeTo();
-        var notPossibleClone = NotPossibleBase.Create(serialized);
+        var notPossibleClone = NotPossibleBase.Create(serialized)!;
 
         notPossibleClone.SerializeTo().Should().Be(serialized);
         notPossibleClone.Should().BeEquivalentTo(notPossible);

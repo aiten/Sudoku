@@ -3,15 +3,15 @@
 
   Copyright (c) Herbert Aitenbichler
 
-  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), 
-  to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
+  to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
   and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
   The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
-  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 namespace Sudoku.Forms;
@@ -31,7 +31,7 @@ public partial class MainForm : Form
 {
     #region Constructor / Initialisation
 
-    public MainForm(string filename)
+    public MainForm(string? filename)
     {
         AttacheSudoku(new Sudoku());
 
@@ -146,21 +146,21 @@ public partial class MainForm : Form
         int x, y;
         for (x = 0; x < 9; x++)
         {
-            _userNoteCol[x].TextChanged += UserNoteChangedCol;
-            _userNoteRow[x].TextChanged += UserNoteChangedRow;
+            _userNoteCol[x].TextChanged += UserNoteChangedCol!;
+            _userNoteRow[x].TextChanged += UserNoteChangedRow!;
 
             for (y = 0; y < 9; y++)
             {
-                _buttons[x, y].Click   += ButtonClick;
-                _buttons[x, y].KeyDown += ButtonKeyDown;
+                _buttons[x, y].Click   += ButtonClick!;
+                _buttons[x, y].KeyDown += ButtonKeyDown!;
             }
         }
     }
 
-    private Button[,]    _buttons = new Button[9, 9];
-    private Solve.Sudoku _sudoku;
-    private TextBox[]    _userNoteRow = new TextBox[9];
-    private TextBox[]    _userNoteCol = new TextBox[9];
+    private Button[,]     _buttons = new Button[9, 9];
+    private Solve.Sudoku? _sudoku;
+    private TextBox[]     _userNoteRow = new TextBox[9];
+    private TextBox[]     _userNoteCol = new TextBox[9];
 
     private SudokuOptions _options;
 
@@ -170,18 +170,18 @@ public partial class MainForm : Form
 
     #region Calculation Thread
 
-    private volatile Thread                  _t;
-    private          CancellationTokenSource _cts = new CancellationTokenSource();
-    private volatile Solve.Sudoku            _tsudoku;
+    private volatile Thread?                  _t;
+    private          CancellationTokenSource? _cts = new CancellationTokenSource();
+    private volatile Solve.Sudoku?            _tsudoku;
 
     public void ThreadProc()
     {
 #if _DEBUG
             Console.WriteLine("IN Thread");
 #endif
-        _tsudoku              =  _sudoku;
-        _sudoku.FoundSolution += OnFoundSolution;
-        _tsudoku.CalcPossibleSolutions(_cts.Token);
+        _tsudoku               =  _sudoku;
+        _sudoku!.FoundSolution += OnFoundSolution;
+        _tsudoku!.CalcPossibleSolutions(_cts!.Token);
 #if _DEBUG
             Console.WriteLine("OUT Thread");
 #endif
@@ -202,14 +202,14 @@ public partial class MainForm : Form
     {
         if (_t != null && _t.IsAlive)
         {
-            _cts.Cancel();
+            _cts!.Cancel();
             _cts.Dispose();
             _t   = null;
             _cts = null;
         }
 
-        _tsudoku              =  null;
-        _sudoku.FoundSolution -= OnFoundSolution;
+        _tsudoku               =  null;
+        _sudoku!.FoundSolution -= OnFoundSolution;
 
         SetControlText(_toolStripStatusPossibleSolutions1, "");
     }
@@ -218,7 +218,7 @@ public partial class MainForm : Form
 
     private void SetControlText(ToolStripLabel control, string text)
     {
-        if (control.Text.CompareTo(text) != 0)
+        if (control.Text!.CompareTo(text) != 0)
             control.Text = text;
     }
 
@@ -246,12 +246,12 @@ public partial class MainForm : Form
 
     #region Button Draw
 
-    private Font _buttonFontSet;
-    private Font _buttonFontClear;
+    private Font? _buttonFontSet;
+    private Font? _buttonFontClear;
 
     private void SetButtons()
     {
-        undoToolStripButton.Enabled = _sudoku.CanUndo();
+        undoToolStripButton.Enabled = _sudoku!.CanUndo();
 
         _notPossibleIndex = -1;
         _sudoku.UpdatePossible();
@@ -304,7 +304,7 @@ public partial class MainForm : Form
         {
             for (y = 0; y < 9; y++)
             {
-                SudokuField def = _sudoku.GetDef(x, y);
+                SudokuField def = _sudoku!.GetDef(x, y);
 
                 if (def.HasNo)
                 {
@@ -336,7 +336,7 @@ public partial class MainForm : Form
             var btn = GetButton(sender, out x, out y);
             if (btn != null)
             {
-                if (_sudoku.Set(x, y, no))
+                if (_sudoku!.Set(x, y, no))
                 {
                     SetButtons();
                 }
@@ -360,7 +360,7 @@ public partial class MainForm : Form
 
     private void Explain(int x, int y)
     {
-        var def = _sudoku.GetDef(x, y);
+        var def = _sudoku!.GetDef(x, y);
         if (def.IsEmpty)
         {
             SetButtonsOnly();
@@ -392,8 +392,8 @@ public partial class MainForm : Form
 
     private void ButtonClick(object sender, EventArgs e)
     {
-        int    x, y;
-        Button btn = GetButton(sender, out x, out y);
+        int x, y;
+        var btn = GetButton(sender, out x, out y);
         if (btn != null)
         {
             if (_options.Help)
@@ -402,7 +402,7 @@ public partial class MainForm : Form
                 {
                     Explain(x, y);
                 }
-                else if (_sudoku.SetNextPossible(x, y))
+                else if (_sudoku!.SetNextPossible(x, y))
                 {
                     SetButtons();
                 }
@@ -413,8 +413,8 @@ public partial class MainForm : Form
             }
             else
             {
-                SudokuField    def  = _sudoku.GetDef(x, y);
-                EnterFieldForm form = new EnterFieldForm();
+                var def  = _sudoku!.GetDef(x, y);
+                var form = new EnterFieldForm();
                 form.UserNote = def.UserNote;
                 form.No       = def.No;
 
@@ -456,7 +456,7 @@ public partial class MainForm : Form
         {
             if (_userNoteCol[x] == sender)
             {
-                _sudoku.SetUserNoteCol(x, _userNoteCol[x].Text);
+                _sudoku!.SetUserNoteCol(x, _userNoteCol[x].Text);
                 return;
             }
         }
@@ -469,7 +469,7 @@ public partial class MainForm : Form
         {
             if (_userNoteRow[x] == sender)
             {
-                _sudoku.SetUserNoteRow(x, _userNoteRow[x].Text);
+                _sudoku!.SetUserNoteRow(x, _userNoteRow[x].Text);
                 return;
             }
         }
@@ -479,7 +479,7 @@ public partial class MainForm : Form
 
     #region Help Functions
 
-    private Button GetButton(object sender, out int x, out int y)
+    private Button? GetButton(object sender, out int x, out int y)
     {
         x = y = 0;
         for (x = 0; x < 9; x++)
@@ -498,7 +498,7 @@ public partial class MainForm : Form
 
     #region Load /Save
 
-    private string _fileName;
+    private string? _fileName;
 
     private bool Save(bool bSaveAs)
     {
@@ -524,7 +524,7 @@ public partial class MainForm : Form
 
         if (_fileName != null)
         {
-            return _sudoku.SaveXml(_fileName);
+            return _sudoku!.SaveXml(_fileName);
         }
 
         return false;
@@ -532,7 +532,7 @@ public partial class MainForm : Form
 
     private bool CheckSave()
     {
-        if (_sudoku.Modified)
+        if (_sudoku!.Modified)
         {
             switch (MessageBox.Show("Save changes?", "Sudoku", MessageBoxButtons.YesNoCancel))
             {
@@ -660,31 +660,31 @@ public partial class MainForm : Form
 
     private void FinishToolStripMenuItemClick(object sender, EventArgs e)
     {
-        _sudoku.Finish();
+        _sudoku!.Finish();
         SetButtons();
     }
 
     private void RotateToolStripMenuItemClick(object sender, EventArgs e)
     {
-        AttacheSudoku(_sudoku.Rotate());
+        AttacheSudoku(_sudoku!.Rotate());
         SetButtons();
     }
 
     private void MirrorToolStripMenuItemClick(object sender, EventArgs e)
     {
-        AttacheSudoku(_sudoku.Mirror());
+        AttacheSudoku(_sudoku!.Mirror());
         SetButtons();
     }
 
     private void UndoToolStripMenuItemClick(object sender, EventArgs e)
     {
-        if (_sudoku.Undo())
+        if (_sudoku!.Undo())
             SetButtons();
     }
 
     private void AboutToolStripMenuItemClick(object sender, EventArgs e)
     {
-        AboutForm form = new AboutForm();
+        var form = new AboutForm();
         form.ShowDialog();
     }
 
@@ -705,7 +705,7 @@ public partial class MainForm : Form
     #region Print / PrintPreview
 
     // Declare the dialog.
-    private PrintPreviewDialog _printPreviewDialog;
+    private PrintPreviewDialog? _printPreviewDialog;
 
     // Declare a PrintDocument object named document.
     private System.Drawing.Printing.PrintDocument _document = new System.Drawing.Printing.PrintDocument();
@@ -741,7 +741,7 @@ public partial class MainForm : Form
 
         // Set the PrintPreviewDialog.Document property to
         // the PrintDocument object selected by the user.
-        _printPreviewDialog.Document = _document;
+        _printPreviewDialog!.Document = _document;
 
         // Call the ShowDialog method. This will trigger the document's
         //  PrintPage event.
@@ -770,8 +770,8 @@ public partial class MainForm : Form
         {
             if ((x % 3) != 0)
             {
-                e.Graphics.DrawLine(pen, Offset,                Offset + RectSize * x, Offset + RectSize * 9, Offset + RectSize * x);
-                e.Graphics.DrawLine(pen, Offset + RectSize * x, Offset,                Offset + RectSize * x, Offset + RectSize * 9);
+                e.Graphics!.DrawLine(pen, Offset,                Offset + RectSize * x, Offset + RectSize * 9, Offset + RectSize * x);
+                e.Graphics!.DrawLine(pen, Offset + RectSize * x, Offset,                Offset + RectSize * x, Offset + RectSize * 9);
             }
         }
 
@@ -781,7 +781,7 @@ public partial class MainForm : Form
         {
             for (y = 0; y < 3; y++)
             {
-                e.Graphics.DrawRectangle(pen, Offset + x * RectSize * 3, Offset + y * RectSize * 3, RectSize * 3, RectSize * 3);
+                e.Graphics!.DrawRectangle(pen, Offset + x * RectSize * 3, Offset + y * RectSize * 3, RectSize * 3, RectSize * 3);
             }
         }
 
@@ -789,10 +789,10 @@ public partial class MainForm : Form
         {
             for (y = 0; y < 9; y++)
             {
-                int no = _sudoku.Get(y, x);
+                int no = _sudoku!.Get(y, x);
                 if (no > 0)
                 {
-                    e.Graphics.DrawString(no.ToString(), printFont, Brushes.Black, Offset + x * RectSize + 5, Offset + y * RectSize);
+                    e.Graphics!.DrawString(no.ToString(), printFont, Brushes.Black, Offset + x * RectSize + 5, Offset + y * RectSize);
                 }
             }
         }
@@ -800,7 +800,7 @@ public partial class MainForm : Form
         string text = _fileName + "\n(c) by Herbert Aitenbichler";
 
         printFont = new Font("Arial", 14, FontStyle.Regular);
-        e.Graphics.DrawString(text, printFont, Brushes.Black, 40, 40);
+        e.Graphics!.DrawString(text, printFont, Brushes.Black, 40, 40);
     }
 
     #endregion

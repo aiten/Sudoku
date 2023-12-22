@@ -20,7 +20,7 @@ using System.Collections.Generic;
 
 public abstract class NotPossibleBase
 {
-    public string RoleName { get; protected set; }
+    public string RoleName { get; protected set; } = default!;
     public int    ForNo    { get; set; }
 
     public abstract    string SerializeTo();
@@ -31,7 +31,7 @@ public abstract class NotPossibleBase
         return new List<(int Row, int Col, int Level)>();
     }
 
-    public static NotPossibleBase Create(string serialized)
+    public static NotPossibleBase? Create(string serialized)
     {
         var val = serialized.Split(':');
 

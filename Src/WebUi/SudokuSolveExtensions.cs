@@ -27,8 +27,8 @@ public static class SudokuSolveExtensions
             return (field.No ?? 0).ToString();
         }
 
-        var possible    = string.Join(',', field.Possible);
-        var notPossible = string.Join(',', field.AllPossible.Except(field.Possible));
+        var possible    = string.Join(',', field.Possible!);
+        var notPossible = string.Join(',', field.AllPossible!.Except(field.Possible!));
 
         if (string.IsNullOrEmpty(notPossible))
         {
@@ -42,6 +42,6 @@ public static class SudokuSolveExtensions
     public static bool   HasValue(this SudokuSolveField field) => field.No.HasValue;
     public static string No(this       SudokuSolveField field) => field?.No.ToString() ?? "";
 
-    public static bool   IsOnlyOnePossible(this SudokuSolveField field) => field.Possible.Count() == 1;
+    public static bool   IsOnlyOnePossible(this SudokuSolveField field) => field.Possible!.Count() == 1;
     public static string Possibilities(this     SudokuSolveField field) => field?.ToPossibleMessage() ?? "";
 }

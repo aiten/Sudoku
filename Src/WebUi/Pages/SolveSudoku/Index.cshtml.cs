@@ -61,7 +61,7 @@ public class IndexModel : PageModel
         {
             return await Http.GetFromJsonAsync<SudokuSolveResult>("Sudoku" + ToFirsteQuery(Sudoku));
         }
-        catch (Exception exception)
+        catch (Exception)
             //    catch (AccessTokenNotAvailableException exception)
         {
             //            exception.Redirect();
@@ -91,7 +91,7 @@ public class IndexModel : PageModel
             Sudoku =  (await Http.GetFromJsonAsync<IEnumerable<string>>("Sudoku/next" + query))!;
             await StartCalc();
         }
-        catch (Exception exception)
+        catch (Exception)
         {
         }
     }
@@ -105,7 +105,7 @@ public class IndexModel : PageModel
             Sudoku =  (await Http.GetFromJsonAsync<IEnumerable<string>>("Sudoku/set" + query))!;
             await StartCalc();
         }
-        catch (Exception exception)
+        catch (Exception)
         {
         }
     }
@@ -119,16 +119,18 @@ public class IndexModel : PageModel
             var solutionCount = await Http.GetFromJsonAsync<int>("Sudoku/solutioncount" + query);
             SolutionCount = solutionCount;
         }
-        catch (Exception exception)
+        catch (Exception)
         {
         }
     }
 
-    public async Task OnMyKeyDown(KeyboardEventArgs eventArgs)
+    public async Task OnMyKeyDown(KeyboardEventArgs? eventArgs)
     {
         if (eventArgs != null && uint.TryParse(eventArgs.Key, out uint code))
         {
             //await OnSetNo.InvokeAsync((int)code);
         }
+
+        await Task.CompletedTask;
     }
 }

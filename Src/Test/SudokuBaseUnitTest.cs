@@ -115,7 +115,7 @@ public class SudokuBaseUnitTest
 
                     if (notPossible != null)
                     {
-                        regex = notPossible.ToString();
+                        regex = notPossible.ToString()!;
                         regex = regex
                             .Replace("(", "\\(")
                             .Replace(")", "\\)")

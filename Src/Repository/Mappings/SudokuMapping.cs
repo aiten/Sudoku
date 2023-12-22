@@ -31,7 +31,7 @@ public static class SudokuMapping
 
         entity.HasKey(c => c.Id);
 
-        entity.Property(c => c.Comment).AsText(4000);
+        entity.Property(c => c.Comment!).AsText(4000);
         entity.Property(c => c.Content).AsRequiredText(1000);
         entity.Property(c => c.LastStored);
 

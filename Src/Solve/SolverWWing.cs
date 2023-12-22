@@ -80,8 +80,8 @@ public class SolverWWing : SolverBase
                             PairField1       = field1.AbsRowCol,
                             PairField2       = field2.AbsRowCol,
                             StrongLinkNo     = strongLink.No.Value,
-                            StrongLinkField1 = strongLink.link1.AbsRowCol,
-                            StrongLinkField2 = strongLink.link2.AbsRowCol
+                            StrongLinkField1 = strongLink.link1!.AbsRowCol,
+                            StrongLinkField2 = strongLink.link2!.AbsRowCol
                         });
                         changeCount++;
                     }
@@ -92,7 +92,7 @@ public class SolverWWing : SolverBase
         return changeCount > 0;
     }
 
-    (int? No, SudokuField link1, SudokuField link2) GetStrongLink(SudokuField field1, SudokuField field2)
+    (int? No, SudokuField? link1, SudokuField? link2) GetStrongLink(SudokuField field1, SudokuField field2)
     {
         if (field1.AbsRowCol.IsIntersect(field2.AbsRowCol))
         {
