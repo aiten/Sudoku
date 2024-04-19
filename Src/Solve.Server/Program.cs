@@ -23,6 +23,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddCors();
 
 var app = builder.Build();
 
@@ -34,6 +35,8 @@ app.UsePathBase("/sudokusolve");
     app.UseSwaggerUI();
 }
 
+// Add CORS to support Single Page Apps (SPAs)
+app.UseCors(b => b.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 
 app.UseHttpsRedirection();
 
