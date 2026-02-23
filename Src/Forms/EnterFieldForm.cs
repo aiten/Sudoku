@@ -16,6 +16,7 @@
 
 namespace Sudoku.Forms;
 
+using System.ComponentModel;
 using System.Windows.Forms;
 
 public partial class EnterFieldForm : Form
@@ -25,12 +26,14 @@ public partial class EnterFieldForm : Form
         InitializeComponent();
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public string UserNote
     {
         get { return _UserNote.Text; }
         set { _UserNote.Text = value; }
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public int No
     {
         get { return _No.SelectedIndex; }
