@@ -1,3 +1,4 @@
+using System.ComponentModel;
 /*
   This file is part of Sudoku - A library to solve a sudoku.
 
@@ -27,6 +28,7 @@ public partial class OptionForm : Form
 
     private SudokuOptions _options;
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public SudokuOptions Options
     {
         get
