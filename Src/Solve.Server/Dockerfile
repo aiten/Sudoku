@@ -1,5 +1,6 @@
 #See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
+#FROM mcr.microsoft.com/dotnet/aspnet:10.0-noble-arm64v8 AS base
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
 WORKDIR /app
 EXPOSE 80
@@ -18,6 +19,7 @@ WORKDIR "/Src/Solve.Server"
 
 FROM build AS publish
 RUN dotnet publish "Solve.Server.csproj" -c Release -o /app/publish /p:UseAppHost=false /p:SelfContained=false
+#RUN dotnet publish "Solve.Server.csproj" -c Release -o /app/publish /p:UseAppHost=false /p:SelfContained=false -r linux-arm64
 
 FROM base AS final
 WORKDIR /app
