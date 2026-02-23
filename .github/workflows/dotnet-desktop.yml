@@ -59,7 +59,7 @@ jobs:
         Configuration: ${{ matrix.configuration }}
         
     - name: Upload build artifacts (WinForms)
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v6
       with:
         name: WinForm_x86
         path: ${{ env.SolutionPath }}\PublishWinForms\
