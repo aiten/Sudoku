@@ -25,7 +25,7 @@ public class SudokuDefaultData : SudokuDbImporter
 {
     public SudokuDefaultData(SudokuContext context) : base(context)
     {
-        CsvDir = $@"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\DefaultData";
+        CsvDir = $@"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}/DefaultData";
     }
 
     public void Import()

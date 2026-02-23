@@ -22,10 +22,13 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.3" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.3" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Framework\Repository\Repository.csproj" />
 		<ProjectReference Include="..\Framework\Tools\Tools.csproj">    </ProjectReference>
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Migrations\" />
 	</ItemGroup>
 </Project>

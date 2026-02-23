@@ -1,6 +1,7 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/aspnet:10.0-bookworm-slim-arm32v7 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-noble-arm64v8 AS base
+#FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
@@ -17,10 +18,11 @@ COPY ["Solve/Solve.csproj", "Solve/"]
 RUN dotnet restore "WebUi/WebUi.csproj"
 COPY . .
 WORKDIR "/src/WebUi"
-RUN dotnet build "WebUi.csproj" -c Release -o /app/build -r linux-arm
+# RUN dotnet build "WebUi.csproj" -c Release -o /app/build -r linux-arm
 
 FROM build AS publish
-RUN dotnet publish "WebUi.csproj" -c Release -o /app/publish /p:UseAppHost=true /p:SelfContained=true -r linux-arm 
+RUN dotnet publish "WebUi.csproj" -c Release -o /app/publish /p:UseAppHost=false /p:SelfContained=false -r linux-arm64
+#RUN dotnet publish "WebUi.csproj" -c Release -o /app/publish /p:UseAppHost=false /p:SelfContained=false
 
 FROM base AS final
 WORKDIR /app

@@ -16,6 +16,8 @@
 
 using System.Reflection;
 
+using CNCLib.Repository.SqLite;
+
 using Framework.NLogTools;
 
 using Microsoft.AspNetCore.Identity;
@@ -45,7 +47,8 @@ builder.Services.AddSwaggerGen();
 
 
 builder.Services
-    .AddSudokuRepository(SqlServerDatabaseTools.OptionBuilder)
+//    .AddSudokuRepository(SqlServerDatabaseTools.OptionBuilder)
+    .AddSudokuRepository(SqliteDatabaseTools.OptionBuilder)
     ;
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
