@@ -44,4 +44,11 @@ public static class SudokuSolveExtensions
 
     public static bool   IsOnlyOnePossible(this SudokuSolveField field) => field.Possible!.Count() == 1;
     public static string Possibilities(this     SudokuSolveField field) => field?.ToPossibleMessage() ?? "";
+
+    public static string TooltipHtml(this SudokuSolveField field)
+    {
+        if (field.NotPossibleExplanation == null || !field.NotPossibleExplanation.Any())
+            return "";
+        return string.Join("<br>", field.NotPossibleExplanation);
+    }
 }
