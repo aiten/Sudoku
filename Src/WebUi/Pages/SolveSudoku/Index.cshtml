@@ -59,11 +59,19 @@ else
                                         }
                                         else if (field.IsOnlyOnePossible())
                                         {
-                                            <button class="isOnlyOne mycell">@field.Possibilities()</button>
+                                            <button class="isOnlyOne mycell"
+                                                    data-bs-toggle="tooltip"
+                                                    data-bs-html="true"
+                                                    data-bs-placement="bottom"
+                                                    title="@field.TooltipHtml()">@field.Possibilities()</button>
                                         }
                                         else
                                         {
-                                            <button class="isEmpty mycell">@field.Possibilities()</button>
+                                            <button class="isEmpty mycell"
+                                                    data-bs-toggle="tooltip"
+                                                    data-bs-html="true"
+                                                    data-bs-placement="bottom"
+                                                    title="@field.TooltipHtml()">@field.Possibilities()</button>
                                         }
                                     }
                                 </form>
@@ -77,4 +85,14 @@ else
     <div>
         @Html.LabelFor(m => m.SolutionCount) = @Model.SolutionCount
     </div>
+}
+
+@section Scripts {
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (el) {
+            new bootstrap.Tooltip(el);
+        });
+    });
+</script>
 }
