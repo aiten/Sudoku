@@ -90,8 +90,42 @@ else
 @section Scripts {
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        const isTouchDevice = window.matchMedia('(hover: none)').matches;
+
         document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (el) {
-            new bootstrap.Tooltip(el);
+            const tip = new bootstrap.Tooltip(el, {
+                trigger: isTouchDevice ? 'manual' : 'hover focus'
+            });
+
+            if (isTouchDevice) {
+                let pressTimer = null;
+
+                el.addEventListener('touchstart', function (e) {
+                    pressTimer = setTimeout(function () {
+                        pressTimer = null;
+                        tip.show();
+                    }, 500);
+                }, { passive: true });
+
+                el.addEventListener('touchend', function (e) {
+                    if (pressTimer !== null) {
+                        clearTimeout(pressTimer);
+                        pressTimer = null;
+                        // short tap — let the form submit normally
+                    } else {
+                        // long press ended — hide tooltip and suppress form submit
+                        e.preventDefault();
+                        setTimeout(function () { tip.hide(); }, 1500);
+                    }
+                });
+
+                el.addEventListener('touchmove', function () {
+                    if (pressTimer !== null) {
+                        clearTimeout(pressTimer);
+                        pressTimer = null;
+                    }
+                }, { passive: true });
+            }
         });
     });
 </script>
